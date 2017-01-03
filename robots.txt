@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://michael-j.net/sitemap.xml
+Sitemap: http://michael-j.net/baidusitemap.xml
