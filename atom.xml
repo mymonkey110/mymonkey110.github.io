@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://michael-j.net/"/>
-  <updated>2017-03-08T01:51:09.072Z</updated>
+  <updated>2017-05-21T14:36:06.661Z</updated>
   <id>http://michael-j.net/</id>
   
   <author>
@@ -14,6 +14,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>评论从多说迁移到Disqus</title>
+    <link href="http://michael-j.net/2017/05/21/%E8%AF%84%E8%AE%BA%E4%BB%8E%E5%A4%9A%E8%AF%B4%E8%BF%81%E7%A7%BB%E5%88%B0Disqus/"/>
+    <id>http://michael-j.net/2017/05/21/评论从多说迁移到Disqus/</id>
+    <published>2017-05-21T14:25:25.000Z</published>
+    <updated>2017-05-21T14:36:06.661Z</updated>
+    
+    <content type="html"><![CDATA[<p>建站以来一直使用多说作为评论系统，我还是非常喜欢国人做的评论系统，简单实用接地气。但是不盈利的商业软件最终只能关闭，这方面国内对盈利模式得探索要不国外落后太多了。</p>
+<p>虽然切换到Disqus以后免不了被墙，但目前我确实还没有找到称心如意的评论软件。如果网友们有好的评论系统，不放留言给我推荐，叩谢！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      本站的评论系统从多说迁移到Disqus
+    
+    </summary>
+    
+      <category term="生活" scheme="http://michael-j.net/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="blog" scheme="http://michael-j.net/tags/blog/"/>
+    
+  </entry>
   
   <entry>
     <title>对云环境下访问控制系统的思考</title>
@@ -341,7 +365,7 @@
 <p><a href="https://www.gitbook.com/book/mymonkey110/zookeeper-distributed-process-coordination" target="_blank" rel="external">GitBook阅读地址</a></p>
 <p><a href="https://github.com/mymonkey110/zookeeper-book/blob/master/SUMMARY.md" target="_blank" rel="external">GitHub阅读地址</a></p>
 <p>由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献：</p>
-<p>参与讨论：邮件列表：<a href="&#109;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#122;&#107;&#x5f;&#x74;&#x72;&#97;&#110;&#115;&#x6c;&#x61;&#116;&#x6f;&#114;&#x40;&#103;&#114;&#111;&#117;&#x70;&#115;&#46;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#x6d;">&#122;&#107;&#x5f;&#x74;&#x72;&#97;&#110;&#115;&#x6c;&#x61;&#116;&#x6f;&#114;&#x40;&#103;&#114;&#111;&#117;&#x70;&#115;&#46;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#x6d;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
+<p>参与讨论：邮件列表：<a href="&#x6d;&#97;&#x69;&#108;&#116;&#111;&#58;&#122;&#x6b;&#95;&#x74;&#x72;&#97;&#x6e;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#x40;&#x67;&#x72;&#x6f;&#x75;&#112;&#x73;&#46;&#x31;&#54;&#51;&#x2e;&#99;&#111;&#x6d;">&#122;&#x6b;&#95;&#x74;&#x72;&#97;&#x6e;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#x40;&#x67;&#x72;&#x6f;&#x75;&#112;&#x73;&#46;&#x31;&#54;&#51;&#x2e;&#99;&#111;&#x6d;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
 <p>部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。</p>
 <p>在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git clone git@github<span class="selector-class">.com</span>:user/zookeeper-book<span class="selector-class">.git</span></div><div class="line">$ cd zookeeper-book</div><div class="line">$ git config user<span class="selector-class">.name</span> <span class="string">"yourname"</span></div><div class="line">$ git config user<span class="selector-class">.email</span> <span class="string">"your email"</span></div></pre></td></tr></table></figure>
@@ -1205,135 +1229,6 @@
     
     
       <category term="distributed lock" scheme="http://michael-j.net/tags/distributed-lock/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C#网络编程初步之TCP</title>
-    <link href="http://michael-j.net/2011/10/03/C#%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%88%9D%E6%AD%A5%E4%B9%8BTCP/"/>
-    <id>http://michael-j.net/2011/10/03/C#网络编程初步之TCP/</id>
-    <published>2011-10-03T02:22:40.000Z</published>
-    <updated>2016-08-14T12:52:02.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>阅读背景：本文针对有C#的初学者而写的，主要讲解如何利用C#进行网络编程。<br>如果你已经有一些网络编程的经验（只需要懂得网络编程的基本常识即可），并且理解C#的基本语法，那么这篇文章可以很快地带你进入C#网络编程的世界。<br>如果你的基础不好，也不要紧，我相信这篇文章也会有你需要的内容。</strong></p>
-<p>网络编程基础复习：</p>
-<p>   <img src="http://hi.csdn.net/attachment/201110/2/0_1317580064Gkl4.gif" alt="TCP-Module"></p>
-<p> 图1. TCP编程基本模型</p>
-<p> 相信很多人看到图1应该不会陌生，这是一个利用TCP进行通信的经典模型图。我想大家都应该把这张图记在心中。<br> 在此我就不讲述上图中每个API的意思了，百度一下，你就知道。我想说的是，难道你不觉得这么编程很累吗?<br> 我们需要去调用每个API函数，然后每个判断返回值是多少，如果你忘记了哪个API的参数形式还得去查MSDN，这种时间花费是巨大的，尤其当你做应用层的快速开发时。</p>
-<p> 图2是利用UDP通信时的编程基本模型，这个模型较为简单，但是应用极为广泛，相比TCP而言，我本人觉得利用UDP通信是一门更为高深的技术，因为它是无连接的，<br> 换言之，它的效率与灵活度就更高些。</p>
-<p>   <img src="http://hi.csdn.net/attachment/201110/2/0_131757970540yA.gif" alt="UDP-Module"></p>
-<p>图2. UDP编程基本模型</p>
-<p>   在此我补充一点，关于何时利用TCP通信、何时利用UDP通信的问题。他们的特性其实已经决定了他们的适用范围。<br>   在进行大数据量、持续连接时，我们使用TCP，例如FTP协议；而在进行小规模数据、突发性高的通信时，我们使用UDP，例如聊天程序。<br>   但是，这并不是绝对的事情。例如流媒体通信，它是大数量、持续的通信，但是使用的是UDP协议，为什么呢？<br>   ——因为我们不关心丢失的帧，人的肉眼是无法识别出少量的帧丢失的。那么使用UDP通信就可以大幅度提高效率，降低网络负载。</p>
-<h3 id="C-之TCP编程"><a href="#C-之TCP编程" class="headerlink" title="C#之TCP编程"></a>C#之TCP编程</h3><p><strong>如何创建一个套接字?</strong></p>
-<p>我们先来看看利用Winsock2是如何建立一个套接字的：</p>
-<p>首先，我们要加载套接字库，然后再建立套接字。大致代码如下：</p>
-<pre><code>WORD wVersion=MAKEWORD(2,2);
-WSADATA wsaData;
-if(WSAStartup(wVersion,&amp;wsaData))
-{
-WSACleanup();
-returnFALSE;
-}
-
-m_sock=WSASocket(AF_INET,SOCK_DGRAM,IPPROTO_UDP,NULL,0,0);
-if(m_sock==INVALID_SOCKET)
-{
-        MessageBox(&quot;创建套接字失败！&quot;);
-        return FALSE;
-}
-</code></pre><p>  难道你不觉得利用Winsock2创建一个套接字很费劲吗？如果你在Linux环境中变成倒是可以省掉加载套接字的部分，<br>  但是却只能反复的调用API，这样也是很费时的事情。那我们再看看看利用C#是如何帮你简化工作的。这里我会介绍TCPClient类。</p>
-<p>  <img src="http://hi.csdn.net/attachment/201110/2/0_131758022652u1.gif" alt="msdn"></p>
-<p>  以上是从MSDN上截取的一段话，可见我们利用TCPClient还处理与TCP通信相关的操作。TCPClient有四个构造函数，每个构造函数的用法是有不同的。这里我补充一个知识，那就是端地址在C#中描述。<br>  我们知道，我们用一个IP地址和一个端口号就可以表示一个端地址。在C#中我们利用IPEndPoint类来表示一个端地址，本人经常利用如下的构造函数来创建一个IPEndPoint类。</p>
-<pre><code>IPEndPoint localEP = new IPEndPoint(IPAddress.Parse(&quot;127.0.0.1&quot;),6666);
-</code></pre><p>这样来表示一个端地址是不是比创建一个struct sockaddr_in的结构体来的快呢？</p>
-<p><strong>如何绑定一个端地址？</strong></p>
-<p>  我们已经创建了一个端地址，也构造了套接字（TCPClient类），那么如何将二者绑定起来呢?也许你已经发现了，在建立TCPClient的时候我们其实就可以绑定端地址了。<br>  如果你使用的TCPClient tcp_Client=new TCPClient()的构造函数来创建的TCPClient,那么系统会认为你没有人为的制定端地址，而会自动帮你制定端地址，在创建客户端的TCPClient时我们常常这样做，<br>  因为我们不关心客户端的端地址。如果是服务器监听呢？在服务器监听时我们会使用例外一个类，叫做TCPListener，接下来我会讲到。我们可以利用TCPClient(IPEndPoint)来构造一个绑定到固定端地址的TCPClient类。例如：</p>
-<pre><code>TcpClient tcp_Client = new TcpClient(localEP);
-</code></pre><p><strong>如何监听套接字？</strong></p>
-<p>   到现在为此我们还没讨论如何监听一个套接字。在传统的socket编程中，我们创建一个套接字，然后把它绑定到一个端地址，而后调用Listen()来监听套接字。而在C#中，我们利用TCPListener来帮我们完成这些工作。让我们先来看看如何在C#监听套接字。</p>
-<pre><code>IPEndPointlocalEP = new IPEndPoint(IPAddress.Parse(&quot;127.0.0.1&quot;),6666);
-TcpListenerListener = new TcpListener(localEP);
-Listener.Start(10);
-</code></pre><p>  我们首先创建需要绑定的端地址，而后创建监听类，并利用其构造函数将其绑定到端地址，然后调用Start(int number)方法来真正实施监听。这与我们传统的socket编程不同。以前我们都是先创建一个socket，然后再创建一个sockaddr_in的结构体。我想你应该开始感受到了C#的优势了，它帮我们省去了很多低级、繁琐的工作，让我们能够真正专注于我们的软件架构和设计思想。</p>
-<p><strong>如何接受客户端连接？</strong></p>
-<p>  接听套接字后面自然就是接受TCP连接了。我们利用下面一句话来完成此工作：</p>
-<pre><code>TcpClient remoteClient =Listener.AcceptTcpClient();
-</code></pre><p>  类似于accept函数来返回一个socket,利用TCPListener类的AcceptTcpClient方法我们可以得到一个与客户端建立了连接的TCPClient类，<br>  而由TCPClient类来处理以后与客户端的通信工作。我想你应该开始理解为什么会存在TCPClient和TCPListener两个类了。<br>  这两个类的存在有着更加明细的区分，让监听和后续的通信真正分开，让程序员也更加容易理解和使用了。</p>
-<p>这里我还得补充一点：监听是一个非阻塞的操作<code>Listener.Start()</code>，而接受连接是一个阻塞操作<code>Listener.AcceptTcpClient</code>。</p>
-<p>说了这么多，还不如来个实例来的明确。接下来，我会通过一个简单的控制台聊天程序来如何使用这些。先贴代码吧！</p>
-<p>服务器端：</p>
-<pre><code>using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-
-namespace Demo
-{
-    class Program
-    {
-        static void Main(string[]args)
-        {
-            byte[]SendBuf = Encoding.UTF8.GetBytes(&quot;Hello,Client!&quot;);    //发给客户端的消息；
-            IPEndPointlocalEP = new IPEndPoint(IPAddress.Parse(&quot;127.0.0.1&quot;),6666);        //本地端地址
-            TcpListenerListener = new TcpListener(localEP);            //建立监听类，并绑定到指定的端地址
-            Listener.Start(10);           //开始监听                                                            
-            Console.WriteLine(&quot;Server is listening...&quot;);                           
-            TcpClientremoteClient = Listener.AcceptTcpClient();  //等待连接（阻塞）
-            Console.WriteLine(&quot;Client:{0} connected!&quot;,remoteClient.Client.RemoteEndPoint.ToString()) ;     //打印客户端连接信息；
-            remoteClient.Client.Send(SendBuf);     //发送欢迎信息；
-            remoteClient.Close();                  //关闭连接；
-        }
-    }
-}
-</code></pre><p>客户端:</p>
-<pre><code>using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.Net.Sockets;
-
-namespace Demo_Client
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            byte[] RecvBuf=new byte[1024];                    //申请接收缓存；
-            int RecvBytes = 0;                                            //接收字节数；
-            string recvmsg=null;                                      //接收消息；
-
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(&quot;127.0.0.1&quot;), 6666);      //远程服务器端地址；
-            TcpClient remoteServer = new TcpClient();                   //创建TCPClient类来与服务器通信；
-            remoteServer.Connect(remoteEP);                                  //调用connect方法连接远端服务器；
-            Console.WriteLine(&quot;I&apos;m using {0}.&quot;, remoteServer.Client.LocalEndPoint);          //打印自己使用的端地址；
-            RecvBytes=remoteServer.Client.Receive(RecvBuf);                           //接受服务器发送过来的消息；
-            recvmsg=Encoding.UTF8.GetString(RecvBuf,0,RecvBytes);          //将接受到的字节码转化为string类型；
-            Console.WriteLine(&quot;Server says:{0}.&quot;, recvmsg);              //打印欢迎信息；
-        }
-    }
-}
-</code></pre><p>   在C#网络编程中，我们要用到两个名空间，分别是System.Net和System.Net.Socket。<br>   可能有人会有这样的疑惑，干嘛要申请一个Byte数组。我们知道，在传统socket编程中，我们都是用char<em>来发送或者接受消息的，<br>   其实char</em>和Byte[]是同源的。他们都是一个Byte，而使用Byte[]能更易于人们理解和转化为其他类型。我们知道网络间传输的字节流，而Byte[]刚好符合了这个思想。<br>   如果对以上类的用法不理解或者不熟悉的话，建议查看MSDN，上面讲解的很详细。</p>
-<p>现在看看运行效果：</p>
-<p><img src="http://hi.csdn.net/attachment/201110/2/0_1317579792B9CZ.gif" alt="result"></p>
-<p>图3 运行效果（左为服务器，右为客户端）</p>
-<p>  好啦，到这里我们C#网络编程初步之TCP基本上算告一段落了，我只讲解了最为基础的部分，仅做抛砖引玉的作用。每个类的使用千变万化，希望你能找到最适合自己使用方法。现在你可以对比以前类似程序的代码了，看看我前面有没有说错。而且，越到后来你会越来越体会到C#人性化的一面。</p>
-<p>  后期的博文中，我会更新C#网络编程初步之UDP.本人更喜欢利用UDP来进行通信，至于为什么我已经说过了。以后，我会逐步写一些网络编程的高级内容，例如异步通信、多线程编程，并关注程序员经常遇到的一些棘手问题，比如TCP边界的确定等等。有机会，我也会同大家讨论网络编程中常用的软件设计思想与架构。</p>
-<p>（本文图1、图2来自互联网，有部分信息来自MSDN。如需转载本文，请注明出处！谢谢）</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;strong&gt;阅读背景：本文针对有C#的初学者而写的，主要讲解如何利用C#进行网络编程。&lt;br&gt;如果你已经有一些网络编程的经验（只需要懂得网络编程的基本常识即可），并且理解C#的基本语法，那么这篇文章可以很快地带你进入C#网络编程的世界。&lt;br&gt;如果你的基础不好，也不要紧
-    
-    </summary>
-    
-      <category term="C#" scheme="http://michael-j.net/categories/C/"/>
-    
-    
-      <category term="C# tcp udp network" scheme="http://michael-j.net/tags/C-tcp-udp-network/"/>
     
   </entry>
   
