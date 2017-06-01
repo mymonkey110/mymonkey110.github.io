@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://michael-j.net/"/>
-  <updated>2017-05-21T14:36:06.661Z</updated>
+  <updated>2017-06-01T11:05:48.549Z</updated>
   <id>http://michael-j.net/</id>
   
   <author>
@@ -14,6 +14,55 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>访问控制：为你的云上业务再加一把锁</title>
+    <link href="http://michael-j.net/2017/06/01/%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%EF%BC%9A%E4%B8%BA%E4%BD%A0%E7%9A%84%E4%BA%91%E4%B8%8A%E4%B8%9A%E5%8A%A1%E5%86%8D%E5%8A%A0%E4%B8%80%E6%8A%8A%E9%94%81/"/>
+    <id>http://michael-j.net/2017/06/01/访问控制：为你的云上业务再加一把锁/</id>
+    <published>2017-06-01T10:56:02.000Z</published>
+    <updated>2017-06-01T11:05:48.549Z</updated>
+    
+    <content type="html"><![CDATA[<p>企业上云首当其冲的就是要解决安全性的问题，是否满足企业对安全的诉求成了影响其是否上云的一个十分重要的因素之一。安全是一个很大的话题，从底层资源数据的安全到上层应用访问的安全，从访问客体（资源或服务）的安全到访问主体（人或者第三方服务）的安全，这些都属于安全的范畴之内。访问控制正是从资源访问的主客体关系出发，解决企业对资源访问的权限控制的需求。</p>
+<p>维基百科对<strong><em>访问控制</em></strong>的定义如下：</p>
+<blockquote>
+<p>访问控制是指允许或禁止某人使用某项资源的能力。</p>
+</blockquote>
+<p>云环境下的访问控制使得这个问题变得复杂，我曾写过一篇<a href="http://michael-j.net/2017/03/07/%E5%AF%B9%E4%BA%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%80%9D%E8%80%83/">对云环境下访问控制系统的思考</a>来阐述这个问题。从2.14号上线访问控制以来，接入访问控制的业务越来越多，截止目前已有六大业务支持访问控制；同时，访问控制还对云服务提供了支持，用户可以授权给易盾和视频云来访问其在NOS（网易对象存储）的数据资源。现在，你可以自定义访问控制策略，通过一套特定DSL语法来定义权限。根据自己的实际使用场景和组织架构来定义对权限的需求，这具有十分重要的意义。</p>
+<p>举个例子，如果不允许某某子账号删除<code>avatar</code>桶中<code>file-1.png</code>的图片，而允许其对其他任何文件有所有的控制权限，那么可以定义如下的策略来达到这个目的。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"version"</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">"statement"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"action"</span>: [</div><div class="line">                <span class="string">"comb:nos:DeleteObject"</span></div><div class="line">            ],</div><div class="line">            <span class="attr">"effect"</span>: <span class="string">"deny"</span>,</div><div class="line">            <span class="attr">"resource"</span>: [</div><div class="line">                <span class="string">"comb:nos:*:*:*:avatar/file-1.png"</span></div><div class="line">            ]</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"action"</span>: [</div><div class="line">                <span class="string">"comb:nos:*"</span></div><div class="line">            ],</div><div class="line">            <span class="attr">"effect"</span>: <span class="string">"allow"</span>,</div><div class="line">            <span class="attr">"resource"</span>: [</div><div class="line">                <span class="string">"comb:nos:*:*:*:*"</span></div><div class="line">            ]</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过语言来定义权限，用户将获得十分灵活的权限控制，当然也包含了细粒度的权限控制。使用DSL来定义权限的做法很早之前就存在了，可以追溯到2001年的<a href="https://en.wikipedia.org/wiki/XACML" target="_blank" rel="external">XACML</a>时代。目前主流的云计算厂商也均采用这种方式来描述权限。我们采用了业界相同的命名方式来降低用户的理解成本。这里对策略语法做一个简单的介绍。</p>
+<p>策略语法就是有着一定约束关系的JSON格式数据，由<code>version</code>和<code>statement</code>两个部分组成。<code>version</code>目前只支持1，而<code>statement</code>则是描述策略的具体形式。<code>statement</code>由三个部分组成，<code>action</code>、<code>effect</code>和<code>resource</code>，这三个子句构成了访问控制最为核心的三个部分。</p>
+<ul>
+<li><code>effect</code>表示授权类型，只能是<code>allow</code>（允许）或者<code>deny</code>（拒绝）。</li>
+<li><p><code>action</code>表示动作，组成结构为<code>product:service-name:action-name</code>。<code>product</code>目前只支持<code>comb</code>，<code>service-name</code>代表基础服务（蜂巢）下的服务，目前已支持的服务如下：</p>
+<p>服务代号 | 服务名称<br>— | —<br>nos | 对象存储<br>nlb | 负载均衡<br>rds | 关系型数据库<br>mongodb | MongoDB<br>ncr | Redis缓存<br>cdn | CDN</p>
+<p><code>action-name</code>表示具体动作的名称，例如nos支持<code>GetBucket</code>、<code>PutObject</code>等动作，cdn支持<code>CreateDomain</code>、<code>DisableDomain</code>等等，具体的动作请参考对应服务的文档。</p>
+</li>
+<li><p><code>resource</code>表示资源，组成结构为<code>product:service-name:region:az:account-id:resource-descriptor</code>。<code>product</code>和<code>service-name</code>和<code>action</code>中的意义相同，<code>region</code>表示地域，<code>az</code>表示可用域，目前只支持<code>*</code>，<code>account-id</code>是用户的主账号id，目前也只能填入<code>*</code>，<code>resource-descriptor</code>是具体资源的描述符。<code>resource-descriptor</code>根据具体的服务会有变化，整体上是树形结构的。例如：<code>bucket-1/file-1.png</code>可以表示nos中<code>bucket-1</code>的桶中的<code>file-1.png</code>文件，而<code>instance/nlb-1</code>可以表示nlb中实例名称为<code>nlb-1</code>的实例。具体的规则请参考对应服务的文档。</p>
+</li>
+</ul>
+<p><code>statement</code>语句本身是一个Array，你可以在其中最多定义5条子句。这样就允许你将多条策略组合在一个策略里面，也可以根据需要将策略拆改，选择权在你手上。</p>
+<p>通过上面的策略语言，企业完全可以根据自身的实际需要来定义权限，具有非常大的灵活性和自由度。如果你以前使用过其他云的访问控制产品，那么上手会很快。如果是第一次接触此类产品，也不用担心，我们提供了一个强大了“编译器”来检查你的策略语法是否合法，并提供简单直观的错误展示来帮你迅速定位问题，如下图所示。</p>
+<img src="/2017/06/01/访问控制：为你的云上业务再加一把锁/compile_error.png" alt="错误提示" title="错误提示">
+<p>另外，访问控制还提供了了<code>子账号</code>、<code>组</code>和<code>角色</code>来满足企业对访问主体描述性的需求，企业可以根据自身的组织架构和研发模式来组合使用这些身份。</p>
+<p>掌握了授权策略后，理解鉴权的执行流程也是很重要的。鉴权流程按照Deny优先原则执行，如果有显式的Deny，那么直接拒绝；如果有显式的allow，那么则允许，否则也拒绝。具体流程如下。</p>
+<img src="/2017/06/01/访问控制：为你的云上业务再加一把锁/auth_flow.png" alt="鉴权流程" title="鉴权流程">
+<p>在授权时请遵循最小权限原则，即根据用户的需要，将刚好能满足其需求的权限赋予给他，这样有助于规避一些越权执行的问题。除此之外，最佳实践还包含及时收回用户不再需要的权限，尽量通过组和角色来授权等等。详细的文档可以参考访问控制的官方文档。</p>
+<p>通过以上的介绍，不知道你是否对访问控制有一个大致的了解。如果还是有些云里雾里，那不如自己去动手定义一个属于自己的访问策略吧！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      企业上云首当其冲的就是要解决安全性的问题，是否满足企业对安全的诉求成了影响其是否上云的一个十分重要的因素之一。
+    
+    </summary>
+    
+      <category term="云计算" scheme="http://michael-j.net/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+    
+    
+      <category term="访问控制 cloud 云计算 DSL" scheme="http://michael-j.net/tags/%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6-cloud-%E4%BA%91%E8%AE%A1%E7%AE%97-DSL/"/>
+    
+  </entry>
   
   <entry>
     <title>评论从多说迁移到Disqus</title>
@@ -365,7 +414,7 @@
 <p><a href="https://www.gitbook.com/book/mymonkey110/zookeeper-distributed-process-coordination" target="_blank" rel="external">GitBook阅读地址</a></p>
 <p><a href="https://github.com/mymonkey110/zookeeper-book/blob/master/SUMMARY.md" target="_blank" rel="external">GitHub阅读地址</a></p>
 <p>由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献：</p>
-<p>参与讨论：邮件列表：<a href="&#x6d;&#97;&#x69;&#108;&#116;&#111;&#58;&#122;&#x6b;&#95;&#x74;&#x72;&#97;&#x6e;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#x40;&#x67;&#x72;&#x6f;&#x75;&#112;&#x73;&#46;&#x31;&#54;&#51;&#x2e;&#99;&#111;&#x6d;">&#122;&#x6b;&#95;&#x74;&#x72;&#97;&#x6e;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#x40;&#x67;&#x72;&#x6f;&#x75;&#112;&#x73;&#46;&#x31;&#54;&#51;&#x2e;&#99;&#111;&#x6d;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
+<p>参与讨论：邮件列表：<a href="&#x6d;&#97;&#105;&#108;&#x74;&#111;&#58;&#x7a;&#x6b;&#95;&#116;&#114;&#97;&#x6e;&#x73;&#108;&#x61;&#x74;&#x6f;&#x72;&#x40;&#103;&#x72;&#111;&#x75;&#x70;&#115;&#x2e;&#x31;&#54;&#x33;&#x2e;&#x63;&#x6f;&#x6d;">&#x7a;&#x6b;&#95;&#116;&#114;&#97;&#x6e;&#x73;&#108;&#x61;&#x74;&#x6f;&#x72;&#x40;&#103;&#x72;&#111;&#x75;&#x70;&#115;&#x2e;&#x31;&#54;&#x33;&#x2e;&#x63;&#x6f;&#x6d;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
 <p>部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。</p>
 <p>在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git clone git@github<span class="selector-class">.com</span>:user/zookeeper-book<span class="selector-class">.git</span></div><div class="line">$ cd zookeeper-book</div><div class="line">$ git config user<span class="selector-class">.name</span> <span class="string">"yourname"</span></div><div class="line">$ git config user<span class="selector-class">.email</span> <span class="string">"your email"</span></div></pre></td></tr></table></figure>
@@ -1173,62 +1222,6 @@
     
     
       <category term="websocket" scheme="http://michael-j.net/tags/websocket/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>利用Tair实现分布式并发锁</title>
-    <link href="http://michael-j.net/2014/12/23/%E5%88%A9%E7%94%A8Tair%E5%AE%9E%E7%8E%B0%E5%85%A8%E5%B1%80%E5%B9%B6%E5%8F%91%E9%94%81/"/>
-    <id>http://michael-j.net/2014/12/23/利用Tair实现全局并发锁/</id>
-    <published>2014-12-23T00:00:00.000Z</published>
-    <updated>2016-08-14T12:52:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近大量使用到了Tair来控制并发，有点心得，总结如下。</p>
-<ul>
-<li><p>利用Tair实现全局并发锁</p>
-<p> 现在基本上线上服务器都是集群环境，那么当我们需要对中心化数据（例如:Tair、数据库）的同一内容进行读写时就会碰到并发问题，这是一种非常常见的需求。解决并发问题的方法无非有两种，在并发点控制并发或者在并发源头控制。<br><img src="http://img3.tbcdn.cn/L1/461/1/48437662f3c9714c3dafff4c0a29fe84215571ba" alt="_"></p>
-<p> 图画的有点丑。并发点控制最常用的一种方式就是使用锁，每个需要访问数据的线程都需要先获取锁，然后才能去访问数据库。根据获取锁的策略的不同，又可以根据不同纬度分为乐观锁、悲观锁，忙等、闲等，互斥锁、读写锁等等。</p>
-<p> 在并发源头控制就是利用第三方的工具，一般是消息队列来将并发访问串行化，然后由统一的数据操作者来访问数据。消息队列的使用不在本文的讨论范文内。比较有名的开源消息队列有,<a href="http://www.rabbitmq.com/" target="_blank" rel="external">RabbitMQ</a>,<a href="http://zeromq.org/" target="_blank" rel="external">ZeroMQ</a>。当然,公司内部也有对应的产品，如<a href="http://baike.corp.taobao.com/index.php/Notify" target="_blank" rel="external">Notify</a>,<a href="http://gitlab.alibaba-inc.com/middleware/metaq3/wikis/what_is_metaq" target="_blank" rel="external">MetaQ</a>。</p>
-<p>由于在分布式环境中，要实现全局的并发锁，那么我们必须借助第三方的服务来进行协调。数据库和缓存经常会成为我们的优先选择。出于性能的考虑，一般选用缓存来实现全局并发锁，其中的关键也就是借助Tair的<a href="http://baike.corp.taobao.com/index.php/Faq#.E4.BB.80.E4.B9.88.E6.98.AFversion.EF.BC.9F" target="_blank" rel="external">Version</a>控制，相比已经有很多人已经在这样做了。Tair提供了以下API：</p>
-<p><code>ResultCode put(int namespace, Object key, Serializable value, int version, int expireTime)</code></p>
-<p>利用该API实现并发控制轻而易举,伪代码如下：</p>
-<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">//加锁</span></div><div class="line">	<span class="keyword">public</span> <span class="built_in">boolean</span> lock(<span class="keyword">String</span> <span class="built_in">key</span>, <span class="built_in">int</span> timeOut) &#123;</div><div class="line">         ResultCode rc = tairManager.put(NAMESPACE, <span class="built_in">key</span>, DEFAULT_VALUE, INIT_VERSION, timeOut);</div><div class="line">         <span class="keyword">return</span> rc!=<span class="keyword">null</span>&amp;&amp;ResultCode.SUCCESS.equals(rc)?<span class="keyword">true</span>:<span class="keyword">false</span>;</div><div class="line">     &#125;</div><div class="line">     </div><div class="line">     <span class="comment">//解锁</span></div><div class="line">     <span class="keyword">public</span> <span class="built_in">boolean</span> unlock(<span class="keyword">String</span> <span class="built_in">key</span>) &#123;</div><div class="line">         ResultCode rc = tairManager.invalid(NAMESPACE, <span class="built_in">key</span>);</div><div class="line"><span class="keyword">return</span> rc!=<span class="keyword">null</span>&amp;&amp;ResultCode.SUCCESS.equals(rc)?<span class="keyword">true</span>:<span class="keyword">false</span>;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>  这主要是利用了Tair的VERSION特性。如果KEY不存在的话，传入一个固定的初始化VERSION，Tair会在保存这个缓存的同时设置这个缓存的VERSION为你传入的<em>VERSION+1</em>；然而KEY如果已经存在，Tair会校验你传入的VERSION是否等于现在这个缓存的VERSION，如果相等则允许修改，否则将失败。  其过程如下图所示：</p>
-<p><img src="http://img2.tbcdn.cn/L1/461/1/c8f6cdafb3401daf724c9e0649f69ce9de71b057" alt="global_lock"></p>
-<p>   这是一个很通用的过程，但是却能涵盖大部分的场景。其实理解这个过程非常简单，这里可以把其想象成受精卵形成的过程。虽然有成千上万个精子会进入卵巢，但当第一个精子和卵子结合以后就会形成一层隔离层，以阻止其他精子的进入。而这里的隔离层就类似于TAIR的<a href="http://baike.corp.taobao.com/index.php/Faq#.E4.BB.80.E4.B9.88.E6.98.AFversion.EF.BC.9F" target="_blank" rel="external">VERSION</a>。如果想知道更多过程可以参考<a href="http://baike.corp.taobao.com/index.php/Faq#.E4.BB.80.E4.B9.88.E6.98.AFversion.EF.BC.9F" target="_blank" rel="external">VERSION</a>的文档。</p>
-<ul>
-<li><p>利用Tair实现全局TOP-N并发锁</p>
-<p>全局TOP-N并发锁是我自己想出来的一个名字，有点不明觉厉吧。实际业务中我们可能会遇到这样一种情况，在短时间内会有大量的并发来获取某种资源，但是我们这个资源又有数量限制。例如，抢火车票，在某一时刻将1000张火车票发出去，假如有大量的用户在同一时间来抢这些火车票就会形成并发，同时我们又有着很高的性能要求。以抢火车票为例，下面是我的思考过程。</p>
-<p>因为我需要控制并发，要告诉第1001个用户你没有抢到，那么我肯定需要一个计数器来保存火车票发售的实时情况，那么很容易就写出了以下伪代码：</p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="keyword">get</span>(ticker_counter)&lt;<span class="number">1000</span>)) &#123;</div><div class="line">    <span class="keyword">bool</span> lockFlag=<span class="keyword">lock</span>(key,<span class="number">60</span>);</div><div class="line">	<span class="keyword">if</span>(lockFlag) &#123;</div><div class="line">		<span class="keyword">int</span> counter=<span class="keyword">get</span>(ticker_counter);</div><div class="line">		<span class="keyword">if</span>(++counter&lt;<span class="number">1000</span>) &#123;</div><div class="line">			<span class="keyword">set</span>(ticker_counter=counter)</div><div class="line">		&#125;</div><div class="line">		unlock(key);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>  首先获取当前计数器的值，如果&gt;=1000则直接失败返回,表示已经被抢完了，但是如果&lt;1000，表示还没被抢完，则尝试去获取全局锁，如果获取成功则增加计数器的值，注意此时是需要再获取一次计数器的。但是这样会有一个明显的问题，就是当A获取了锁，正在执行增加计数器操作时，B也去尝试获取锁，此时必然是失败的。但是我现在就应该告诉他你已经失败了吗，你没有机会获得这张火车票了吗？显然不是。因为我们允许获取的资源是一个范围，那么当没有明确地表示现在资源已经超出这个返回了或者没有资源了，那么现在所有尝试得到资源的线程或者用户都是有机会的。此时，书中的一个概念浮现出来——信号量。这种业务场景正好是信号量技术能够解决的。但是在分布式环境下如何解决这个问题呢。</p>
-<p>  我想到了Linux环境下编程时的很多技术。其中就有一个很这个业务场景非常相似的API，就是POSIX系列里面的<code>pthread_cond_wait()</code>和<code>pthread_cond_signal()</code>。前者会一直阻塞直到等待的资源变为可用，而后者会唤醒一个正在等待某个资源的线程。如果有有这两个语义的API存在的话就会变得非常简单，伪代码将变为：</p>
-  <figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(<span class="keyword">get</span>(ticker_counter)&lt;<span class="number">1000</span>)) &#123;</div><div class="line">	    pthread_cond_wait();</div><div class="line">		<span class="keyword">int</span> counter=<span class="keyword">get</span>(ticker_counter);</div><div class="line">		<span class="keyword">if</span>(++counter&lt;<span class="number">1000</span>) &#123;</div><div class="line">			<span class="keyword">set</span>(ticker_counter=counter)</div><div class="line">		&#125;</div><div class="line">		pthread_cond_signal();</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>  只可惜在分布式环境下没有这两个语义的API操作存在，那么久不得不转化思维。之所以我需要这两个语义的API存在是因为我希望在A线程完成工作以后，将这个状态/消息通知到其他在等待的线程，并且这些线程是分布式的。其实这里是可以使用到消息模型的。notify会选择集群中的一台服务器投递消息，这就可以作为唤醒操作。所有的worker一开始都去监听notify的消息，直到其中一个worker收到，然后去checkAndInc(counter)，最后再发出一个消息，如此循环就能达到目的。最后只需要增加一个Trigger,在最开始执行的时候直接去执行，而不用等待notify消息，就能完成完整的流程。但是，如此简单地一个功能，真的要实现的这么复杂吗？当然不行，什么时候都要坚持KISS原则。</p>
-<p>  其实，我最终的目的很简单，就是增加一个计数器的值，然后达到某一上线时希望能够得到一个错误返回。因为在做以前一个项目时使用到了Tair中计数器的功能，带着侥幸的心理重新去找Tair的API，居然发现了这个重要API:</p>
-<pre><code>`Result&lt;Integer&gt; incr(int namespace, Serializable key, int value, int defaultValue, int expireTime, int lowBound, int upperBound)`
-</code></pre><p>  当我看到这个API的时候感悟良多，在此还是要感谢一下设计这个API的作者，因为这个API的设计就是为这种业务场景而生的。这个<code>incr()</code>操作可以指定一个范围段，如果value值不在这个范围段中就会报错。有个这个API那么伪代码就简化成以下：</p>
-  <figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="literal">result</span> = tairManager.incr(NAMESPACE, key, <span class="number">1</span>, <span class="number">0</span>, <span class="number">60</span>, <span class="number">0</span>, <span class="number">1000</span>);</div><div class="line"><span class="built_in">    return</span> ResultCode.SUCCESS.<span class="keyword">equals</span>(<span class="literal">result</span>.getRc())? <span class="literal">true</span> : <span class="literal">false</span></div></pre></td></tr></table></figure>
-<p>   这个多么的简洁和优雅,而且又有着很高的性能。如果有着类似的业务场景，推荐大家不妨试一下这个API。</p>
-<ul>
-<li><p>一点思考</p>
-<p>现在分布式计算越来越受到重视，随着去IOE的深入，大型机的时代一去不复返。但是分布式计算的流行使得程序员思考问题的方式也在发生改变，以前在单机上运行很好地系统，拿到分布式环境下可能就会出现各种问题。虽然整体架构发生了很大的变化，但是单机时代的很多思想还是值得我们去借鉴的。就比如信号量计算，PV操作。以前这些技术靠操作系统去实现就好了，但是在分布式环境下就很难实现这些以前看似很自然的功能。从某种程度上，这又为我们的中间件技术指明了发展的道路。如果哪一天业务程序员能在分布式环境中像在单机环境里编程，那分布式技术的发展就达到了一个新的高度。</p>
-</li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      最近大量使用到了Tair来控制并发，分享一下心得。
-    
-    </summary>
-    
-    
-      <category term="distributed lock" scheme="http://michael-j.net/tags/distributed-lock/"/>
     
   </entry>
   
