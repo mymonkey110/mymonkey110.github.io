@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://michael-j.net/2017/06/03/%E6%9E%B6%E6%9E%84%E5%B8%88%E5%BA%94%E8%AF%A5%E6%98%AF%E4%B8%80%E7%A7%8D%E8%A7%92%E8%89%B2%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E8%81%8C%E4%BD%8D/</loc>
+    <lastmod>2017-06-03T15:09:55.788Z</lastmod>
+    <data>
+        <display>
+        <title>架构师应该是一种角色，而不是一个职位</title>
+        <pubTime>2017-06-03T07:23:13.000Z</pubTime>
+        
+        <tag>架构设计</tag>
+         
+        <tag>软件开发理论</tag>
+         
+         
+           
+             
+              <breadCrumb title="翻译" url="http://michael-j.net/categories/%E7%BF%BB%E8%AF%91/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://michael-j.net/2016/09/20/%E8%AE%BAEnum%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7/</loc>
     <lastmod>2017-06-03T03:50:51.075Z</lastmod>
     <data>
@@ -239,11 +261,11 @@
         <title>对云环境下访问控制系统的思考</title>
         <pubTime>2017-03-07T12:16:56.000Z</pubTime>
         
+        <tag>架构设计</tag>
+         
         <tag>cloud</tag>
          
         <tag>访问控制</tag>
-         
-        <tag>架构设计</tag>
          
         <tag>DSL</tag>
          
