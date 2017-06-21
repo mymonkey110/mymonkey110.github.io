@@ -1,0 +1,1368 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="debug,调试,mysql,工具," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Michael-J" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="昨天QA跟我反馈说系统有几个接口反应很慢，起初我不以为意，因为这几个接口就是简单的写入和删除，最多就是再更新一下缓存，能有多慢。我让QA看看是不是网络抖动，延迟的问题，再看看我们的access_log里面响应时间是多少。QA说网络比较稳定，access_log里面显示要好几秒，这就让我有些诧异了。其中有一个删除用户XXX数据的接口响应特别慢，我们在测试环境去复现的时候果然复现了这个问题。当前端直接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次坑爹的Debug过程">
+<meta property="og:url" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/index.html">
+<meta property="og:site_name" content="Michael-J">
+<meta property="og:description" content="昨天QA跟我反馈说系统有几个接口反应很慢，起初我不以为意，因为这几个接口就是简单的写入和删除，最多就是再更新一下缓存，能有多慢。我让QA看看是不是网络抖动，延迟的问题，再看看我们的access_log里面响应时间是多少。QA说网络比较稳定，access_log里面显示要好几秒，这就让我有些诧异了。其中有一个删除用户XXX数据的接口响应特别慢，我们在测试环境去复现的时候果然复现了这个问题。当前端直接">
+<meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/jprofiler.png">
+<meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/我想到了.png">
+<meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/想不到吧.png">
+<meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/btrace.png">
+<meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/greys.png">
+<meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/jstat.png">
+<meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/啊.png">
+<meta property="og:updated_time" content="2017-06-21T10:57:42.794Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次坑爹的Debug过程">
+<meta name="twitter:description" content="昨天QA跟我反馈说系统有几个接口反应很慢，起初我不以为意，因为这几个接口就是简单的写入和删除，最多就是再更新一下缓存，能有多慢。我让QA看看是不是网络抖动，延迟的问题，再看看我们的access_log里面响应时间是多少。QA说网络比较稳定，access_log里面显示要好几秒，这就让我有些诧异了。其中有一个删除用户XXX数据的接口响应特别慢，我们在测试环境去复现的时候果然复现了这个问题。当前端直接">
+<meta name="twitter:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/jprofiler.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/"/>
+
+
+
+
+
+  <title>记一次坑爹的Debug过程 | Michael-J</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-64773431-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?157f1b4ead183afaf48d4513691034f4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Michael-J</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">一个修行路上的码农</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Michael Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Michael-J">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">记一次坑爹的Debug过程</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T18:46:22+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/debug/" itemprop="url" rel="index">
+                    <span itemprop="name">debug</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/21/记一次坑爹的Debug过程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/21/记一次坑爹的Debug过程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  2,215
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>昨天QA跟我反馈说系统有几个接口反应很慢，起初我不以为意，因为这几个接口就是简单的写入和删除，最多就是再更新一下缓存，能有多慢。我让QA看看是不是网络抖动，延迟的问题，再看看我们的<code>access_log</code>里面响应时间是多少。QA说网络比较稳定，<code>access_log</code>里面显示要好几秒，这就让我有些诧异了。其中有一个删除用户XXX数据的接口响应特别慢，我们在测试环境去复现的时候果然复现了这个问题。当前端直接点击删除的时候，接口过了8秒多才返回，这肯定不正常了，而且<code>access_log</code>也印证了这一现象。</p>
+<a id="more"></a>
+<p><code>access_log</code>如下所示：（后面的代码和日志我都以XXX来代替这次的业务场景）。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">10.180</span><span class="number">.9</span><span class="number">.150</span> - <span class="number">2017</span><span class="number">-06</span><span class="number">-20</span><span class="string">_15:</span><span class="number">58</span>:<span class="number">55.960</span> DELETE <span class="regexp">/v1/</span>xxx<span class="regexp">/user/</span>comb/region<span class="number">-1497945389492</span>-vfxil <span class="number">200</span> <span class="number">95</span> (<span class="number">9586</span> ms)</div><div class="line"><span class="number">10.180</span><span class="number">.9</span><span class="number">.150</span> - <span class="number">2017</span><span class="number">-06</span><span class="number">-20</span><span class="string">_16:</span><span class="number">04</span>:<span class="number">00.239</span> DELETE <span class="regexp">/v1/</span>xxx<span class="regexp">/user/</span>comb/region<span class="number">-1497945389482</span>-yajym <span class="number">200</span> <span class="number">95</span> (<span class="number">4580</span> ms)</div></pre></td></tr></table></figure>
+<p>铁证如山，<code>access_log</code>显示了确实是我们接口响应慢了。这让我有些纳闷了，这个接口的业务场景非常简单，就是删除用户的一条XXX记录，并清除跟它相关的表信息，最后发出一个领域事件，由一个listener来清除缓存，代码如下。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="meta">@Transactional</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">deleteUserXXX</span><span class="params">(<span class="keyword">long</span> uid, String code, String name)</span> <span class="keyword">throws</span> XXXNotFoundException </span>&#123;</div><div class="line">    Optional&lt;XXX&gt; result = getUserXXX(uid, code, name);</div><div class="line">    XXX xxx = result.orElseThrow(PolicyNotFoundException::<span class="keyword">new</span>);</div><div class="line">    <span class="keyword">long</span> xxxId = xxxx.getId();</div><div class="line"></div><div class="line">    xxxRepository.clearAllVersion(xxxId);</div><div class="line">    authorizeService.revokeXXXRefFromYYY(primaryAccountId, xxxId);</div><div class="line">    authorizeService.revokeXXXRefFromZZZ(primaryAccountId, xxxId);</div><div class="line">    xxxRepository.delete(xxxId);</div><div class="line"></div><div class="line">    DomainEventPublisher.publish(XXXEvent.newDeleteEvent(xxx));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>关键是这个接口响应慢也不是每次都出现，响应慢的概率大概有50%，还是比较好复现的。还一个比较重要的信息就是，我们的SQL日志很快就打印完了，基本上我在<code>POSTMAN</code>一发出请求，我们的SQL也就执行完成了。但是<code>POSTMAN</code>此时并没有请求，那么就是说我们还没有返回<code>response</code>给前端。</p>
+<p>怎么会这样？！不应该呀？难道是慢查询，索引的问题，我已经建了索引了呀，况且测试环境数据量这么小，不要索引也不至于这么慢啊！为了确定是不是慢查询的问题，我去咋们的APM工具(蜂巢的APM产品很强大，推荐大家使用)里面查询一下有没有捕获到慢查询的日志，结果很遗憾，并没有看到响应的慢查询日志。此时我就更困惑了。如果不是慢查询还能是什么。</p>
+<p>走投无路的我只能祭出神器了——<code>JProfiler</code>，一款专业的APM工具。在折腾完一番环境配置部署等问题以后，我的客户端重要可以连上测试环境的jvm进行<code>profiling</code>了。用上了<code>JProfiler</code>感觉档次提高了好多，好像马上就能把问题解决了。下图是<code>JProfiler</code>的显示的调用过程。</p>
+<img src="/2017/06/21/记一次坑爹的Debug过程/jprofiler.png" alt="JProfiler" title="JProfiler">
+<p>调到这里，我只想说WTF！JProfiler显示这个HTTP调用只用了44ms就完成了。</p>
+<p>我的内心又奔溃了，明明<code>access_log</code>显示花了8秒多，为啥<code>JProfiler</code>显示才44ms，难道<code>JProfiler</code>出错了？实际上，我更相信我自己的程序有问题，那为什么<code>JProfiler</code>显示我们的程序执行的很快呢？</p>
+<p>看来<code>JProfiler</code>不能用了，我又想了很久。 <img src="/2017/06/21/记一次坑爹的Debug过程/我想到了.png" alt="我想到了.png" title=""></p>
+<p>难道是因为我agent加的太多了，因为测试环境为了统计需要jvm参数里面加了jacoco的agent；还有，apm的agent。这么多agent会不会导致某种性能问题了，虽然我自己都不太相信，但本着大胆尝试地原则我果断去掉了两个agent再重试了几次，现象依旧！</p>
+ <img src="/2017/06/21/记一次坑爹的Debug过程/想不到吧.png" alt="想不到吧.png" title="">
+<p>幸好我内心强大，我还是很珍惜每次调试诡异BUG的机会的，因为能学到很多东西。此时的我已经没有什么手段了，事实摆着那里，接口响应很慢，也没有看到慢查询，<code>JProfiler</code>也没用了。然后我又祭出了我的第二个神器——<code>BTrace</code>。</p>
+<p>相信很多人用过<code>BTrace</code>，这是在线调试的神器！虽然我不太想用这玩意，因为它要自己写脚本，内心有点排斥。但是我也没有别的办法了。准备再去看看<code>BTrace</code>的文档的时候发现<code>BTrace</code>的官方文档网站已经关了，WTF!</p>
+ <img src="/2017/06/21/记一次坑爹的Debug过程/btrace.png" alt="btrace.png" title="">
+<p>我突然想到了以前看到过的另外一款神器——<code>Greys</code>。<code>Greys</code>也是一款在线调试神器，是阿里开源的一个工具。以前我没有用过这个工具，这次形式所迫，不得以而学之。看完文档之后发现它非常强大，不比<code>BTrace</code>弱，而且对开发者比较友好，至少不用去写脚本。我用<code>trace</code>跟踪了一下那个<code>deleteUserXXX</code>方法，结果如下：</p>
+ <img src="/2017/06/21/记一次坑爹的Debug过程/greys.png" alt="greys.png" title="">
+<p>啥？为啥我发一次请求这个方法会被调用两次？而且还是被同一个线程执行两次？为此我专门在代码入口处加了一条无用的log来看看这个方法到底被执行了几次。log显示这个方法只执行了一次。那为什么<code>trace</code>显示执行了两次，我为此纠结了很久，有知道的小伙伴可以告诉我。</p>
+<p><code>Greys</code>没有提供太多有价值的线索给我，唯一有价值的信息就是那个线程名称。此时，我又灵关一闪，难道是<code>Stop The World</code> ？ 因为我用的同步请求的方式，所以一个request只会被一个thread处理，而又没有满日志打印，说明不是数据库的问题，只能是jvm本身的问题，难道请求的时候触发了GC ？ 又本着大胆尝试的精神我果断开启了<code>jstat</code>观察GC的情况。</p>
+<img src="/2017/06/21/记一次坑爹的Debug过程/jstat.png" alt="jstat.png" title="">
+<p>观察很久以后发现自己还是太年轻。别说FGC了，连YGC都没几次，根本不是GC的问题。这可如何是好？对了，还有一个工具没试过，<code>jstack</code>，反正这么多工具都用了，也不差这一个了。</p>
+<p>在请求过程中我用<code>jstack</code>来查看线程的运行状态，得到了如下的运行堆栈。堆栈显示<code>socket</code>在读取什么东西<br>，到底是什么东西呢？</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="string">"http-nio-8080-exec-2"</span> <span class="number">#104</span> daemon prio=<span class="number">5</span> os_prio=<span class="number">0</span> tid=<span class="number">0</span>x0000000006b1b000 nid=<span class="number">0</span>x7392 runnable [<span class="number">0</span>x00007f74dece9000]</div><div class="line">   java<span class="selector-class">.lang</span><span class="selector-class">.Thread</span><span class="selector-class">.State</span>: RUNNABLE</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.socketRead0</span>(Native Method)</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.socketRead</span>(SocketInputStream<span class="selector-class">.java</span>:<span class="number">116</span>)</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.read</span>(SocketInputStream<span class="selector-class">.java</span>:<span class="number">170</span>)</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.read</span>(SocketInputStream<span class="selector-class">.java</span>:<span class="number">141</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span><span class="selector-class">.fill</span>(ReadAheadInputStream<span class="selector-class">.java</span>:<span class="number">101</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span><span class="selector-class">.readFromUnderlyingStreamIfNecessary</span>(ReadAheadInputStream<span class="selector-class">.java</span>:<span class="number">144</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span><span class="selector-class">.read</span>(ReadAheadInputStream<span class="selector-class">.java</span>:<span class="number">174</span>)</div><div class="line">        - locked &lt;<span class="number">0</span>x000000076ef859b8&gt; (<span class="selector-tag">a</span> com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.readFully</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3008</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.reuseAndReadPacket</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3469</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.reuseAndReadPacket</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3459</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.checkErrorPacket</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3900</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.sendCommand</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">2527</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.sqlQueryDirect</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">2680</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.ConnectionImpl</span><span class="selector-class">.execSQL</span>(ConnectionImpl<span class="selector-class">.java</span>:<span class="number">2486</span>)</div><div class="line">        - locked &lt;<span class="number">0</span>x000000076ef7b928&gt; (<span class="selector-tag">a</span> com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.JDBC4Connection</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.ConnectionImpl</span><span class="selector-class">.commit</span>(ConnectionImpl<span class="selector-class">.java</span>:<span class="number">1555</span>)</div><div class="line">        - locked &lt;<span class="number">0</span>x000000076ef7b928&gt; (<span class="selector-tag">a</span> com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.JDBC4Connection</span>)</div><div class="line">        at org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.dbcp2</span><span class="selector-class">.DelegatingConnection</span><span class="selector-class">.commit</span>(DelegatingConnection<span class="selector-class">.java</span>:<span class="number">364</span>)</div><div class="line">        at org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.dbcp2</span><span class="selector-class">.DelegatingConnection</span><span class="selector-class">.commit</span>(DelegatingConnection<span class="selector-class">.java</span>:<span class="number">364</span>)</div><div class="line">        at org<span class="selector-class">.springframework</span><span class="selector-class">.jdbc</span><span class="selector-class">.datasource</span><span class="selector-class">.DataSourceTransactionManager</span><span class="selector-class">.doCommit</span>(DataSourceTransactionManager<span class="selector-class">.java</span>:<span class="number">279</span>)</div></pre></td></tr></table></figure>
+<p>我拿着堆栈信息一通Google，最终发现下面这两个网页：<br><a href="https://bugs.mysql.com/bug.php?id=74739" target="_blank" rel="external">ReadAheadInputStream hangs on socket read</a><br><a href="https://bugs.mysql.com/bug.php?id=74979" target="_blank" rel="external">Server query cache vs protocol issue</a></p>
+<p>啊哈，这个人的堆栈跟我们一样，这是MySQL的一个BUG。哈哈，我居然碰到了MySQL的一个BUG。似乎一个程序员在一个问题上调试了很久还没有找到原因时，总是急于把发现的蛛丝马迹套到某个相识的问题上，而且那个人跟我有着一样的运行堆栈！我现在多么希望就是这个原因啊！</p>
+<p>在<a href="https://bugs.mysql.com/bug.php?id=74979" target="_blank" rel="external">Bug #74979</a>的说明中表示这个影响的版本是MySQL 5.7.4，但是我的MySQL 版本是5.7.14。为了确认是否是MySQL的问题，我专门找DBA来一起看这个现象。</p>
+<p>起初，DBA也很诧异，SQL的执行速度是很快的，索引也没有问题，但是COMMIT很慢！这是为什么呢，我并不是MySQL专家，这么专业的事情还是主要交给DBA来分析。再和DBA复现了几次现象以后，DBA也有些纳闷了，再和其他的DBA沟通以后发现我的库所在的盘的IO很高，是磁盘IO的问题！WTF?!</p>
+<p>DBA在给我的库换了一块盘以后一切恢复正常了，但是我此时的内心是这样的！</p>
+<img src="/2017/06/21/记一次坑爹的Debug过程/啊.png" alt="啊.png" title="">
+<p>这个例子告诉我，有时候再多的分析也没有，不要想太多，想把基本的监控参数看清楚很重要！哈哈，当然，我再这个过程中又学到了很多新技能，就算这次坑爹的Debug过程花了我快1天半的时间，但我还是觉得很值得！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/wechat_pay.png" alt="Michael Jiang WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/alipay.png" alt="Michael Jiang Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Michael Jiang
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/" title="记一次坑爹的Debug过程">http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/debug/" rel="tag"># debug</a>
+          
+            <a href="/tags/调试/" rel="tag"># 调试</a>
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/工具/" rel="tag"># 工具</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/03/架构师应该是一种角色，而不是一个职位/" rel="next" title="架构师应该是一种角色，而不是一个职位">
+                <i class="fa fa-chevron-left"></i> 架构师应该是一种角色，而不是一个职位
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/avatar.jpg"
+               alt="Michael Jiang" />
+          <p class="site-author-name" itemprop="name">Michael Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mymonkey110" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mjxyz" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              朋友
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fegirl.com/" title="fegirl" target="_blank">fegirl</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://work-jlsun.github.io/" title="tom哥" target="_blank">tom哥</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Michael Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/';
+          this.page.identifier = '2017/06/21/记一次坑爹的Debug过程/';
+          this.page.title = '记一次坑爹的Debug过程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://michael-j.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

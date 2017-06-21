@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://michael-j.net/2017/06/21/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%9D%91%E7%88%B9%E7%9A%84Debug%E8%BF%87%E7%A8%8B/</loc>
+    <lastmod>2017-06-21T10:57:42.794Z</lastmod>
+    <data>
+        <display>
+        <title>记一次坑爹的Debug过程</title>
+        <pubTime>2017-06-21T10:46:22.000Z</pubTime>
+        
+        <tag>debug</tag>
+         
+        <tag>调试</tag>
+         
+        <tag>mysql</tag>
+         
+        <tag>工具</tag>
+         
+         
+           
+             
+              <breadCrumb title="debug" url="http://michael-j.net/categories/debug/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://michael-j.net/2017/06/03/%E6%9E%B6%E6%9E%84%E5%B8%88%E5%BA%94%E8%AF%A5%E6%98%AF%E4%B8%80%E7%A7%8D%E8%A7%92%E8%89%B2%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E8%81%8C%E4%BD%8D/</loc>
     <lastmod>2017-06-03T15:09:55.788Z</lastmod>
     <data>
@@ -57,11 +83,11 @@
         <title>Debug:Tomcat deploy twice</title>
         <pubTime>2015-10-30T02:46:31.000Z</pubTime>
         
-        <tag>debug</tag>
-         
         <tag>tomcat</tag>
          
         <tag>部署</tag>
+         
+        <tag>debug</tag>
          
          
            

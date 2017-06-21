@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://michael-j.net/"/>
-  <updated>2017-06-03T15:09:55.788Z</updated>
+  <updated>2017-06-21T10:57:42.794Z</updated>
   <id>http://michael-j.net/</id>
   
   <author>
@@ -14,6 +14,67 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>记一次坑爹的Debug过程</title>
+    <link href="http://michael-j.net/2017/06/21/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%9D%91%E7%88%B9%E7%9A%84Debug%E8%BF%87%E7%A8%8B/"/>
+    <id>http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/</id>
+    <published>2017-06-21T10:46:22.000Z</published>
+    <updated>2017-06-21T10:57:42.794Z</updated>
+    
+    <content type="html"><![CDATA[<p>昨天QA跟我反馈说系统有几个接口反应很慢，起初我不以为意，因为这几个接口就是简单的写入和删除，最多就是再更新一下缓存，能有多慢。我让QA看看是不是网络抖动，延迟的问题，再看看我们的<code>access_log</code>里面响应时间是多少。QA说网络比较稳定，<code>access_log</code>里面显示要好几秒，这就让我有些诧异了。其中有一个删除用户XXX数据的接口响应特别慢，我们在测试环境去复现的时候果然复现了这个问题。当前端直接点击删除的时候，接口过了8秒多才返回，这肯定不正常了，而且<code>access_log</code>也印证了这一现象。</p>
+<a id="more"></a>
+<p><code>access_log</code>如下所示：（后面的代码和日志我都以XXX来代替这次的业务场景）。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">10.180</span><span class="number">.9</span><span class="number">.150</span> - <span class="number">2017</span><span class="number">-06</span><span class="number">-20</span><span class="string">_15:</span><span class="number">58</span>:<span class="number">55.960</span> DELETE <span class="regexp">/v1/</span>xxx<span class="regexp">/user/</span>comb/region<span class="number">-1497945389492</span>-vfxil <span class="number">200</span> <span class="number">95</span> (<span class="number">9586</span> ms)</div><div class="line"><span class="number">10.180</span><span class="number">.9</span><span class="number">.150</span> - <span class="number">2017</span><span class="number">-06</span><span class="number">-20</span><span class="string">_16:</span><span class="number">04</span>:<span class="number">00.239</span> DELETE <span class="regexp">/v1/</span>xxx<span class="regexp">/user/</span>comb/region<span class="number">-1497945389482</span>-yajym <span class="number">200</span> <span class="number">95</span> (<span class="number">4580</span> ms)</div></pre></td></tr></table></figure>
+<p>铁证如山，<code>access_log</code>显示了确实是我们接口响应慢了。这让我有些纳闷了，这个接口的业务场景非常简单，就是删除用户的一条XXX记录，并清除跟它相关的表信息，最后发出一个领域事件，由一个listener来清除缓存，代码如下。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="meta">@Transactional</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">deleteUserXXX</span><span class="params">(<span class="keyword">long</span> uid, String code, String name)</span> <span class="keyword">throws</span> XXXNotFoundException </span>&#123;</div><div class="line">    Optional&lt;XXX&gt; result = getUserXXX(uid, code, name);</div><div class="line">    XXX xxx = result.orElseThrow(PolicyNotFoundException::<span class="keyword">new</span>);</div><div class="line">    <span class="keyword">long</span> xxxId = xxxx.getId();</div><div class="line"></div><div class="line">    xxxRepository.clearAllVersion(xxxId);</div><div class="line">    authorizeService.revokeXXXRefFromYYY(primaryAccountId, xxxId);</div><div class="line">    authorizeService.revokeXXXRefFromZZZ(primaryAccountId, xxxId);</div><div class="line">    xxxRepository.delete(xxxId);</div><div class="line"></div><div class="line">    DomainEventPublisher.publish(XXXEvent.newDeleteEvent(xxx));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>关键是这个接口响应慢也不是每次都出现，响应慢的概率大概有50%，还是比较好复现的。还一个比较重要的信息就是，我们的SQL日志很快就打印完了，基本上我在<code>POSTMAN</code>一发出请求，我们的SQL也就执行完成了。但是<code>POSTMAN</code>此时并没有请求，那么就是说我们还没有返回<code>response</code>给前端。</p>
+<p>怎么会这样？！不应该呀？难道是慢查询，索引的问题，我已经建了索引了呀，况且测试环境数据量这么小，不要索引也不至于这么慢啊！为了确定是不是慢查询的问题，我去咋们的APM工具(蜂巢的APM产品很强大，推荐大家使用)里面查询一下有没有捕获到慢查询的日志，结果很遗憾，并没有看到响应的慢查询日志。此时我就更困惑了。如果不是慢查询还能是什么。</p>
+<p>走投无路的我只能祭出神器了——<code>JProfiler</code>，一款专业的APM工具。在折腾完一番环境配置部署等问题以后，我的客户端重要可以连上测试环境的jvm进行<code>profiling</code>了。用上了<code>JProfiler</code>感觉档次提高了好多，好像马上就能把问题解决了。下图是<code>JProfiler</code>的显示的调用过程。</p>
+<img src="/2017/06/21/记一次坑爹的Debug过程/jprofiler.png" alt="JProfiler" title="JProfiler">
+<p>调到这里，我只想说WTF！JProfiler显示这个HTTP调用只用了44ms就完成了。</p>
+<p>我的内心又奔溃了，明明<code>access_log</code>显示花了8秒多，为啥<code>JProfiler</code>显示才44ms，难道<code>JProfiler</code>出错了？实际上，我更相信我自己的程序有问题，那为什么<code>JProfiler</code>显示我们的程序执行的很快呢？</p>
+<p>看来<code>JProfiler</code>不能用了，我又想了很久。 <img src="/2017/06/21/记一次坑爹的Debug过程/我想到了.png" alt="我想到了.png" title=""></p>
+<p>难道是因为我agent加的太多了，因为测试环境为了统计需要jvm参数里面加了jacoco的agent；还有，apm的agent。这么多agent会不会导致某种性能问题了，虽然我自己都不太相信，但本着大胆尝试地原则我果断去掉了两个agent再重试了几次，现象依旧！</p>
+ <img src="/2017/06/21/记一次坑爹的Debug过程/想不到吧.png" alt="想不到吧.png" title="">
+<p>幸好我内心强大，我还是很珍惜每次调试诡异BUG的机会的，因为能学到很多东西。此时的我已经没有什么手段了，事实摆着那里，接口响应很慢，也没有看到慢查询，<code>JProfiler</code>也没用了。然后我又祭出了我的第二个神器——<code>BTrace</code>。</p>
+<p>相信很多人用过<code>BTrace</code>，这是在线调试的神器！虽然我不太想用这玩意，因为它要自己写脚本，内心有点排斥。但是我也没有别的办法了。准备再去看看<code>BTrace</code>的文档的时候发现<code>BTrace</code>的官方文档网站已经关了，WTF!</p>
+ <img src="/2017/06/21/记一次坑爹的Debug过程/btrace.png" alt="btrace.png" title="">
+<p>我突然想到了以前看到过的另外一款神器——<code>Greys</code>。<code>Greys</code>也是一款在线调试神器，是阿里开源的一个工具。以前我没有用过这个工具，这次形式所迫，不得以而学之。看完文档之后发现它非常强大，不比<code>BTrace</code>弱，而且对开发者比较友好，至少不用去写脚本。我用<code>trace</code>跟踪了一下那个<code>deleteUserXXX</code>方法，结果如下：</p>
+ <img src="/2017/06/21/记一次坑爹的Debug过程/greys.png" alt="greys.png" title="">
+<p>啥？为啥我发一次请求这个方法会被调用两次？而且还是被同一个线程执行两次？为此我专门在代码入口处加了一条无用的log来看看这个方法到底被执行了几次。log显示这个方法只执行了一次。那为什么<code>trace</code>显示执行了两次，我为此纠结了很久，有知道的小伙伴可以告诉我。</p>
+<p><code>Greys</code>没有提供太多有价值的线索给我，唯一有价值的信息就是那个线程名称。此时，我又灵关一闪，难道是<code>Stop The World</code> ？ 因为我用的同步请求的方式，所以一个request只会被一个thread处理，而又没有满日志打印，说明不是数据库的问题，只能是jvm本身的问题，难道请求的时候触发了GC ？ 又本着大胆尝试的精神我果断开启了<code>jstat</code>观察GC的情况。</p>
+<img src="/2017/06/21/记一次坑爹的Debug过程/jstat.png" alt="jstat.png" title="">
+<p>观察很久以后发现自己还是太年轻。别说FGC了，连YGC都没几次，根本不是GC的问题。这可如何是好？对了，还有一个工具没试过，<code>jstack</code>，反正这么多工具都用了，也不差这一个了。</p>
+<p>在请求过程中我用<code>jstack</code>来查看线程的运行状态，得到了如下的运行堆栈。堆栈显示<code>socket</code>在读取什么东西<br>，到底是什么东西呢？</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="string">"http-nio-8080-exec-2"</span> <span class="number">#104</span> daemon prio=<span class="number">5</span> os_prio=<span class="number">0</span> tid=<span class="number">0</span>x0000000006b1b000 nid=<span class="number">0</span>x7392 runnable [<span class="number">0</span>x00007f74dece9000]</div><div class="line">   java<span class="selector-class">.lang</span><span class="selector-class">.Thread</span><span class="selector-class">.State</span>: RUNNABLE</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.socketRead0</span>(Native Method)</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.socketRead</span>(SocketInputStream<span class="selector-class">.java</span>:<span class="number">116</span>)</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.read</span>(SocketInputStream<span class="selector-class">.java</span>:<span class="number">170</span>)</div><div class="line">        at java<span class="selector-class">.net</span><span class="selector-class">.SocketInputStream</span><span class="selector-class">.read</span>(SocketInputStream<span class="selector-class">.java</span>:<span class="number">141</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span><span class="selector-class">.fill</span>(ReadAheadInputStream<span class="selector-class">.java</span>:<span class="number">101</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span><span class="selector-class">.readFromUnderlyingStreamIfNecessary</span>(ReadAheadInputStream<span class="selector-class">.java</span>:<span class="number">144</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span><span class="selector-class">.read</span>(ReadAheadInputStream<span class="selector-class">.java</span>:<span class="number">174</span>)</div><div class="line">        - locked &lt;<span class="number">0</span>x000000076ef859b8&gt; (<span class="selector-tag">a</span> com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.util</span><span class="selector-class">.ReadAheadInputStream</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.readFully</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3008</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.reuseAndReadPacket</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3469</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.reuseAndReadPacket</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3459</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.checkErrorPacket</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">3900</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.sendCommand</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">2527</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.MysqlIO</span><span class="selector-class">.sqlQueryDirect</span>(MysqlIO<span class="selector-class">.java</span>:<span class="number">2680</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.ConnectionImpl</span><span class="selector-class">.execSQL</span>(ConnectionImpl<span class="selector-class">.java</span>:<span class="number">2486</span>)</div><div class="line">        - locked &lt;<span class="number">0</span>x000000076ef7b928&gt; (<span class="selector-tag">a</span> com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.JDBC4Connection</span>)</div><div class="line">        at com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.ConnectionImpl</span><span class="selector-class">.commit</span>(ConnectionImpl<span class="selector-class">.java</span>:<span class="number">1555</span>)</div><div class="line">        - locked &lt;<span class="number">0</span>x000000076ef7b928&gt; (<span class="selector-tag">a</span> com<span class="selector-class">.mysql</span><span class="selector-class">.jdbc</span><span class="selector-class">.JDBC4Connection</span>)</div><div class="line">        at org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.dbcp2</span><span class="selector-class">.DelegatingConnection</span><span class="selector-class">.commit</span>(DelegatingConnection<span class="selector-class">.java</span>:<span class="number">364</span>)</div><div class="line">        at org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.dbcp2</span><span class="selector-class">.DelegatingConnection</span><span class="selector-class">.commit</span>(DelegatingConnection<span class="selector-class">.java</span>:<span class="number">364</span>)</div><div class="line">        at org<span class="selector-class">.springframework</span><span class="selector-class">.jdbc</span><span class="selector-class">.datasource</span><span class="selector-class">.DataSourceTransactionManager</span><span class="selector-class">.doCommit</span>(DataSourceTransactionManager<span class="selector-class">.java</span>:<span class="number">279</span>)</div></pre></td></tr></table></figure>
+<p>我拿着堆栈信息一通Google，最终发现下面这两个网页：<br><a href="https://bugs.mysql.com/bug.php?id=74739" target="_blank" rel="external">ReadAheadInputStream hangs on socket read</a><br><a href="https://bugs.mysql.com/bug.php?id=74979" target="_blank" rel="external">Server query cache vs protocol issue</a></p>
+<p>啊哈，这个人的堆栈跟我们一样，这是MySQL的一个BUG。哈哈，我居然碰到了MySQL的一个BUG。似乎一个程序员在一个问题上调试了很久还没有找到原因时，总是急于把发现的蛛丝马迹套到某个相识的问题上，而且那个人跟我有着一样的运行堆栈！我现在多么希望就是这个原因啊！</p>
+<p>在<a href="https://bugs.mysql.com/bug.php?id=74979" target="_blank" rel="external">Bug #74979</a>的说明中表示这个影响的版本是MySQL 5.7.4，但是我的MySQL 版本是5.7.14。为了确认是否是MySQL的问题，我专门找DBA来一起看这个现象。</p>
+<p>起初，DBA也很诧异，SQL的执行速度是很快的，索引也没有问题，但是COMMIT很慢！这是为什么呢，我并不是MySQL专家，这么专业的事情还是主要交给DBA来分析。再和DBA复现了几次现象以后，DBA也有些纳闷了，再和其他的DBA沟通以后发现我的库所在的盘的IO很高，是磁盘IO的问题！WTF?!</p>
+<p>DBA在给我的库换了一块盘以后一切恢复正常了，但是我此时的内心是这样的！</p>
+<img src="/2017/06/21/记一次坑爹的Debug过程/啊.png" alt="啊.png" title="">
+<p>这个例子告诉我，有时候再多的分析也没有，不要想太多，想把基本的监控参数看清楚很重要！哈哈，当然，我再这个过程中又学到了很多新技能，就算这次坑爹的Debug过程花了我快1天半的时间，但我还是觉得很值得！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;昨天QA跟我反馈说系统有几个接口反应很慢，起初我不以为意，因为这几个接口就是简单的写入和删除，最多就是再更新一下缓存，能有多慢。我让QA看看是不是网络抖动，延迟的问题，再看看我们的&lt;code&gt;access_log&lt;/code&gt;里面响应时间是多少。QA说网络比较稳定，&lt;code&gt;access_log&lt;/code&gt;里面显示要好几秒，这就让我有些诧异了。其中有一个删除用户XXX数据的接口响应特别慢，我们在测试环境去复现的时候果然复现了这个问题。当前端直接点击删除的时候，接口过了8秒多才返回，这肯定不正常了，而且&lt;code&gt;access_log&lt;/code&gt;也印证了这一现象。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="debug" scheme="http://michael-j.net/categories/debug/"/>
+    
+    
+      <category term="debug" scheme="http://michael-j.net/tags/debug/"/>
+    
+      <category term="调试" scheme="http://michael-j.net/tags/%E8%B0%83%E8%AF%95/"/>
+    
+      <category term="mysql" scheme="http://michael-j.net/tags/mysql/"/>
+    
+      <category term="工具" scheme="http://michael-j.net/tags/%E5%B7%A5%E5%85%B7/"/>
+    
+  </entry>
   
   <entry>
     <title>架构师应该是一种角色，而不是一个职位</title>
@@ -483,7 +544,7 @@
 <p><a href="https://www.gitbook.com/book/mymonkey110/zookeeper-distributed-process-coordination" target="_blank" rel="external">GitBook阅读地址</a></p>
 <p><a href="https://github.com/mymonkey110/zookeeper-book/blob/master/SUMMARY.md" target="_blank" rel="external">GitHub阅读地址</a></p>
 <p>由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献：</p>
-<p>参与讨论：邮件列表：<a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#58;&#122;&#x6b;&#x5f;&#x74;&#x72;&#x61;&#x6e;&#115;&#108;&#97;&#x74;&#x6f;&#x72;&#x40;&#x67;&#x72;&#111;&#x75;&#x70;&#115;&#46;&#49;&#x36;&#51;&#x2e;&#99;&#x6f;&#x6d;">&#122;&#x6b;&#x5f;&#x74;&#x72;&#x61;&#x6e;&#115;&#108;&#97;&#x74;&#x6f;&#x72;&#x40;&#x67;&#x72;&#111;&#x75;&#x70;&#115;&#46;&#49;&#x36;&#51;&#x2e;&#99;&#x6f;&#x6d;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
+<p>参与讨论：邮件列表：<a href="&#x6d;&#97;&#x69;&#108;&#116;&#111;&#58;&#122;&#x6b;&#x5f;&#116;&#x72;&#x61;&#x6e;&#115;&#x6c;&#x61;&#116;&#111;&#114;&#x40;&#103;&#114;&#x6f;&#x75;&#x70;&#115;&#46;&#x31;&#x36;&#51;&#46;&#x63;&#111;&#x6d;">&#122;&#x6b;&#x5f;&#116;&#x72;&#x61;&#x6e;&#115;&#x6c;&#x61;&#116;&#111;&#114;&#x40;&#103;&#114;&#x6f;&#x75;&#x70;&#115;&#46;&#x31;&#x36;&#51;&#46;&#x63;&#111;&#x6d;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
 <p>部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。</p>
 <p>在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git clone git@github<span class="selector-class">.com</span>:user/zookeeper-book<span class="selector-class">.git</span></div><div class="line">$ cd zookeeper-book</div><div class="line">$ git config user<span class="selector-class">.name</span> <span class="string">"yourname"</span></div><div class="line">$ git config user<span class="selector-class">.email</span> <span class="string">"your email"</span></div></pre></td></tr></table></figure>
@@ -1069,11 +1130,11 @@
       <category term="踩过的那些坑" scheme="http://michael-j.net/categories/%E8%B8%A9%E8%BF%87%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
     
     
-      <category term="debug" scheme="http://michael-j.net/tags/debug/"/>
-    
       <category term="tomcat" scheme="http://michael-j.net/tags/tomcat/"/>
     
       <category term="部署" scheme="http://michael-j.net/tags/%E9%83%A8%E7%BD%B2/"/>
+    
+      <category term="debug" scheme="http://michael-j.net/tags/debug/"/>
     
   </entry>
   
@@ -1149,75 +1210,6 @@
     
     
       <category term="btrace" scheme="http://michael-j.net/tags/btrace/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>利用Autoconfig打包Java WEB应用</title>
-    <link href="http://michael-j.net/2015/10/17/%E5%88%A9%E7%94%A8Autoconfig%E6%89%93%E5%8C%85Java-WEB%E5%BA%94%E7%94%A8/"/>
-    <id>http://michael-j.net/2015/10/17/利用Autoconfig打包Java-WEB应用/</id>
-    <published>2015-10-17T06:39:08.000Z</published>
-    <updated>2017-06-03T03:41:19.832Z</updated>
-    
-    <content type="html"><![CDATA[<p>简介： 本文主要介绍常用的后台应用打包的几种方式</p>
-<p>后端应用上线前都需要经过重新打包，可千万别小看了这个阶段，这个是非常非常重要的！如果打错了包或者使用错了配置文件，结果可能是毁灭性的！</p>
-<p>我们都知道每个软件项目或者公司都会维护几套隔离环境，例如以前在阿里就会有<code>日常测试</code>、<code>日常</code>、<code>预发</code>和<code>线上</code>几个环境，还有根据特殊需要配置的独立环境，如<code>性能环境</code>等等。 当然，对于小公司或者创业公司来说不需要准备这么多套环境，但至少是需要<code>测试</code>和<code>线上</code>两套环境的。多套环境的可以有效的隔离线上和线下，提高开发人员的工作效率，又不至于将不稳定的代码带到线上。其中最重要的一个环节就是打包，我主要介绍两种简单的打包方式。</p>
-<h2 id="利用Spring配置"><a href="#利用Spring配置" class="headerlink" title="利用Spring配置"></a>利用Spring配置</h2><p>现在Java WEB应用可以说90%都使用了Spring框架，而Spring框架早就帮我们考虑了这个问题。我一开始也是使用这个配置方式，在Spring配置文件中引入一下配置：</p>
-<blockquote>
-<context:property-placeholder location="file:${APP_HOME}/config.properties">
-
-</context:property-placeholder></blockquote>
-<p>Spring是支持classpath和file的，个人推荐使用<code>file</code>模式来查找外部配置文件，因为这样我们就不必将配置文件引入到工程目录中了，因为工程目录对所有的开发人员都可见，这样会降低配置文件的安全性。引入外部配置文件一个常见的做法就是使用环境变量，我们新建一个<code>APP_HOME</code>的环境变量来区分不同的环境。</p>
-<p>在使用配置文件的地方利用placeholder进行配置即可，例如以下方式：</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;bean <span class="built_in">id</span>=<span class="string">"dataSource"</span> <span class="built_in">class</span>=<span class="string">"org.apache.commons.dbcp2.BasicDataSource"</span>&gt;</div><div class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"driverClassName"</span> value=<span class="string">"$&#123;db.driverClass&#125;"</span>/&gt;</div><div class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"url"</span> value=<span class="string">"$&#123;db.url&#125;"</span>/&gt;</div><div class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"username"</span> value=<span class="string">"$&#123;db.username&#125;"</span>/&gt;</div><div class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"password"</span> value=<span class="string">"$&#123;db.password&#125;"</span>/&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure>
-<p>在Spring启动以后，它会去查找你配置的外部配置文件，并逐个替换使用的配置中的placeholder。</p>
-<p>这种方式的优点就是简单，灵活，但是缺点也是很明显的：</p>
-<ul>
-<li><p>只支持Spring配置文件的替换，不支持其他框架配置文件的替换。<br> 如果你想替换logback.xml中的某个配置，例如日志输出目录或者日志输出级别，它是做不到的。</p>
-</li>
-<li><p>大规模部署不方便。<br>如果只有一两机器这样部署还是比较方便的，但是如果有几十台甚至上百台这样打包就十分麻烦了。如果改动一个配置项，就需要保持所有机器的同步的，所以一般大一点的公司都会有专门负责配置的服务，例如阿里的ConfigServer。</p>
-</li>
-</ul>
-<h2 id="利用AutoConfig打包"><a href="#利用AutoConfig打包" class="headerlink" title="利用AutoConfig打包"></a>利用AutoConfig打包</h2><p>AutoConfig 是阿里内部使用的一个打包工具，十分方便，也十分强大，这里有它的介绍：<a href="http://openwebx.org/docs/autoconfig.html" target="_blank" rel="external">http://openwebx.org/docs/autoconfig.html</a></p>
-<p>下面是我利用AutoConfig打包的步骤：</p>
-<ul>
-<li><p>添加不同环境的配置</p>
-<p>为了直接利用Maven打出不同环境的包，我们在需要打包的module的pom中添加下面的配置：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">autoconfig.properties</span>&gt;</span>antx.properties.dev<span class="tag">&lt;/<span class="name">autoconfig.properties</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>然后加入profile配置：</p>
-  <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">profile</span>&gt;</span></div><div class="line">           <span class="comment">&lt;!-- 本地开发环境 --&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">autoconfig.properties</span>&gt;</span>antx.properties.dev<span class="tag">&lt;/<span class="name">autoconfig.properties</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">env</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">env</span>&gt;</span></div><div class="line">           <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">profile</span>&gt;</span></div><div class="line">           <span class="comment">&lt;!-- 测试环境 --&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">id</span>&gt;</span>test<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">autoconfig.properties</span>&gt;</span>antx.properties.test<span class="tag">&lt;/<span class="name">autoconfig.properties</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">env</span>&gt;</span>test<span class="tag">&lt;/<span class="name">env</span>&gt;</span></div><div class="line">           <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">profile</span>&gt;</span></div><div class="line">           <span class="comment">&lt;!-- 生产环境 --&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">id</span>&gt;</span>online<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">           <span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">autoconfig.properties</span>&gt;</span>antx.properties.online<span class="tag">&lt;/<span class="name">autoconfig.properties</span>&gt;</span></div><div class="line">               <span class="tag">&lt;<span class="name">env</span>&gt;</span>online<span class="tag">&lt;/<span class="name">env</span>&gt;</span></div><div class="line">           <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></div></pre></td></tr></table></figure>
-<ul>
-<li><p>添加autoconfig maven插件支持</p>
-<figure class="highlight dust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="xml"> <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.citrus.tool<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>autoconfig-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"> 	<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">               	<span class="tag">&lt;<span class="name">userProperties</span>&gt;</span>$<span class="template-variable">&#123;user.home&#125;</span><span class="xml">/conf/$</span><span class="template-variable">&#123;autoconfig.properties&#125;</span><span class="xml"><span class="tag">&lt;/<span class="name">userProperties</span>&gt;</span></span></div><div class="line">	<span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>autoconfig<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p> 其中,userProperties属性就是我们使用的配置文件。</p>
-<ul>
-<li><p>利用Maven进行打包</p>
-<p>进入到需要打包的module中，然后执行<code>mvn package -P&lt;env&gt;</code>，其中env代表不同的环境，在上面的配置中env只能为dev、test和online.<br>我们可以将最终的包名也带上环境名称，以区分打出来的不同环境的包，如下配置：</p>
-</li>
-</ul>
-<p><code>&lt;finalName&gt;包名-${env}&lt;/finalName&gt;</code></p>
-<h3 id="Tips"><a href="#Tips" class="headerlink" title="Tips:"></a>Tips:</h3><p>如果开发人员使用的是jetty插件来进行本地开发的，那么需要将jetty:run改为jetty:run-war，因为autoconfig是需要执行package才会进行触发的，而jetty:run不会执行package阶段。可以参考一下配置：</p>
-<pre><code><figure class="highlight dust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="xml"><span class="comment">&lt;!-- jetty插件 --&gt;</span></span></div><div class="line"> <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mortbay.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jetty-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>7.6.16.v20140903<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">webAppSourceDirectory</span>&gt;</span>src/main/webapp<span class="tag">&lt;/<span class="name">webAppSourceDirectory</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">scanIntervalSeconds</span>&gt;</span>3<span class="tag">&lt;/<span class="name">scanIntervalSeconds</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">connectors</span>&gt;</span></div><div class="line">             <span class="tag">&lt;<span class="name">connector</span> <span class="attr">implementation</span>=<span class="string">"org.eclipse.jetty.server.nio.SelectChannelConnector"</span>&gt;</span></div><div class="line">                 <span class="tag">&lt;<span class="name">port</span>&gt;</span>8080<span class="tag">&lt;/<span class="name">port</span>&gt;</span></div><div class="line">                 <span class="tag">&lt;<span class="name">maxIdleTime</span>&gt;</span>60000<span class="tag">&lt;/<span class="name">maxIdleTime</span>&gt;</span></div><div class="line">             <span class="tag">&lt;/<span class="name">connector</span>&gt;</span></div><div class="line">         <span class="tag">&lt;/<span class="name">connectors</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">war</span>&gt;</span>target/包名-$<span class="template-variable">&#123;env&#125;</span><span class="xml">.war<span class="tag">&lt;/<span class="name">war</span>&gt;</span></span></div><div class="line">     <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
-</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      本文主要介绍常用的后台应用打包的几种方式
-    
-    </summary>
-    
-      <category term="部署" scheme="http://michael-j.net/categories/%E9%83%A8%E7%BD%B2/"/>
-    
-    
-      <category term="java" scheme="http://michael-j.net/tags/java/"/>
-    
-      <category term="package" scheme="http://michael-j.net/tags/package/"/>
-    
-      <category term="autoconfig" scheme="http://michael-j.net/tags/autoconfig/"/>
     
   </entry>
   
