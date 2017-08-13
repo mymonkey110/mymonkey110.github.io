@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[再谈领域事件]]></title>
+    <url>%2F2017%2F08%2F13%2F%E5%86%8D%E8%B0%88%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%2F</url>
+    <content type="text"><![CDATA[我以前写过一篇关于领域事件的文章——实现领域事件，随着在项目中深入的使用DDD架构，我对领域事件有了新的认识。尤其是采用领域事件来解耦代码这种方式对项目的发展具有深远的影响。 我在实现领域事件中主要谈到了如何在技术层面去实现发布事件与订阅事件，比较了几种不同的方式以及它们背后的原理。但随着我在自己负责的项目中严格地实施DDD架构时，我发现如何去发布订阅领域事件的意义远没有决定去做这件事情本身重要。换句话说，与其纠结与是使用基于Spring的事件架构还是Guava提供的EventBus，是使用同步发布还是异步发布，还不如想想去做这件事情对你的项目会产生怎样的影响。 为什么要使用事件？我认为这是所有人应该考虑的首要问题。对我来说，使用事件的意义有两个方面，一是在于流程上的解耦，二是在于代码层面的解耦。在代码层面的解耦是显而易见的，我就不再赘述了。那么流程上的解耦是什么意思了？我们先看一下一个普通的业务流程执行的链路。 目前我们绝大部分人的思维习惯是顺序式的，体现在代码上也就是A做完它做的事情然后B继续处理，当然这么做没有任何问题，这也是最为简单直观的一种编程方式。我们再来看一下通过Event来解耦的链路。 通过引入事件，我们将过程A和过程B解耦了。第一种方式和第二种方式都有着其重要的存在意义，决定何时采用第二种方式的关键在于BoundedContext。正好最近我在负责处理一个遗留系统的拆分问题，恰好有一个好的例子来说明这个问题。 这个遗留系统是一个计费系统，因为各种各样的原因，整个项目在代码层面非常混乱，代码之间各种凌乱的引用和交叉，这种感觉就和下图一样。 我认为造成这个问题的根源在于开发人员并没有及时地识别出这个项目中的几个关键领域以及及早的将其进行隔离。更为让人遗憾的是开发这个项目的人员都已离职，后来接手这个项目的开发人员被堆积地需求压得喘不过气来，也就更没有时间来处理以前的技术债务问题。 实际上，这个项目包含多个领域，最为核心的三个领域就是订单、账单和计费。在和老大以及开发沟通过后，我们意识到系统拆分已经刻不容缓。目前我们在做的事情就是在工程内部进行代码级别的拆分，其中最为棘手的问题就是订单系统和计费系统的耦合太深。 仔细分析各个业务流程之后我们发现，很多耦合都是可以避免的。大部分的业务流程都是由订单系统触发，然后计费系统做出相应的变更。最终，我们决定使用领域事件来讲订单系统和计费系统解耦开。（PS:原系统中并没有使用DDD的开发模式，但这并不影响我们使用领域事件。) 上图是我们现在的做法，通过OrderEvent和BillEvent来将两个系统解耦开，然后将Event放到一个公共的Module中来达到Module级别的解耦。令人惊喜的发现在于，这种解耦的方式与我们规划中订单系统与计费系统通过MQ来通信达成了一致。后面我们只需要标准化这些事件，就可以做到无缝迁移到MQ中。 通过上面这个例子，我再总结一下使用领域事件的来解耦业务流程的应用场景： 如果一个业务流程需要贯穿几个不同的受限上下文中，那么可以通过以发布领域事件的方式来避免上游系统耦合下游系统。这种解耦方式收益最大，因为其有利于后期系统间的拆分。 如果在同一个受限上下文中，也可以通过发布领域事件的方式来达到领域间解耦。 至于为什么说以何种方式来发布事件不在那么重要，因为当你在项目采用了领域事件技术来解耦代码，你已经获得这项技术的90%的好处，而具体怎么执行就显得不那么重要了。我在另外一个项目中（这个项目完全采用DDD的模式来开发）就采用了最为朴实的方式来实现，不再基于Spring或者Guava了。 附上我目前的使用方法：https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a 如果你对使用领域事件的感触没有那么深，那么请记住这句话：代码间解耦用事件，系统间解耦用MQ！ 参考资料：实现领域驱动设计领域驱动设计:软件核心复杂性应对之道]]></content>
+      <categories>
+        <category>DDD</category>
+      </categories>
+      <tags>
+        <tag>领域事件</tag>
+        <tag>event</tag>
+        <tag>dddd</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[跨Region实践初探]]></title>
     <url>%2F2017%2F08%2F02%2F%E8%B7%A8Region%E5%AE%9E%E8%B7%B5%E5%88%9D%E6%8E%A2%2F</url>
     <content type="text"><![CDATA[最近网易云上线华北REGION(cn-north-1)地区的服务，在此过程中我们做出了很多调整以适应跨REGION架构。 在此分享一下我在团队内部的分享：http://pan.baidu.com/s/1eSgUYmY 密码：m72t 这次的跨REGION改造仅仅是第一步，我们意识到要支持多REGION，要做的事情很多。后续有机会进一步跟大家分享网易云在这方面的实践心得。]]></content>
@@ -73,9 +86,9 @@
         <category>云计算</category>
       </categories>
       <tags>
-        <tag>架构设计</tag>
         <tag>cloud</tag>
         <tag>访问控制</tag>
+        <tag>架构设计</tag>
         <tag>DSL</tag>
         <tag>云计算</tag>
       </tags>
@@ -146,7 +159,7 @@
   <entry>
     <title><![CDATA[Zookeeper:distributed process coordination中文版]]></title>
     <url>%2F2016%2F08%2F02%2FZookeeper-distributed-process-coordination%2F</url>
-    <content type="text"><![CDATA[最近使用zookeeper比较多，但是国内关于zookeeper方面的数据太少。能介绍其使用同时也讲解原理的书太少了。Zookeeper:distributed process coordination是一本关于zookeeper不可多得的好书。读完以后我对zookeeper有能一个非常直观的了解。 现在分布式应用开发越来越常见，基本上大部分的分布式应用都需要与其它应用进行协同。Zookeeper非常擅长于处理分布式协同。所以我决定利用工作之余的时间翻译这本书籍，完全出于个人兴趣。 GitBook阅读地址 GitHub阅读地址 由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献： 参与讨论：邮件列表：&#122;&#107;&#x5f;&#116;&#x72;&#x61;&#110;&#115;&#x6c;&#97;&#116;&#x6f;&#114;&#64;&#x67;&#x72;&#x6f;&#117;&#x70;&#115;&#x2e;&#49;&#54;&#51;&#46;&#99;&#111;&#x6d;，申请加入地址：http://163.fm/UJNWGHS 部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。 在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。 1234$ git clone git@github.com:user/zookeeper-book.git$ cd zookeeper-book$ git config user.name "yourname"$ git config user.email "your email" 修改代码后提交，并推送到自己的仓库。 123$ #do some change on the content$ git commit -am "Fix issue #1: change helo to hello"$ git push 在 GitHub 网站上提交 pull request。定期使用项目仓库内容更新自己仓库内容。 12345$ git remote add upstream https://github.com/mymonkey110/zookeeper-book.git$ git fetch upstream$ git checkout master$ git rebase upstream/master$ git push -f origin master PS: 2016/8/15 Update: 很遗憾，因为授权的问题，不得不停止翻译的工作。本书已经有中文版的译本了，我后来才得知，所以我也不会取得中文版的翻译授权了。因为本人第一次翻译，事先没有搞清这些事情，才导致了现在的情况。不得不说，十分遗憾，感谢关注本书翻译的伙伴。我相信已有的中文译本应该还不错，如果需要的伙伴可以去购买。So, that’s it, it’s over, thanks for your attention.]]></content>
+    <content type="text"><![CDATA[最近使用zookeeper比较多，但是国内关于zookeeper方面的数据太少。能介绍其使用同时也讲解原理的书太少了。Zookeeper:distributed process coordination是一本关于zookeeper不可多得的好书。读完以后我对zookeeper有能一个非常直观的了解。 现在分布式应用开发越来越常见，基本上大部分的分布式应用都需要与其它应用进行协同。Zookeeper非常擅长于处理分布式协同。所以我决定利用工作之余的时间翻译这本书籍，完全出于个人兴趣。 GitBook阅读地址 GitHub阅读地址 由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献： 参与讨论：邮件列表：&#122;&#107;&#95;&#116;&#x72;&#x61;&#x6e;&#115;&#x6c;&#x61;&#116;&#x6f;&#x72;&#64;&#103;&#x72;&#x6f;&#x75;&#112;&#x73;&#x2e;&#49;&#54;&#x33;&#x2e;&#99;&#x6f;&#109;，申请加入地址：http://163.fm/UJNWGHS 部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。 在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。 1234$ git clone git@github.com:user/zookeeper-book.git$ cd zookeeper-book$ git config user.name "yourname"$ git config user.email "your email" 修改代码后提交，并推送到自己的仓库。 123$ #do some change on the content$ git commit -am "Fix issue #1: change helo to hello"$ git push 在 GitHub 网站上提交 pull request。定期使用项目仓库内容更新自己仓库内容。 12345$ git remote add upstream https://github.com/mymonkey110/zookeeper-book.git$ git fetch upstream$ git checkout master$ git rebase upstream/master$ git push -f origin master PS: 2016/8/15 Update: 很遗憾，因为授权的问题，不得不停止翻译的工作。本书已经有中文版的译本了，我后来才得知，所以我也不会取得中文版的翻译授权了。因为本人第一次翻译，事先没有搞清这些事情，才导致了现在的情况。不得不说，十分遗憾，感谢关注本书翻译的伙伴。我相信已有的中文译本应该还不错，如果需要的伙伴可以去购买。So, that’s it, it’s over, thanks for your attention.]]></content>
       <categories>
         <category>翻译</category>
       </categories>
@@ -229,8 +242,8 @@
         <category>架构设计</category>
       </categories>
       <tags>
-        <tag>架构</tag>
         <tag>评论系统</tag>
+        <tag>架构</tag>
       </tags>
   </entry>
   <entry>
@@ -241,9 +254,9 @@
         <category>踩过的那些坑</category>
       </categories>
       <tags>
-        <tag>debug</tag>
         <tag>tomcat</tag>
         <tag>部署</tag>
+        <tag>debug</tag>
       </tags>
   </entry>
   <entry>
