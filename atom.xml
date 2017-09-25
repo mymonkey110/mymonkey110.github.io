@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://michael-j.net/"/>
-  <updated>2017-08-13T11:19:21.939Z</updated>
+  <updated>2017-09-25T08:06:10.556Z</updated>
   <id>http://michael-j.net/</id>
   
   <author>
@@ -14,6 +14,56 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>编程心智(一)——代码架构与系统架构</title>
+    <link href="http://michael-j.net/2017/09/24/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA-%E4%B8%80-%E2%80%94%E2%80%94%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E4%B8%8E%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/"/>
+    <id>http://michael-j.net/2017/09/24/编程心智-一-——代码架构与系统架构/</id>
+    <published>2017-09-24T12:00:27.000Z</published>
+    <updated>2017-09-25T08:06:10.556Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="写在开头的话"><a href="#写在开头的话" class="headerlink" title="写在开头的话"></a>写在开头的话</h2><p>想写这个系列文章很久了，但是对于一个重度的拖延症患者来说，决定写一个系列文章还是颇有挑战。最开始，只想写一两片文章分享一下自己对于编程的感悟。但随着时间越拖越久，发现想写的东西越来越多。直到今天，居然发现我的博客的To-Do-List（目前我在使用<code>WunderList</code>，很好用的一个To-Do-List工具)文章数达到了10篇，终于说服自己动笔了。<br>“编程心智”这个词这段时间一直萦绕在我的脑海中，我觉得这个词最能表达我想分享了内容了。我希望通过这个系列文章分享自己对于代码、编程、架构以及软件工程的理解与感悟，另外，还有隐藏在代码后面的程序员心智。所有文章仅代表个人观点，没有是非对错的标准。如果你对文章中的观点不认同，还请给我留言，不同的声音对于进步有着极大的促进。</p>
+<a id="more"></a>
+<p>选择“代码架构与系统架构”作为第一篇文章是因为我发现很多人对“架构”的误解很深，而且国内关于“代码架构”的分享和书籍凤毛麟角，似乎只有流弊的“系统架构”才能成为谈资。我不太能理解这个现象，好像大部分人都完全不用操心“如何写好代码”这回事，似乎只要有一个看上去比较“完美”的系统架构就能解决所有的事情。但根据我的实际经验，现实情况往往不是这样，有时候甚至相反。有些项目的系统架构图画的非常“漂亮”，引入了很多新潮的技术，每个组件都划分的很清楚，系统之间如何通信，模块之间如何引用等等都一目了然。但是当你去看项目的真实代码时，完全是另外一番景象。至于为什么会这样，我想很大一部分原因是“系统架构图”已经沦为了一种满足KPI考核手段，而通常你的老板不会深入地去理解你的代码，更不要说指出其中的问题了。</p>
+<h2 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h2><p>相信很多人对系统架构都不陌生，只要是从事软件开发领域的人，或多或少都接触过系统架构。系统架构最直观的表现就是系统架构图，下图就是一张系统架构图，摘自李智慧老师<a href="https://www.amazon.cn/dp/B00F3Z26G8/ref=cngwdyfloorv2_recs_0?pf_rd_p=7149a3bb-2ee6-4f99-92eb-d87852365f8c&amp;pf_rd_s=desktop-2&amp;pf_rd_t=36701&amp;pf_rd_i=desktop&amp;pf_rd_m=A1AJ19PSB66TGU&amp;pf_rd_r=R2PPN3T6JNKNPP0HTHWS&amp;pf_rd_r=R2PPN3T6JNKNPP0HTHWS&amp;pf_rd_p=7149a3bb-2ee6-4f99-92eb-d87852365f8c" target="_blank" rel="external">大型网站技术架构:核心原理与案例分析</a>。</p>
+<img src="/2017/09/24/编程心智-一-——代码架构与系统架构/部署架构图.png" alt="部署架构图" title="部署架构图">
+<p>系统架构是一个比较大的概念，从技术角度来看，它往往以部署架构图的形式出现（上图就是）；而换到业务视图，它又以另外一种形式出现，如下图。</p>
+<img src="/2017/09/24/编程心智-一-——代码架构与系统架构/业务架构图.png" alt="业务架构图" title="业务架构图">
+<p>不论是部署架构图还是业务架构图，它们都反映了系统与系统之间的一种关联关系，从更加宏观的角度反映系统在全局中的作用和定位。如果你是某个系统的开发者或者负责人，那么你的系统会在系统架构图中以一个方框出现。通过系统架构图，你的老板和同事能很直观地了解到你的系统在全局中的位置以及你服务的层次。这样做有好处的，它降低了技术人员之间以及技术和业务人员之间地沟通成本。</p>
+<p>实际上，关于系统采用什么样的中间件、何种数据库和缓存、选用哪种服务框架等等，甚至今年非常火的微服务架构，这些统统都属于系统架构的范畴。关于系统架构方面的书籍和文章已经非常多了，而且国内的分享也主要集中于此，我就不再这方面展开了。</p>
+<h2 id="代码架构"><a href="#代码架构" class="headerlink" title="代码架构"></a>代码架构</h2><p>相比于系统架构，代码架构对很多人可能就陌生许多。我刚刚去Google一下，发现甚至没有关于“代码架构”的权威定义。那么什么是代码架构呢？打个比方，如果你的系统在系统架构图中只是一个方框，那么代码架构就是介绍这个方框是如何组成和实现的。代码架构的关注点在一个工程（Project）内部，它描述了你的整个工程代码是如何组织和实现的。简而言之，系统架构是宏观层面的体现，而代码架构是微观层面的体现。</p>
+<p>在我的博客中有很多关于DDD的文章，而DDD本身就是一种代码架构。除此之外，还有MVC、CQRS、Event Souring等等。那么，设计模式是否也可以成为代码架构呢？在某种程度上是的，因为它可以指导你如何组织代码的实现，如何在代码层面解耦，但是，光光通过设计模式你无法组织起你的整个工程代码，所以从严格意义上讲，设计模式并不是一种代码架构。代码架构也可以通过图文的形式表现，不过这完全取决于你采用何种代码架构。下图是我目前负责的一个系统的代码架构，这个系统的核心在于策略语言（Policy）。</p>
+<img src="/2017/09/24/编程心智-一-——代码架构与系统架构/六边形架构.png" alt="六边形架构" title="六边形架构">
+<p>熟悉DDD的人一眼就可以看出来这是DDD种的经典六边形架构（题外话，至今我不太明白为什么是六边形）。如果你的工程采用MVC或者CQRS架构进行组织，可能会画出完全不一样的架构图。我很庆幸，在我正式的职业编程生涯的早期接触到了DDD这种编程思想，它对我的编程生涯影响很大，让我少走了很多弯路。如果你还没有接触过DDD，我希望你能立马买一本<code>Eric Evans</code>的<a href="https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B01GZ6T12K/ref=sr_1_1?ie=UTF8&amp;qid=1506266953&amp;sr=8-1&amp;keywords=%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1" target="_blank" rel="external">领域驱动设计:软件核心复杂性应对之道</a>，细细研读此书，字里行间都体现着作者对软件开发的深刻理解。</p>
+<p>为什么我说代码架构是如此的重要？是因为其奠定了大型系统的基石。我认为衡量一个优秀的程序员的能力之一就包含其对复杂问题的解决能力。现实的问题往往比理论复杂很多，很多时候需要妥协、折中、权衡和取舍，如何在这些取舍之中不影响到软件的核心，这需要大量的经验。当然，这是有规律可循的，那就是代码架构。</p>
+<p>好的代码架构会帮助你理解你的业务，哪些部分是你系统的核心，哪些部分只是技术层面的实现。换句话说，好的代码架构不光能知道你如何去组织你的代码，还能加深你对系统的理解。反过来，随着你对系统理解的不断深入，你又能更好的调整你的代码以适应新的变化。是不是所有的项目都需要代码架构呢？这取决于你的问题域。如果你的项目仅仅是一个<code>Hello World</code>程序，又或者是一个数据采集脚步，那么使用代码架构来组织代码可能没什么作用，反而使得你的代码变得更加复杂和臃肿。那么什么情况下你需要使用代码架构呢？我认为只要满足以下两个条件就行。</p>
+<ul>
+<li><p>你有一个相对固定的业务场景。固定意味着你要处理的问题域是有边界的，比如订单系统、库存系统、用户中心等等，它们所要处理的问题是比较集中和固定的。</p>
+</li>
+<li><p>你要解决的问题相对比较复杂。这看上去本身就比较矛盾，因为“复杂”本身就是相对的。这里的复杂的意义在于，你要处理的问题领域本身就具有复杂性。也许起初问题本身并不复杂，但随着时间的推移，系统要处理的问题也越来越复杂了，这要求你对问题有一定的前瞻性。</p>
+</li>
+</ul>
+<p>事实上，上面两个条件是很容易满足，之所以还列出来因为在实际的开发过程中，我确实遇到过在以上两点犯错的情况。这主要出现在刚刚开始正式编程生涯的毕业生，他们对业务和要做的事理解程度不够，如果有经验丰富的程序员带的话，可以避免走一些弯路。正是因为上诉条件门槛较低，所以代码架构的应用场景非常广泛。有可能你现在的项目就在使用MVC架构，只是你没有意思到。我建议程序员能有意识地去了解你的代码架构，深入的思考一下目前的代码组织方式是最为合理的吗？</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>说了这么多，希望自己把代码架构和系统架构的核心点说明白了。两者都非常地重要，但是应用的场景各不相同，两者结合使用才能让你做出一个高质量的系统。相比于系统架构，代码架构往往被人们所遗留，但这并不代表其不重要。依我之见，代码架构的应用场景更为广泛，因为大部分的公司和项目其实并不需要一个复杂和“高大上”的系统架构，而与我们日常交互最多的就是一行一行的代码。深入的了解你的项目代码是如何组织对程序员来说是十分重要的，好的代码架构能起到事半功倍的效果。最后，个人建议将代码架构纳入到KPI的评判之中，最为直观的表现就是“技术债务”。好的代码架构会把项目的技术债务维持在一个比较低的水平；相反，糟糕的代码结构会让项目的“技术债务”越滚越大，最终到了不可收拾的程度。不过，技术债务如何量化，以及是否需要量化，目前这方面有着很多不同的身影，但是，能意识到这个问题的存在，至少，我们在向高水平的软件开发者迈出了一大步。</p>
+<h2 id="写在最后的话"><a href="#写在最后的话" class="headerlink" title="写在最后的话"></a>写在最后的话</h2><p>编程心智这个系列我会持续地更新，但更新时间就不确定了。前面也说了，我是一个重度的拖延症患者，而且，最近项目的事情很多，一个接着一个。我会努力做到一个月一篇的。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;写在开头的话&quot;&gt;&lt;a href=&quot;#写在开头的话&quot; class=&quot;headerlink&quot; title=&quot;写在开头的话&quot;&gt;&lt;/a&gt;写在开头的话&lt;/h2&gt;&lt;p&gt;想写这个系列文章很久了，但是对于一个重度的拖延症患者来说，决定写一个系列文章还是颇有挑战。最开始，只想写一两片文章分享一下自己对于编程的感悟。但随着时间越拖越久，发现想写的东西越来越多。直到今天，居然发现我的博客的To-Do-List（目前我在使用&lt;code&gt;WunderList&lt;/code&gt;，很好用的一个To-Do-List工具)文章数达到了10篇，终于说服自己动笔了。&lt;br&gt;“编程心智”这个词这段时间一直萦绕在我的脑海中，我觉得这个词最能表达我想分享了内容了。我希望通过这个系列文章分享自己对于代码、编程、架构以及软件工程的理解与感悟，另外，还有隐藏在代码后面的程序员心智。所有文章仅代表个人观点，没有是非对错的标准。如果你对文章中的观点不认同，还请给我留言，不同的声音对于进步有着极大的促进。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程心智" scheme="http://michael-j.net/categories/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA/"/>
+    
+    
+      <category term="编程心得" scheme="http://michael-j.net/tags/%E7%BC%96%E7%A8%8B%E5%BF%83%E5%BE%97/"/>
+    
+      <category term="代码架构" scheme="http://michael-j.net/tags/%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84/"/>
+    
+      <category term="系统架构" scheme="http://michael-j.net/tags/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/"/>
+    
+  </entry>
   
   <entry>
     <title>再谈领域事件</title>
@@ -626,7 +676,7 @@
 <p><a href="https://www.gitbook.com/book/mymonkey110/zookeeper-distributed-process-coordination" target="_blank" rel="external">GitBook阅读地址</a></p>
 <p><a href="https://github.com/mymonkey110/zookeeper-book/blob/master/SUMMARY.md" target="_blank" rel="external">GitHub阅读地址</a></p>
 <p>由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献：</p>
-<p>参与讨论：邮件列表：<a href="&#109;&#97;&#x69;&#108;&#116;&#111;&#x3a;&#122;&#107;&#95;&#116;&#x72;&#x61;&#x6e;&#115;&#x6c;&#x61;&#116;&#x6f;&#x72;&#64;&#103;&#x72;&#x6f;&#x75;&#112;&#x73;&#x2e;&#49;&#54;&#x33;&#x2e;&#99;&#x6f;&#109;">&#122;&#107;&#95;&#116;&#x72;&#x61;&#x6e;&#115;&#x6c;&#x61;&#116;&#x6f;&#x72;&#64;&#103;&#x72;&#x6f;&#x75;&#112;&#x73;&#x2e;&#49;&#54;&#x33;&#x2e;&#99;&#x6f;&#109;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
+<p>参与讨论：邮件列表：<a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#122;&#x6b;&#95;&#116;&#114;&#97;&#110;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#64;&#103;&#x72;&#111;&#x75;&#112;&#115;&#x2e;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#109;">&#122;&#x6b;&#95;&#116;&#114;&#97;&#110;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#64;&#103;&#x72;&#111;&#x75;&#112;&#115;&#x2e;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#109;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
 <p>部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。</p>
 <p>在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git clone git@github<span class="selector-class">.com</span>:user/zookeeper-book<span class="selector-class">.git</span></div><div class="line">$ cd zookeeper-book</div><div class="line">$ git config user<span class="selector-class">.name</span> <span class="string">"yourname"</span></div><div class="line">$ git config user<span class="selector-class">.email</span> <span class="string">"your email"</span></div></pre></td></tr></table></figure>
@@ -938,244 +988,6 @@
       <category term="领域事件" scheme="http://michael-j.net/tags/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/"/>
     
       <category term="event" scheme="http://michael-j.net/tags/event/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>评论设计</title>
-    <link href="http://michael-j.net/2016/01/05/%E8%AF%84%E8%AE%BA%E8%AE%BE%E8%AE%A1/"/>
-    <id>http://michael-j.net/2016/01/05/评论设计/</id>
-    <published>2016-01-05T09:52:07.000Z</published>
-    <updated>2017-06-03T03:41:44.236Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>本文主要分享了我在设计评论模块中的一些心得，希望对读者有些许帮助。</p>
-</blockquote>
-<h3 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h3><p>现阶段评论做的最好的我想应该是<code>网易新闻</code>（app）里面的评论模块了，其“盖楼”的方式让人印象深刻，评论已经成为该app的核心功能之一了。市面上大部分app的评论模块设计的还是相对简单的，这是可以理解的，因为评论模块不是这些app的核心功能之一。</p>
-<p>在设计评论模块前可以和pd或者boss沟通，我们的评论功能是核心功能之一吗？实际上，90%的app采用简单的评论设计就可以了，也就是采用<code>一问一答</code>，类似于如下的设计。</p>
-<p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/2.pic.jpg?imageView/2/w/480/h/640|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=" alt="一问一答"></p>
-<p>这种设计十分简单、直接，也满足了用户评论、回复的基本要求，对于没有大量用户评论或者评论不是核心功能的app来说就够用了。暂且把这种场景称之为<code>场景A</code>。</p>
-<p>如果你是新闻类或者咨询类的app，有着大量的用户评论，那么设计“盖楼”的效果还是可取的，这样能帮助用户找到该条评论或者回复的上下文情景。但是根据“盖楼”的显示效果不同，设计上也是有很大的差别的。如果是以<code>评论为主</code>的显示方式，类似于下面的显示方式。</p>
-<p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/3.pic.jpg?imageView/2/w/500/h/800|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=" alt="评论为主"></p>
-<p>这里可以把评论分为<code>评论</code>和<code>回复</code>，所有的<code>回复</code>均挂在<code>评论</code>下面，类似于树状结构。把这种场景称之为<code>场景B</code></p>
-<p>最后就是类似于网易新闻的评论设计了，贴一张截图</p>
-<p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/5.pic.jpg?imageView/2/w/400/h/600|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=" alt="同级显示"></p>
-<p>这种场景下设计最为复杂，因为回复和评论是同等级的，回复还可以引用完整的回复路径，就是可以溯源到最开始的评论上。这种场景我将至称为<code>场景C</code>。</p>
-<h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><p>由于我 一直使用<code>mysql</code>，我就以<code>mysql</code>为例谈一下针对上面三种场景的设计。</p>
-<h4 id="场景A"><a href="#场景A" class="headerlink" title="场景A"></a>场景A</h4><p>这种场景下一般评论数量较少，评论不为活跃，可以把不区分评论和回复，而统一看成评论。区别在于有的评论是直接评论<code>主题</code>(每个评论都挂在某个主题下，如文章、帖子等)，而有些评论是<code>@</code>其他用户的，为了能cover这两张场景，使用一张表就可以达到效果，评论表如下设计：</p>
-<table>
-<thead>
-<tr>
-<th>表字段</th>
-<th>字段说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>id</td>
-<td>主键</td>
-</tr>
-<tr>
-<td>topic_id</td>
-<td>主题ID</td>
-</tr>
-<tr>
-<td>topic_type</td>
-<td>主题type</td>
-</tr>
-<tr>
-<td>content</td>
-<td>评论内容</td>
-</tr>
-<tr>
-<td>from_uid</td>
-<td>评论用户id</td>
-</tr>
-<tr>
-<td>to_uid</td>
-<td>评论目标用户id</td>
-</tr>
-</tbody>
-</table>
-<p>为了能复用评论模块，我们引入一个<code>topic_type</code>字段来区分主题的类别。</p>
-<p><code>from_uid</code>表示评论人的id，通过该id我们可以检索到评论人的相关信息。</p>
-<p><code>to_uid</code> 是评论目标人的id，如果没有目标人，则该字段为空。</p>
-<p>出于性能的考虑，往往我们会冗余评人的相关信息到评论表中，比如评论人的nick、头像等，目标用户也是如此。这样一来我们就只用查询单表就可以达到显示的效果。</p>
-<p>有时，目标用户有多个，那么可以将<code>to_uid</code>字段修改为<code>to_uids</code>，保存时用分隔符来分割用户id，而目标用户的信息再去查询缓存或者数据库。也可以简单的将多个目标用户的信息一起存成json格式，可以应付简单的展现需求。</p>
-<h4 id="场景B"><a href="#场景B" class="headerlink" title="场景B"></a>场景B</h4><p>在以评论为主的树形显示的情况下，数据库的设计十分灵活，可以使用单表，添加一个<code>parent_id</code>字段来指向父评论。如果数据库本身支持嵌套查询，那么还是比较方便的，SqlServer、Oracle都支持，但是mysql不支持，那就只能通过存储过程来实现。在互联网应用中，能不使用<code>触发器</code> ｀存储过程`的话，尽量不要去使用，因为其对性能有影响。</p>
-<p>我们还可以将评论拆分为<code>评论表</code> 和 <code>回复表</code>，<code>评论</code>挂在各种<code>主题</code>下面，而<code>回复</code>都挂在<code>评论</code>下面。</p>
-<p><code>评论表</code>的设计如下：</p>
-<table>
-<thead>
-<tr>
-<th>表字段</th>
-<th>字段说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>id</td>
-<td>主键</td>
-</tr>
-<tr>
-<td>topic_id</td>
-<td>主题ID</td>
-</tr>
-<tr>
-<td>topic_type</td>
-<td>主题type</td>
-</tr>
-<tr>
-<td>content</td>
-<td>评论内容</td>
-</tr>
-<tr>
-<td>from_uid</td>
-<td>评论用户id</td>
-</tr>
-</tbody>
-</table>
-<p><code>回复表</code>的设计如下：</p>
-<table>
-<thead>
-<tr>
-<th>表字段</th>
-<th>字段说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>id</td>
-<td>主键</td>
-</tr>
-<tr>
-<td>comment_id</td>
-<td>评论ID</td>
-</tr>
-<tr>
-<td>reply_id</td>
-<td>回复目标id</td>
-</tr>
-<tr>
-<td>reply_type</td>
-<td>回复类型</td>
-</tr>
-<tr>
-<td>content</td>
-<td>回复内容</td>
-</tr>
-<tr>
-<td>from_uid</td>
-<td>回复用户id</td>
-</tr>
-<tr>
-<td>to_uid</td>
-<td>目标用户id</td>
-</tr>
-</tbody>
-</table>
-<p>由于我们拆分了评论和回复，那么评论表就不再需要目标用户字段了，因为评论均是用户对主题的评论，评论表的设计更佳简洁了。</p>
-<p>回复表我添加了一个<code>comment_id</code>字段来表示该回复挂在的根评论id，这样设计也是出于性能方面的考虑，我们可以直接通过评论id一次性的捞出该评论下的所有回复，然后通过程序来编排回复的显示结构。通过适当的冗余来提高性能也是常用的优化手段之一。这里给出一段我通过来评论id来查找并组织所有回复的代码：</p>
-<figure class="highlight zephir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">List</span>&lt;ReplyDTO&gt; getReplyListByRid(<span class="keyword">Long</span> rid) &#123;</div><div class="line"><span class="keyword">List</span>&lt;ReplyDO&gt; replyDOList = replyDAO.queryReplyByCid(rid);</div><div class="line">        <span class="keyword">if</span> (replyDOList == <span class="keyword">null</span> || replyDOList.size() == <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">List</span>&lt;ReplyDTO&gt; replyDTOList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">List</span>&lt;ReplyDTO&gt; parentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">for</span> (ReplyDO replyDO : replyDOList) &#123;</div><div class="line">            ReplyDTO replyDTO = convertReplyToDTO(replyDO);</div><div class="line">            <span class="keyword">if</span> (replyDTO.getReplyType() == ReplyType.COMMENT) &#123;</div><div class="line">                replyDTOList.add(replyDTO);</div><div class="line">                parentList.add(replyDTO);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">boolean</span> foundParent = <span class="keyword">false</span>;</div><div class="line">                <span class="keyword">if</span> (replyDTOList.size() &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">for</span> (ReplyDTO <span class="keyword">parent</span> : parentList) &#123;</div><div class="line">                        <span class="keyword">if</span> (<span class="keyword">parent</span>.getId().equals(replyDTO.getReplyId())) &#123;</div><div class="line">                            <span class="keyword">if</span> (<span class="keyword">parent</span>.getNext() == <span class="keyword">null</span>) &#123;</div><div class="line">                                <span class="keyword">parent</span>.setNext(<span class="keyword">new</span> ArrayList&lt;ReplyDTO&gt;());</div><div class="line">                            &#125;</div><div class="line">                            <span class="keyword">parent</span>.getNext().add(replyDTO);</div><div class="line">                            parentList.add(replyDTO);</div><div class="line">                            foundParent = <span class="keyword">true</span>;</div><div class="line">                            <span class="keyword">break</span>;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (!foundParent) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"sort reply error,should not go here."</span>);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> replyDTOList;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<p><code>reply_type</code>表示回复的类型，因为回复可以是针对评论的回复(comment)，也可以是针对回复的回复(reply)， 通过这个字段来区分两种情景。</p>
-<p><code>reply_id</code>表示回复目标的id，如果reply_type是comment的话，那么reply_id＝commit_id，如果reply_type是reply的话，这表示这条回复的父回复。</p>
-<p>在数据结构的设计上，我在replyDTO中设计了一个<code>List&lt;ReplyDTO&gt; next</code>属性，这样在形成了一个树形的结构，类似如下结构。</p>
-<p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/6.pic.jpg?imageView/2/w/300/h/600|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=" alt="树形结构"></p>
-<p>客户端可以直接根据该结构来进行树形结构的显示。</p>
-<h4 id="场景c"><a href="#场景c" class="headerlink" title="场景c"></a>场景c</h4><p>要达到网易新闻中评论的效果我还没有特别好的建议。这种场景中评论和回复是同级显示的，回复不在显示结构上不用挂在一个评论下面。双表的设计在这里就不太合适了，因为涉及到评论和回复的混排，使用双表则会导致查询的逻辑过于复杂。所以建议还是采用单表的设计，不区分评论和回复会简化应用层的逻辑。我们统一都看成评论，而有些评论是可以引用其他评论的。本人推荐采用闭包表的设计，例如：</p>
-<p>comment表设计</p>
-<table>
-<thead>
-<tr>
-<th>表字段</th>
-<th>字段说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>id</td>
-<td>主键</td>
-</tr>
-<tr>
-<td>topic_id</td>
-<td>主题ID</td>
-</tr>
-<tr>
-<td>topic_type</td>
-<td>主题type</td>
-</tr>
-<tr>
-<td>content</td>
-<td>评论内容</td>
-</tr>
-<tr>
-<td>from_uid</td>
-<td>评论用户id</td>
-</tr>
-</tbody>
-</table>
-<p>parent_children表</p>
-<table>
-<thead>
-<tr>
-<th>表字段</th>
-<th>字段说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>id</td>
-<td>主键</td>
-</tr>
-<tr>
-<td>parent_id</td>
-<td>父id</td>
-</tr>
-<tr>
-<td>child_id</td>
-<td>子id</td>
-</tr>
-</tbody>
-</table>
-<p>comment表保存所有评论内容，而parent_children表则记录评论表中各个评论的父子关系。</p>
-<p>查询时往往会按照时间排序，我们可以直接按id或者创建时间降序排列查询comment表即可。如果用户想查询一条评论的完整引用，则可以通过parent_children来找到对应的路径。向上查找到评论只需要可执行：</p>
-<blockquote>
-<p>select parent_id from parent_children where child_id=${id} and parent_id != ${id}</p>
-</blockquote>
-<p>向下查找所有的子孙评论可执行：</p>
-<blockquote>
-<p>select child_id from parent_children where parent_id = ${id} and parent_id != ${id}</p>
-</blockquote>
-<p>闭包表在查询时非常方便，但是插入的性能稍差，因为除了插入评论表以外，还需要把该条评论所有的父子关系插入到父子关系表中。插入性能会随着评论层级的加深而线性下降。</p>
-<h3 id="海量数据优化"><a href="#海量数据优化" class="headerlink" title="海量数据优化"></a>海量数据优化</h3><p>如果你的系统每天都会有成千上万条评论，那么单表的设计肯定是不行，优化的方式也有很多。</p>
-<ul>
-<li><p>分库分表。分库分表是最为常用也最有效的优化方式，建议按照主题来分库分表。这样同一个主题下面的评论就会落到同一张表里，避免了跨表查询。</p>
-</li>
-<li><p>适当的数据冗余。如果你需要显示评论人的相关信息，那么在插入评论时就把这些信息写入评论表中，避免多次查询。实际上，如果是纪录数据，都可以冗余对应的数据信息，因为它们的数据的实时行和一致性要求并不高，用户不会因为评论中的头像没更新而撕了你，哈哈。</p>
-</li>
-<li><p>附加幂等数据只允许单项操作。如果pd要求你能给评论点赞，那么你可以告诉他只能点赞，不能取消。因为从幂等性的要求来说，每个赞都是一条记录。评论的赞数如果都从点赞表中统计得出，那么性能开销会十分巨大，而且点赞如此轻量级的一个操作一定会加剧点赞表的竞争操作。所以建议直接在评论表中添加一个<code>like_count</code>的计数器，该字段只增不减。</p>
-</li>
-<li><p>热门评论加缓存。类似于网易新闻的热门评论，读取频度非常高，可以专门开接口给客户端，同时该接口做缓存。</p>
-</li>
-</ul>
-<p>参考文献：</p>
-<p><a href="http://blog.csdn.net/tiantiandjava/article/details/45390859" target="_blank" rel="external">逻辑数据库设计 - 单纯的树(递归关系数据)</a></p>
-<p><a href="http://qinxuye.me/article/storing-hierachical-data-in-database/" target="_blank" rel="external">在数据库中存储层级结构</a></p>
-<p><a href="http://stackoverflow.com/questions/4048151/what-are-the-options-for-storing-hierarchical-data-in-a-relational-database" target="_blank" rel="external">What are the Options for Storing Hierarchical Data in a Relational Database</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      本文主要分享了我在设计评论模块中的一些心得，希望对读者有些许帮助。
-    
-    </summary>
-    
-      <category term="架构设计" scheme="http://michael-j.net/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"/>
-    
-    
-      <category term="评论系统" scheme="http://michael-j.net/tags/%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="架构" scheme="http://michael-j.net/tags/%E6%9E%B6%E6%9E%84/"/>
     
   </entry>
   

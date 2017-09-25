@@ -4,6 +4,30 @@
 
     
   <url>
+    <loc>http://michael-j.net/2017/09/24/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA-%E4%B8%80-%E2%80%94%E2%80%94%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E4%B8%8E%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2017-09-25T08:06:10.556Z</lastmod>
+    <data>
+        <display>
+        <title>编程心智(一)——代码架构与系统架构</title>
+        <pubTime>2017-09-24T12:00:27.000Z</pubTime>
+        
+        <tag>编程心得</tag>
+         
+        <tag>代码架构</tag>
+         
+        <tag>系统架构</tag>
+         
+         
+           
+             
+              <breadCrumb title="编程心智" url="http://michael-j.net/categories/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://michael-j.net/2017/08/13/%E5%86%8D%E8%B0%88%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/</loc>
     <lastmod>2017-08-13T11:19:21.939Z</lastmod>
     <data>
@@ -133,11 +157,11 @@
         <title>Debug:Tomcat deploy twice</title>
         <pubTime>2015-10-30T02:46:31.000Z</pubTime>
         
+        <tag>debug</tag>
+         
         <tag>tomcat</tag>
          
         <tag>部署</tag>
-         
-        <tag>debug</tag>
          
          
            
@@ -201,9 +225,9 @@
         <title>评论设计</title>
         <pubTime>2016-01-05T09:52:07.000Z</pubTime>
         
-        <tag>评论系统</tag>
-         
         <tag>架构</tag>
+         
+        <tag>评论系统</tag>
          
          
            
