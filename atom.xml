@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://michael-j.net/"/>
-  <updated>2017-09-25T08:06:10.556Z</updated>
+  <updated>2017-11-05T04:02:32.921Z</updated>
   <id>http://michael-j.net/</id>
   
   <author>
@@ -14,6 +14,53 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>编程心智(二)——二八定律对软件开发的影响</title>
+    <link href="http://michael-j.net/2017/11/03/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA-%E4%BA%8C-%E2%80%94%E2%80%94%E4%BA%8C%E5%85%AB%E5%AE%9A%E5%BE%8B%E5%AF%B9%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%9A%84%E5%BD%B1%E5%93%8D/"/>
+    <id>http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/</id>
+    <published>2017-11-03T12:49:13.000Z</published>
+    <updated>2017-11-05T04:02:32.921Z</updated>
+    
+    <content type="html"><![CDATA[<p>相信很多人都听说过二八定律，这是一个适用性非常广泛的定律。我发现二八定律同样适用于软件开发，并对其产生了十分深远的影响。这次我想聊聊二八定律是如何影响我们日常的开发工作的，希望通过这个话题来改变一下大家习以为常的开发思维。</p>
+<a id="more"></a>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>二八定律是19世纪末20世纪初意大利经济学家巴莱多发现的。他认为：</p>
+<blockquote>
+<p>在任何一组东西中，最重要的只占其中一小部分，约20%，其余80%尽管是多数，却是次要的，因此又称二八定律。</p>
+</blockquote>
+<p>二八定律有相当广泛的普适性，不论是在生活中，还是在工作上，只要你细心观察，都会发现其身影。</p>
+<h2 id="功能需求对软件开发的影响"><a href="#功能需求对软件开发的影响" class="headerlink" title="功能需求对软件开发的影响"></a>功能需求对软件开发的影响</h2><p>不知道大家有没有发现这样一个事实，随着我们系统要处理的业务功能越来越多，我们添加一个新功能的代价也越来越大。很有意思，我发现业务功能与添加一个新功能要做出的努力呈现出类似于下图所示的关系。</p>
+<img src="/2017/11/03/编程心智-二-——二八定律对软件开发的影响/effort-feature.png" alt="effort-feature" title="effort-feature">
+<p>起初，为了使得一个新系统能运行，我们不得不处理一些非业务性的工作，比如搭建框架、技术选型、架构设计、部署结构设计、资源申请等等。而一旦这些基础性的工作完成，那我们就可以快速的完成业务需求。大概花费我们20%的精力就可以满足80%的业务功能，这些业务功能也是系统的主要功能。但是再往后新增功能，所要做出的努力就会成指数增长。这张图与<a href="https://www.amazon.cn/%E4%BC%81%E4%B8%9A%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F-%E7%A6%8F%E5%8B%92/dp/B003LBSRDM/ref=sr_1_1?qid=1509850680" target="_blank" rel="external">P o EAA</a>中的领域逻辑复杂度与工作量之间的关系类似。当然，这个曲线并不是绝对的，影响这条曲线的关键在于系统的代码架构，好的代码架构能让你在处理复杂的业务需求时更加从容。（题外话，我认为一个优秀的程序员应该具备处理复杂需求的能力。）</p>
+<p>既然我们发现了这个规律，是否能指导我们的日常开发工作呢？答案是肯定的。因为80%的功能基本已经满足了大部分人的需求，而为了满足少数人的需求而增加80%的努力是不值得。当然，公司完全有理由要求你这么做，与此同时你也可以把这个利害关系介绍给他们听。</p>
+<p>甚至在细分到x轴和y轴，我们可以继续运用二八定律来分解。80%的业务功能其实大概只有20%是核心功能，其余的只是为了优化体验或者简化流程为存在的；而对于20%的努力而言，其中80%的工作主要集中在满足核心的业务需求而存在的，我们应该也必须投入这么多精力来设计并开发这些功能，因为它们是整个系统的核心。</p>
+<h2 id="性能优化对软件开发的影响"><a href="#性能优化对软件开发的影响" class="headerlink" title="性能优化对软件开发的影响"></a>性能优化对软件开发的影响</h2><p>程序员总是对性能优化这个话题充满激情，好像这成了唯一彰显其技术能力的手段。确实，要把应用系统的性能优化到极致，确实要付出大量的努力。但实际上性能优化所付出的努力与取得的效果也符合二八定律。其工作量与索取的效果类似于下图所示。</p>
+<img src="/2017/11/03/编程心智-二-——二八定律对软件开发的影响/effort-performance.png" alt="effort-performance" title="effort-performance">
+<p>不消多说，凡是做个性能优化的同学应该都会有这样的感触：只用加个索引或者加上缓存就可以使得系统的性能大幅度提供。使用常规的优化手段（大概耗费20%的精力）就可以取得显著的效果（提升80%的性能）。但是要取得另外20%的性能提升要付出努力将大大增加。掌握这个规律相信大家应该知道如何“使力”了。</p>
+<h2 id="项目人数对开发效率的影响"><a href="#项目人数对开发效率的影响" class="headerlink" title="项目人数对开发效率的影响"></a>项目人数对开发效率的影响</h2><p>还一个比较显著的符合二八定律的场景就是在项目管理上。</p>
+<img src="/2017/11/03/编程心智-二-——二八定律对软件开发的影响/people-progress.png" alt="people-progress" title="people-progress">
+<p>同时参与一个项目的人并非越多越好，实际上影响应项目进度只取决于少数人（20%），后面增加更多的人其实收效甚微。我个人也是倾向于不要在一个项目上投入过多的人力，要精不要多。现在微服务这么流行，我觉得也有类似地影响。它在架构层面把一个大系统拆分成一个一个小服务，让每个服务有少数几个人负责，这样整体的开发效率会更高。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>类似上面的例子还有很多，比如迭代周期对软件质量的影响、服务数量对整体可用性的影响等等，只要你细心观察就会发现二八定律在我们的日常开发工作中无处不在。更为重要的是，我们不仅要发现其存在，更要在那20%的重点上下功夫，避免在80%的事情上瞎费劲。</p>
+<p>（文中配图是我用Windows的画图程序生成的，不好看望大家见谅。）</p>
+<h4 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h4><p><a href="https://baike.baidu.com/item/%E4%BA%8C%E5%85%AB%E5%AE%9A%E5%BE%8B/747076?fr=aladdin" target="_blank" rel="external">二八定律</a><br><a href="https://www.amazon.cn/%E4%BC%81%E4%B8%9A%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F-%E7%A6%8F%E5%8B%92/dp/B003LBSRDM/ref=sr_1_1?qid=1509850680" target="_blank" rel="external">企业架构模式</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;相信很多人都听说过二八定律，这是一个适用性非常广泛的定律。我发现二八定律同样适用于软件开发，并对其产生了十分深远的影响。这次我想聊聊二八定律是如何影响我们日常的开发工作的，希望通过这个话题来改变一下大家习以为常的开发思维。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="编程心智" scheme="http://michael-j.net/categories/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA/"/>
+    
+    
+      <category term="编程心得" scheme="http://michael-j.net/tags/%E7%BC%96%E7%A8%8B%E5%BF%83%E5%BE%97/"/>
+    
+      <category term="二八定律" scheme="http://michael-j.net/tags/%E4%BA%8C%E5%85%AB%E5%AE%9A%E5%BE%8B/"/>
+    
+      <category term="软件开发" scheme="http://michael-j.net/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title>编程心智(一)——代码架构与系统架构</title>
@@ -676,7 +723,7 @@
 <p><a href="https://www.gitbook.com/book/mymonkey110/zookeeper-distributed-process-coordination" target="_blank" rel="external">GitBook阅读地址</a></p>
 <p><a href="https://github.com/mymonkey110/zookeeper-book/blob/master/SUMMARY.md" target="_blank" rel="external">GitHub阅读地址</a></p>
 <p>由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献：</p>
-<p>参与讨论：邮件列表：<a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#122;&#x6b;&#95;&#116;&#114;&#97;&#110;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#64;&#103;&#x72;&#111;&#x75;&#112;&#115;&#x2e;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#109;">&#122;&#x6b;&#95;&#116;&#114;&#97;&#110;&#115;&#108;&#x61;&#116;&#x6f;&#x72;&#64;&#103;&#x72;&#111;&#x75;&#112;&#115;&#x2e;&#49;&#54;&#51;&#x2e;&#99;&#x6f;&#109;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
+<p>参与讨论：邮件列表：<a href="&#109;&#97;&#105;&#108;&#x74;&#111;&#x3a;&#x7a;&#x6b;&#x5f;&#116;&#114;&#x61;&#110;&#x73;&#108;&#97;&#116;&#x6f;&#x72;&#x40;&#x67;&#114;&#x6f;&#x75;&#x70;&#x73;&#x2e;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;">&#x7a;&#x6b;&#x5f;&#116;&#114;&#x61;&#110;&#x73;&#108;&#97;&#116;&#x6f;&#x72;&#x40;&#x67;&#114;&#x6f;&#x75;&#x70;&#x73;&#x2e;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;</a>，申请加入地址：<a href="http://163.fm/UJNWGHS" target="_blank" rel="external">http://163.fm/UJNWGHS</a></p>
 <p>部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。</p>
 <p>在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ git clone git@github<span class="selector-class">.com</span>:user/zookeeper-book<span class="selector-class">.git</span></div><div class="line">$ cd zookeeper-book</div><div class="line">$ git config user<span class="selector-class">.name</span> <span class="string">"yourname"</span></div><div class="line">$ git config user<span class="selector-class">.email</span> <span class="string">"your email"</span></div></pre></td></tr></table></figure>
@@ -930,64 +977,6 @@
     
     
       <category term="life" scheme="http://michael-j.net/tags/life/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>实现领域事件</title>
-    <link href="http://michael-j.net/2016/01/19/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/"/>
-    <id>http://michael-j.net/2016/01/19/实现领域事件/</id>
-    <published>2016-01-19T08:53:05.000Z</published>
-    <updated>2017-06-03T03:36:02.863Z</updated>
-    
-    <content type="html"><![CDATA[<p>当你的系统或者业务变得日益复杂时，<code>DDD</code>的模式是一种非常值得尝试的架构模式。<code>DDD</code>让你更加关注于你的业务领域，思考你的业务模型，帮组你理清繁杂的业务关系。我推荐所有还没有了解过或者接触过<code>DDD</code>的后端工程师都去学习一下该架构模式。本文主要关注<code>DDD</code>中的<code>领域事件</code>，以及一种可能的实践方式。</p>
-<a id="more"></a>
-<p>我们知道领域模型的变化会产生领域事件。例如，用户在完成注册后，系统会发出一封带有确认信息的邮件到用户的邮箱；用户关注的好友发送动态后他会收到相应的通知等等。在业务比较简单或者不用考虑性能的情况下，我们可以直接把对领域事件的处理嵌入到领域服务中。考虑这样一个场景：用户回复了某条评论，那么被回复的那个用户（也就是那条评论的所有者）需要收到一个PUSH消息。这个场景比较简单，我们可能直接写出类似下面的代码：</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  void  reply(long <span class="keyword">from</span>UserId,long <span class="keyword">to</span>UserId,String content) &#123;</div><div class="line">   	saveReply(<span class="keyword">from</span>UserId,<span class="keyword">to</span>UserId,content);</div><div class="line">	sendPush(<span class="keyword">to</span>UserId,content); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这样一来，我们就直接把发送PUSH的动作嵌入到了回复的逻辑中。这样做有以下两个问题：</p>
-<ul>
-<li>回复动作处理了它不关心的逻辑。发送PUSH不是回复的强关联逻辑，也就是说即使push发送不成功也应该让回复动作成功。上面的代码将回复和发送PUSH耦合在了一起。</li>
-<li>如果出现了多个对回复动作感兴趣的业务方，那么上面的代码将不可维护。比如，我们有一个回复的计数器，它要统计回复的总量。如果把增加计数器的动作写在回复中，那么将不可维护，因为每次出现新的业务方都要修改回复逻辑。这显然返回了<code>开闭原则</code>。</li>
-</ul>
-<p>解决上诉问题的方法很简单，就是使用<code>领域事件</code>。<code>领域事件</code>很好理解，说白了就是与领域相关的事件。事件的产生往往伴随着相应的动作，例如上面所提到的回复动作。有了领域事件，每个领域本身就只需要关系其自己的业务逻辑，并在处理完自身逻辑的同时抛出相应的领域事件。对这些领域事件感兴趣的业务方可以<code>订阅</code>该事件，然后进行后续的处理。这与<code>观察者</code>模式和<code>发布订阅</code>模式是十分相像的。我更倾向于<code>发布订阅</code>这个词，它更好的表达了发布者和订阅者的一种解耦。</p>
-<p><code>发布订阅</code>模式有很多种的实现，有很多开源框架和类库也实现了这种模式。例如<code>Spring</code>中的事件，<code>Guava</code>中的<code>EventBus</code>都是很好的实践。直接采用这些工具会有两个问题：</p>
-<ul>
-<li>无法灵活的处理同步事件和异步事件。<code>Spring</code>框架自带的事件机制是同步的，那么领域事件的发布者的执行流程就和订阅者的处理流程在一个调用堆栈中了，在某些情况下这事不可接收的。<code>EventBus</code>是支持同步和异步两种模式的，但是它要求在初始化时就指定好事件是<code>同步</code>的还是<code>异步</code>的，这对于使用方不够灵活。</li>
-<li>订阅方无法控制事件的订阅与取消。出于解耦和灵活性的考虑，我们往往把事件注册的动作放倒订阅方。<code>Spring</code>框架让这种订阅关系变得模糊，因为事件的注册是通过事件<code>ApplicationListener</code>接口完成的，那么订阅方就无法获得事件发布者的引用，进而无法取消事件的订阅。当然，取消事件订阅的情景并不常见，所以这种情况在大部分场景下也是可以接受的。</li>
-</ul>
-<p>无论是出于对事件发送同步异步的控制，还是处于订阅方更高的灵活性要求，自己在这些框架和工具上再进行封装都还是要必要的。下面我给出我的一种实践方案。</p>
-<p>我推荐在<code>guava</code>的<code>EventBus</code>上面进行封装，因为它已经实现了同步和异步的模式，并且使用注解的订阅方式对程序员也十分友好。</p>
-<p>首先，我们需要定义一个<code>领域事件</code>的抽象基类。</p>
-<p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/domain_event.jpg?imageView/2/w/480/h/640|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=" alt="DomainEvent"></p>
-<p>这个抽血基类中定义了发生时间和identify的一个抽象方法，该方法用来标示事件。下面我们就可以定义领域事件的发布器了，如下图所示。</p>
-<p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/event_publisher.jpg?imageView/2/w/480/h/640|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=" alt="EventPublisher"></p>
-<p>我先定义了领域发布器的一个通用接口，主要包括四个方法：</p>
-<ul>
-<li>identify() 发布器标示，用来区分不同的发布器。</li>
-<li>register(Object) 注册接口，订阅方调用该接口来订阅事件。</li>
-<li>publish(T event) 同步发布事件接口</li>
-<li>asyncPublish(T event) 异步发布事件接口</li>
-</ul>
-<p>同时，我给出了一个基于<code>Guava</code>的实现，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Guava事件发布器实现</div><div class="line"> * Created by Michael Jiang on 16/1/12.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">GuavaDomainEventPublisher</span> <span class="keyword">implements</span> <span class="title">DomainEventPublisher</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> EventBus syncBus = <span class="keyword">new</span> EventBus(identify());</div><div class="line">    <span class="keyword">private</span> EventBus asyncBus = <span class="keyword">new</span> AsyncEventBus(identify(), Executors.newFixedThreadPool(<span class="number">1</span>));</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object listener)</span> </span>&#123;</div><div class="line">        syncBus.register(listener);</div><div class="line">        asyncBus.register(listener);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(DomainEvent event)</span> </span>&#123;</div><div class="line">        syncBus.post(event);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">asyncPublish</span><span class="params">(DomainEvent event)</span> </span>&#123;</div><div class="line">        asyncBus.post(event);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我在实现中初始化了两个eventBus，一个是同步的<code>syncBus</code>，用于发布同步事件；另外一个是异步的<code>asyncBus</code>，用于发布异步事件。其中我将异步线程池硬编码为1个线程，基本满足大部分情况，也可酌情修改或者开放这个参数，有各个领域事件的发布器来实现。</p>
-<p>具体的领域事件发布器直接继承<code>GuavaDomainEventPublisher</code>，并覆盖identify()方法后就可以使用了。</p>
-<p>这里我并没有专门去设计订阅方，因为<code>Guava</code>提供的注解方式已经十分方便了。我设计了一个简单的demo放倒了github上面，有兴趣的朋友可以直接查看源代码。如果你有更好的设计方法或者思路，可以直接留言进行讨论。</p>
-<p>Demo地址：<a href="https://github.com/mymonkey110/event-light" target="_blank" rel="external">https://github.com/mymonkey110/event-light</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      最近在实践DDD的过程中对领域事件颇有感触，分享一下我的心得和实践方法。
-    
-    </summary>
-    
-      <category term="DDD" scheme="http://michael-j.net/categories/DDD/"/>
-    
-    
-      <category term="领域事件" scheme="http://michael-j.net/tags/%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/"/>
-    
-      <category term="event" scheme="http://michael-j.net/tags/event/"/>
     
   </entry>
   
