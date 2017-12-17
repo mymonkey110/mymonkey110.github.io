@@ -4,6 +4,32 @@
 
     
   <url>
+    <loc>http://michael-j.net/2017/12/15/%E8%9C%82%E5%B7%A2%E8%AE%A1%E8%B4%B9%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%8D%87%E7%BA%A7%E4%B9%8B%E8%B7%AF/</loc>
+    <lastmod>2017-12-17T13:56:15.946Z</lastmod>
+    <data>
+        <display>
+        <title>蜂巢计费系统架构升级之路</title>
+        <pubTime>2017-12-15T06:26:26.000Z</pubTime>
+        
+        <tag>cloud</tag>
+         
+        <tag>云计算</tag>
+         
+        <tag>计费</tag>
+         
+        <tag>微服务</tag>
+         
+         
+           
+             
+              <breadCrumb title="云计算" url="http://michael-j.net/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://michael-j.net/2017/11/03/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA-%E4%BA%8C-%E2%80%94%E2%80%94%E4%BA%8C%E5%85%AB%E5%AE%9A%E5%BE%8B%E5%AF%B9%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%9A%84%E5%BD%B1%E5%93%8D/</loc>
     <lastmod>2017-11-05T04:02:32.921Z</lastmod>
     <data>
@@ -181,11 +207,11 @@
         <title>Debug:Tomcat deploy twice</title>
         <pubTime>2015-10-30T02:46:31.000Z</pubTime>
         
+        <tag>debug</tag>
+         
         <tag>tomcat</tag>
          
         <tag>部署</tag>
-         
-        <tag>debug</tag>
          
          
            
@@ -249,9 +275,9 @@
         <title>评论设计</title>
         <pubTime>2016-01-05T09:52:07.000Z</pubTime>
         
-        <tag>架构</tag>
-         
         <tag>评论系统</tag>
+         
+        <tag>架构</tag>
          
          
            
@@ -385,11 +411,11 @@
         <title>对云环境下访问控制系统的思考</title>
         <pubTime>2017-03-07T12:16:56.000Z</pubTime>
         
+        <tag>架构设计</tag>
+         
         <tag>cloud</tag>
          
         <tag>访问控制</tag>
-         
-        <tag>架构设计</tag>
          
         <tag>DSL</tag>
          
