@@ -116,16 +116,18 @@
 
 
 <meta name="description" content="我以前写过一篇关于领域事件的文章——实现领域事件，随着在项目中深入的使用DDD架构，我对领域事件有了新的认识。尤其是采用领域事件来解耦代码这种方式对项目的发展具有深远的影响。">
+<meta name="keywords" content="领域事件,event,dddd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="再谈领域事件">
 <meta property="og:url" content="http://michael-j.net/2017/08/13/再谈领域事件/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="我以前写过一篇关于领域事件的文章——实现领域事件，随着在项目中深入的使用DDD架构，我对领域事件有了新的认识。尤其是采用领域事件来解耦代码这种方式对项目的发展具有深远的影响。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://michael-j.net/2017/08/13/再谈领域事件/couple.png">
 <meta property="og:image" content="http://michael-j.net/2017/08/13/再谈领域事件/decouple-with-event.png">
 <meta property="og:image" content="http://michael-j.net/2017/08/13/再谈领域事件/一团乱麻.jpg">
 <meta property="og:image" content="http://michael-j.net/2017/08/13/再谈领域事件/order-bill.png">
-<meta property="og:updated_time" content="2017-08-13T11:19:21.939Z">
+<meta property="og:updated_time" content="2017-08-13T11:19:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="再谈领域事件">
 <meta name="twitter:description" content="我以前写过一篇关于领域事件的文章——实现领域事件，随着在项目中深入的使用DDD架构，我对领域事件有了新的认识。尤其是采用领域事件来解耦代码这种方式对项目的发展具有深远的影响。">
@@ -513,16 +515,16 @@
 <a id="more"></a>
 <p>我在<a href="http://michael-j.net/2016/01/19/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/">实现领域事件</a>中主要谈到了如何在技术层面去实现发布事件与订阅事件，比较了几种不同的方式以及它们背后的原理。但随着我在自己负责的项目中严格地实施DDD架构时，我发现如何去发布订阅领域事件的意义远没有决定去做这件事情本身重要。换句话说，与其纠结与是使用基于<code>Spring</code>的事件架构还是<code>Guava</code>提供的<code>EventBus</code>，是使用同步发布还是异步发布，还不如想想去做这件事情对你的项目会产生怎样的影响。</p>
 <p>为什么要使用事件？我认为这是所有人应该考虑的首要问题。对我来说，使用事件的意义有两个方面，一是在于流程上的解耦，二是在于代码层面的解耦。在代码层面的解耦是显而易见的，我就不再赘述了。那么流程上的解耦是什么意思了？我们先看一下一个普通的业务流程执行的链路。</p>
-<img src="/2017/08/13/再谈领域事件/couple.png" alt="正常的业务流程" title="正常的业务流程">
+<img src="/2017/08/13/再谈领域事件/couple.png" title="正常的业务流程">
 <p>目前我们绝大部分人的思维习惯是顺序式的，体现在代码上也就是<code>A</code>做完它做的事情然后<code>B</code>继续处理，当然这么做没有任何问题，这也是最为简单直观的一种编程方式。我们再来看一下通过<code>Event</code>来解耦的链路。</p>
-<img src="/2017/08/13/再谈领域事件/decouple-with-event.png" alt="通过事件来解耦" title="通过事件来解耦">
-<p>通过引入事件，我们将过程A和过程B解耦了。第一种方式和第二种方式都有着其重要的存在意义，决定何时采用第二种方式的关键在于<a href="https://martinfowler.com/bliki/BoundedContext.html" target="_blank" rel="external">BoundedContext</a>。正好最近我在负责处理一个遗留系统的拆分问题，恰好有一个好的例子来说明这个问题。</p>
+<img src="/2017/08/13/再谈领域事件/decouple-with-event.png" title="通过事件来解耦">
+<p>通过引入事件，我们将过程A和过程B解耦了。第一种方式和第二种方式都有着其重要的存在意义，决定何时采用第二种方式的关键在于<a href="https://martinfowler.com/bliki/BoundedContext.html" target="_blank" rel="noopener">BoundedContext</a>。正好最近我在负责处理一个遗留系统的拆分问题，恰好有一个好的例子来说明这个问题。</p>
 <p>这个遗留系统是一个计费系统，因为各种各样的原因，整个项目在代码层面非常混乱，代码之间各种凌乱的引用和交叉，这种感觉就和下图一样。</p>
-<img src="/2017/08/13/再谈领域事件/一团乱麻.jpg" alt="一团乱麻.jpg" title="">
+<img src="/2017/08/13/再谈领域事件/一团乱麻.jpg">
 <p>我认为造成这个问题的根源在于开发人员并没有及时地识别出这个项目中的几个关键领域以及及早的将其进行隔离。更为让人遗憾的是开发这个项目的人员都已离职，后来接手这个项目的开发人员被堆积地需求压得喘不过气来，也就更没有时间来处理以前的技术债务问题。</p>
 <p>实际上，这个项目包含多个领域，最为核心的三个领域就是订单、账单和计费。在和老大以及开发沟通过后，我们意识到系统拆分已经刻不容缓。目前我们在做的事情就是在工程内部进行代码级别的拆分，其中最为棘手的问题就是订单系统和计费系统的耦合太深。</p>
 <p>仔细分析各个业务流程之后我们发现，很多耦合都是可以避免的。大部分的业务流程都是由订单系统触发，然后计费系统做出相应的变更。最终，我们决定使用领域事件来讲订单系统和计费系统解耦开。（PS:原系统中并没有使用DDD的开发模式，但这并不影响我们使用领域事件。)</p>
-<img src="/2017/08/13/再谈领域事件/order-bill.png" alt="order-bill" title="order-bill">
+<img src="/2017/08/13/再谈领域事件/order-bill.png" title="order-bill">
 <p>上图是我们现在的做法，通过<code>OrderEvent</code>和<code>BillEvent</code>来将两个系统解耦开，然后将<code>Event</code>放到一个公共的Module中来达到Module级别的解耦。令人惊喜的发现在于，这种解耦的方式与我们规划中订单系统与计费系统通过MQ来通信达成了一致。后面我们只需要标准化这些事件，就可以做到无缝迁移到MQ中。</p>
 <p>通过上面这个例子，我再总结一下使用领域事件的来解耦业务流程的应用场景：</p>
 <ol>
@@ -530,9 +532,9 @@
 <li>如果在同一个受限上下文中，也可以通过发布领域事件的方式来达到领域间解耦。</li>
 </ol>
 <p>至于为什么说以何种方式来发布事件不在那么重要，因为当你在项目采用了领域事件技术来解耦代码，你已经获得这项技术的90%的好处，而具体怎么执行就显得不那么重要了。我在另外一个项目中（这个项目完全采用DDD的模式来开发）就采用了最为朴实的方式来实现，不再基于Spring或者Guava了。</p>
-<p>附上我目前的使用方法：<a href="https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a" target="_blank" rel="external">https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a</a></p>
+<p>附上我目前的使用方法：<a href="https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a" target="_blank" rel="noopener">https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a</a></p>
 <p>如果你对使用领域事件的感触没有那么深，那么请记住这句话：代码间解耦用事件，系统间解耦用MQ！</p>
-<p>参考资料：<br><a href="https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00IYTVWA6/ref=sr_1_1/462-1072474-8297663?qid=1502622410" target="_blank" rel="external">实现领域驱动设计</a><br><a href="https://www.amazon.cn/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E8%BD%AF%E4%BB%B6%E6%A0%B8%E5%BF%83%E5%A4%8D%E6%9D%82%E6%80%A7%E5%BA%94%E5%AF%B9%E4%B9%8B%E9%81%93-%E5%9F%83%E9%87%8C%E5%85%8B-%E5%9F%83%E6%96%87%E6%96%AF/dp/B01GZ6T12K/ref=tmm_pap_swatch_0?_encoding=UTF8&amp;qid=1502622410" target="_blank" rel="external">领域驱动设计:软件核心复杂性应对之道</a></p>
+<p>参考资料：<br><a href="https://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00IYTVWA6/ref=sr_1_1/462-1072474-8297663?qid=1502622410" target="_blank" rel="noopener">实现领域驱动设计</a><br><a href="https://www.amazon.cn/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1-%E8%BD%AF%E4%BB%B6%E6%A0%B8%E5%BF%83%E5%A4%8D%E6%9D%82%E6%80%A7%E5%BA%94%E5%AF%B9%E4%B9%8B%E9%81%93-%E5%9F%83%E9%87%8C%E5%85%8B-%E5%9F%83%E6%96%87%E6%96%AF/dp/B01GZ6T12K/ref=tmm_pap_swatch_0?_encoding=UTF8&amp;qid=1502622410" target="_blank" rel="noopener">领域驱动设计:软件核心复杂性应对之道</a></p>
 
       
     </div>
@@ -829,7 +831,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

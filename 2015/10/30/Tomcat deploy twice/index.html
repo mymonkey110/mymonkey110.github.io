@@ -97,7 +97,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="debug,tomcat,部署," />
+  <meta name="keywords" content="tomcat,部署,debug," />
 
 
 
@@ -116,15 +116,17 @@
 
 
 <meta name="description" content="tomcat重复部署的问题">
+<meta name="keywords" content="tomcat,部署,debug">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Debug:Tomcat deploy twice">
 <meta property="og:url" content="http://michael-j.net/2015/10/30/Tomcat deploy twice/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="tomcat重复部署的问题">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://7xnwpq.com1.z0.glb.clouddn.com/jscheduler.png">
 <meta property="og:image" content="http://7xnwpq.com1.z0.glb.clouddn.com/E77611B1-937A-49AD-B51D-797143F9B6B1.png">
 <meta property="og:image" content="http://7xnwpq.com1.z0.glb.clouddn.com/9CDEE719-9454-4E4B-99C3-684518E9F49F.png">
-<meta property="og:updated_time" content="2017-06-03T03:43:57.341Z">
+<meta property="og:updated_time" content="2017-06-03T03:43:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Debug:Tomcat deploy twice">
 <meta name="twitter:description" content="tomcat重复部署的问题">
@@ -519,14 +521,14 @@
 <p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/E77611B1-937A-49AD-B51D-797143F9B6B1.png" alt="debug-1"></p>
 <p>我们发现在同一时刻Scheduler对一个Job触发了两次，而在集群的某台机器上发现一个Job被触发了4次：</p>
 <p><img src="http://7xnwpq.com1.z0.glb.clouddn.com/9CDEE719-9454-4E4B-99C3-684518E9F49F.png" alt="debug-2"></p>
-<p>当我在自己的机器上始终无法复现该问题。由于是同一个war包，故排出了代码的问题。不同之处在于，我本机启动的方式是用jetty的插件直接启动的，而服务器上则是用的是tomcat容器。经过一番排查发现，是tomcat重复部署的问题，tomcat的<a href="https://tomcat.apache.org/tomcat-7.0-doc/deployer-howto.html" target="_blank" rel="external">官方文档</a>有如下说明:</p>
+<p>当我在自己的机器上始终无法复现该问题。由于是同一个war包，故排出了代码的问题。不同之处在于，我本机启动的方式是用jetty的插件直接启动的，而服务器上则是用的是tomcat容器。经过一番排查发现，是tomcat重复部署的问题，tomcat的<a href="https://tomcat.apache.org/tomcat-7.0-doc/deployer-howto.html" target="_blank" rel="noopener">官方文档</a>有如下说明:</p>
 <blockquote>
 <p>Any Context Descriptors will be deployed first.</p>
 </blockquote>
 <p>因为我想讲应用直接部署在/下，所以在server.xml中的localhost节点下加入了context的配置。根据tomcat的官方文档，如果host下面有context的配置则会先部署，而后容器再部署一次。也就是说，应用被部署了两次。这也就解释了为什么scheduler会触发两次，而job会触发4次了。</p>
 <p>解决的方法是将<code>deployOnStart</code>设置为<code>false</code>，<code>autoDeploy</code>设置为<code>false</code>。</p>
 <p>参考：</p>
-<p><a href="http://stackoverflow.com/questions/7223108/quartz-job-runs-twice-when-deployed-on-tomcat-6-ubuntu-10-04lts" target="_blank" rel="external">http://stackoverflow.com/questions/7223108/quartz-job-runs-twice-when-deployed-on-tomcat-6-ubuntu-10-04lts</a></p>
+<p><a href="http://stackoverflow.com/questions/7223108/quartz-job-runs-twice-when-deployed-on-tomcat-6-ubuntu-10-04lts" target="_blank" rel="noopener">http://stackoverflow.com/questions/7223108/quartz-job-runs-twice-when-deployed-on-tomcat-6-ubuntu-10-04lts</a></p>
 
       
     </div>
@@ -592,11 +594,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/debug/" rel="tag"># debug</a>
-          
             <a href="/tags/tomcat/" rel="tag"># tomcat</a>
           
             <a href="/tags/部署/" rel="tag"># 部署</a>
+          
+            <a href="/tags/debug/" rel="tag"># debug</a>
           
         </div>
       
@@ -823,7 +825,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -116,12 +116,14 @@
 
 
 <meta name="description" content="最近对xss攻击的的防范又有了新的理解，特此分享一下心得。">
+<meta name="keywords" content="security">
 <meta property="og:type" content="article">
 <meta property="og:title" content="防范xss的正确姿势">
 <meta property="og:url" content="http://michael-j.net/2016/04/12/防范xss的正确姿势/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="最近对xss攻击的的防范又有了新的理解，特此分享一下心得。">
-<meta property="og:updated_time" content="2017-06-03T03:40:48.694Z">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-06-03T03:40:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="防范xss的正确姿势">
 <meta name="twitter:description" content="最近对xss攻击的的防范又有了新的理解，特此分享一下心得。">
@@ -508,7 +510,7 @@
       
 
       
-        <p>xss攻击是web攻击中非常常见的一种攻击手段。如果你还没有听说过xss攻击，可以先了解xss的相关知识和原理，例如:<a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)" target="_blank" rel="external">https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)</a>。</p>
+        <p>xss攻击是web攻击中非常常见的一种攻击手段。如果你还没有听说过xss攻击，可以先了解xss的相关知识和原理，例如:<a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)" target="_blank" rel="noopener">https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)</a>。</p>
 <p>防范xss攻击的方式也十分简单：转义！</p>
 <p>但是转义的时机？是在持久化之前转义呢，还是读数据之后escape呢？</p>
 <p>我开始想也没想就选择了第一种方式，因为这种方法看上去一劳永逸，但是我现在越来越倾向于第二种方式。</p>
@@ -540,8 +542,8 @@
 </table>
 <p>本人推荐第二种方式来防范xss攻击。虽然需要对每个输出数据都进行转义，但是如果你使用带自动转义的模版或者框架来处理的话，那么就可以极大的提高效率，又可以规避安全的问题。最后还是要提醒大家，安全无小事，即使你觉得没有人会攻击的系统，还是要规避这些风险，安全是系统的基石。</p>
 <p>参考文献：</p>
-<p><a href="https://n0tw0rthy.wordpress.com/2011/10/07/when-do-you-escape-your-data/" target="_blank" rel="external">Why escape-on-input is a bad idea</a></p>
-<p><a href="https://n0tw0rthy.wordpress.com/2011/10/07/when-do-you-escape-your-data/" target="_blank" rel="external">When do you escape your data?</a></p>
+<p><a href="https://n0tw0rthy.wordpress.com/2011/10/07/when-do-you-escape-your-data/" target="_blank" rel="noopener">Why escape-on-input is a bad idea</a></p>
+<p><a href="https://n0tw0rthy.wordpress.com/2011/10/07/when-do-you-escape-your-data/" target="_blank" rel="noopener">When do you escape your data?</a></p>
 
       
     </div>
@@ -834,7 +836,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

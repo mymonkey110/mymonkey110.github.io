@@ -116,11 +116,13 @@
 
 
 <meta name="description" content="java程序中经常会遇到异常的处理，何时选用Checked Exception和Unchecked Exception经常会让程序员苦恼，本文分享一下我在这方面的心得。">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java异常的选择：Checked Exception还是Unchecked Exception ?">
 <meta property="og:url" content="http://michael-j.net/2016/06/07/Java异常的选择/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="java程序中经常会遇到异常的处理，何时选用Checked Exception和Unchecked Exception经常会让程序员苦恼，本文分享一下我在这方面的心得。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2016-08-20T10:34:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java异常的选择：Checked Exception还是Unchecked Exception ?">
@@ -518,12 +520,12 @@
 <li>本节点还未被创建</li>
 </ul>
 <p>那么，这个API的签名大致应该是这样：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">createNode</span><span class="params">(String path,<span class="keyword">byte</span>[] data)</span> <span class="keyword">throws</span> FatherNodeNotExist, NodeExist</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createNode</span><span class="params">(String path,<span class="keyword">byte</span>[] data)</span> <span class="keyword">throws</span> FatherNodeNotExist, NodeExist</span>;</span><br></pre></td></tr></table></figure>
 <p>API的使用者看到这个签名的定义时就会得到一个强烈的心理暗示，我需要考虑父节点不存在和本节点已存在的情况，那么他就不得不显示的去处理这两种异常。</p>
 <p>有的朋友可能会争论说，我正常的情况下不会出现这种情况，因为使用这个API的前提就是先创建好父节点，而后创建本节点，那我就不用抛出两种异常了，使用者也轻松了许多。但事实真的如此吗？我们想当然的认为了使用者是<code>自己人</code>，他们会乖乖的按照我们的想法去先创建父节点，再创建本节点，如果是在一个很局限的使用场景下，每个人都说经过严格培训的，那么你可以去做这样的假设，但是我还是不推荐你这么做，因为这样设计使得系统是脆弱的，不稳定的。如果能通过系统能自己避免这些错误，为什么不呢？况且，如果你把这个API开放给第三方的使用者，那么情况会更糟糕，你根本不知道他们会怎样去使用API，这非常恐怖！</p>
 <p>有时候情况会变得很复杂，<code>正常情况</code>的鉴定变得很困难，你肯定会遇到这种时候，此时就需要结合你的业务场景去权衡其中的利弊。这依赖与你的经验和对业务场景的理解，我无法给你一个绝对的建议，那样是不负责任的。</p>
 <p>我再举个常见的栗子：用户修改他拥有的资源信息。在菜谱APP中给出一个接口，让用户修改他菜谱的信息。那么这里一个隐含的条件就是用户修改他自己的菜谱信息，他是无权限修改别人的菜谱信息的。那么这个API的签名可能是这样的：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">updateMenu</span><span class="params">(<span class="keyword">long</span> menuId,<span class="keyword">long</span> uid,String title,String description...)</span></span>;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">updateMenu</span><span class="params">(<span class="keyword">long</span> menuId,<span class="keyword">long</span> uid,String title,String description...)</span></span>;</span><br></pre></td></tr></table></figure>
 <p>如果用户尝试去修改不属于他的菜谱呢？我们是否需要throws UserPermissionException之类受检异常？我认为是不需要的。判断是这属于正常情况吗？我认为这不算是正常情况。<br>正常情况下，客户端调用修改信息的接口，那么menuId一定是属于这个用户的。如果出现这种情况，要么是你系统设计的就有问题，要么就是不怀好意的人在破坏你的系统。前者需要重新设计我们的系统，而后者我们更不用关系，直接抛出一个RuntimeException就可以，因为他不算正常用户。</p>
 <h4 id="2-调用者中能从异常中恢复的，推荐使用受检异常；反之，则使用非受检异常"><a href="#2-调用者中能从异常中恢复的，推荐使用受检异常；反之，则使用非受检异常" class="headerlink" title="2. 调用者中能从异常中恢复的，推荐使用受检异常；反之，则使用非受检异常"></a>2. 调用者中能从异常中恢复的，推荐使用受检异常；反之，则使用非受检异常</h4><p>注意这里的一个关键词是<code>推荐</code>，决定使用哪种异常最为根本的还是第一条原则。如果第一条原则难以判断时，才考虑调用者。这条原则和<code>Effective Java</code>中的第58条很像，如果有这本书的朋友可以再拿出来读读。</p>
 <p>我和<code>Effective Java</code>#58不同的观点在于，这条原则只能是<code>推荐</code>，另外，对于所有不能恢复的情况我都建议使用非受检异常。我对可恢复的理解是，如果API的调用者能够处理你抛出的异常，并给出积极的响应和反馈，并指导它的使用者做出调整，那么这就是可恢复的。不可恢复就是API的调用者无法处理你抛出的异常，或者仅仅只是打个LOG记录一下，不能对它的使用者做出提示，那么都可认为是不可恢复的。</p>
@@ -538,7 +540,7 @@
 <p>这些在<code>Effective Java</code>中都有详细的介绍，朋友可以认真读一下这本书，写的非常好！</p>
 <p>对异常处理有不同理解的朋友可以给我留言，一起讨论，共同进步！</p>
 <p>参考文献：</p>
-<p><a href="https://github.com/HackathonHackers/programming-ebooks/blob/master/Java/Effective%20Java%20\(2nd%20Edition\" target="_blank" rel="external">Effective Java, 2nd Edition</a>.pdf)</p>
+<p><a href="https://github.com/HackathonHackers/programming-ebooks/blob/master/Java/Effective%20Java%20\(2nd%20Edition\" target="_blank" rel="noopener">Effective Java, 2nd Edition</a>.pdf)</p>
 
       
     </div>
@@ -856,7 +858,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

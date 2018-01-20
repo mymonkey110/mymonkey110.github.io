@@ -116,14 +116,16 @@
 
 
 <meta name="description" content="最近在实践DDD的过程中对领域事件颇有感触，分享一下我的心得和实践方法。">
+<meta name="keywords" content="领域事件,event">
 <meta property="og:type" content="article">
 <meta property="og:title" content="实现领域事件">
 <meta property="og:url" content="http://michael-j.net/2016/01/19/实现领域事件/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="最近在实践DDD的过程中对领域事件颇有感触，分享一下我的心得和实践方法。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://7xnwpq.com1.z0.glb.clouddn.com/domain_event.jpg?imageView/2/w/480/h/640|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=">
 <meta property="og:image" content="http://7xnwpq.com1.z0.glb.clouddn.com/event_publisher.jpg?imageView/2/w/480/h/640|watermark/2/text/aHR0cDovL21pY2hhZWwtai54eXo=">
-<meta property="og:updated_time" content="2017-06-03T03:36:02.863Z">
+<meta property="og:updated_time" content="2017-06-03T03:36:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实现领域事件">
 <meta name="twitter:description" content="最近在实践DDD的过程中对领域事件颇有感触，分享一下我的心得和实践方法。">
@@ -473,7 +475,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  1,635
+                  1,662
                 </span>
               
 
@@ -514,7 +516,7 @@
         <p>当你的系统或者业务变得日益复杂时，<code>DDD</code>的模式是一种非常值得尝试的架构模式。<code>DDD</code>让你更加关注于你的业务领域，思考你的业务模型，帮组你理清繁杂的业务关系。我推荐所有还没有了解过或者接触过<code>DDD</code>的后端工程师都去学习一下该架构模式。本文主要关注<code>DDD</code>中的<code>领域事件</code>，以及一种可能的实践方式。</p>
 <a id="more"></a>
 <p>我们知道领域模型的变化会产生领域事件。例如，用户在完成注册后，系统会发出一封带有确认信息的邮件到用户的邮箱；用户关注的好友发送动态后他会收到相应的通知等等。在业务比较简单或者不用考虑性能的情况下，我们可以直接把对领域事件的处理嵌入到领域服务中。考虑这样一个场景：用户回复了某条评论，那么被回复的那个用户（也就是那条评论的所有者）需要收到一个PUSH消息。这个场景比较简单，我们可能直接写出类似下面的代码：</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">  void  reply(long <span class="keyword">from</span>UserId,long <span class="keyword">to</span>UserId,String content) &#123;</div><div class="line">   	saveReply(<span class="keyword">from</span>UserId,<span class="keyword">to</span>UserId,content);</div><div class="line">	sendPush(<span class="keyword">to</span>UserId,content); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  void  reply(long <span class="keyword">from</span>UserId,long <span class="keyword">to</span>UserId,String content) &#123;</span><br><span class="line">   	saveReply(<span class="keyword">from</span>UserId,<span class="keyword">to</span>UserId,content);</span><br><span class="line">	sendPush(<span class="keyword">to</span>UserId,content); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这样一来，我们就直接把发送PUSH的动作嵌入到了回复的逻辑中。这样做有以下两个问题：</p>
 <ul>
 <li>回复动作处理了它不关心的逻辑。发送PUSH不是回复的强关联逻辑，也就是说即使push发送不成功也应该让回复动作成功。上面的代码将回复和发送PUSH耦合在了一起。</li>
@@ -540,11 +542,11 @@
 <li>asyncPublish(T event) 异步发布事件接口</li>
 </ul>
 <p>同时，我给出了一个基于<code>Guava</code>的实现，如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Guava事件发布器实现</div><div class="line"> * Created by Michael Jiang on 16/1/12.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">GuavaDomainEventPublisher</span> <span class="keyword">implements</span> <span class="title">DomainEventPublisher</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> EventBus syncBus = <span class="keyword">new</span> EventBus(identify());</div><div class="line">    <span class="keyword">private</span> EventBus asyncBus = <span class="keyword">new</span> AsyncEventBus(identify(), Executors.newFixedThreadPool(<span class="number">1</span>));</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object listener)</span> </span>&#123;</div><div class="line">        syncBus.register(listener);</div><div class="line">        asyncBus.register(listener);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(DomainEvent event)</span> </span>&#123;</div><div class="line">        syncBus.post(event);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">asyncPublish</span><span class="params">(DomainEvent event)</span> </span>&#123;</div><div class="line">        asyncBus.post(event);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Guava事件发布器实现</span></span><br><span class="line"><span class="comment"> * Created by Michael Jiang on 16/1/12.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">GuavaDomainEventPublisher</span> <span class="keyword">implements</span> <span class="title">DomainEventPublisher</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> EventBus syncBus = <span class="keyword">new</span> EventBus(identify());</span><br><span class="line">    <span class="keyword">private</span> EventBus asyncBus = <span class="keyword">new</span> AsyncEventBus(identify(), Executors.newFixedThreadPool(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object listener)</span> </span>&#123;</span><br><span class="line">        syncBus.register(listener);</span><br><span class="line">        asyncBus.register(listener);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(DomainEvent event)</span> </span>&#123;</span><br><span class="line">        syncBus.post(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">asyncPublish</span><span class="params">(DomainEvent event)</span> </span>&#123;</span><br><span class="line">        asyncBus.post(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我在实现中初始化了两个eventBus，一个是同步的<code>syncBus</code>，用于发布同步事件；另外一个是异步的<code>asyncBus</code>，用于发布异步事件。其中我将异步线程池硬编码为1个线程，基本满足大部分情况，也可酌情修改或者开放这个参数，有各个领域事件的发布器来实现。</p>
 <p>具体的领域事件发布器直接继承<code>GuavaDomainEventPublisher</code>，并覆盖identify()方法后就可以使用了。</p>
 <p>这里我并没有专门去设计订阅方，因为<code>Guava</code>提供的注解方式已经十分方便了。我设计了一个简单的demo放倒了github上面，有兴趣的朋友可以直接查看源代码。如果你有更好的设计方法或者思路，可以直接留言进行讨论。</p>
-<p>Demo地址：<a href="https://github.com/mymonkey110/event-light" target="_blank" rel="external">https://github.com/mymonkey110/event-light</a></p>
+<p>Demo地址：<a href="https://github.com/mymonkey110/event-light" target="_blank" rel="noopener">https://github.com/mymonkey110/event-light</a></p>
 
       
     </div>
@@ -839,7 +841,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

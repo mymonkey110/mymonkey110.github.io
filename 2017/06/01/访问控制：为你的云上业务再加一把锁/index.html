@@ -116,14 +116,16 @@
 
 
 <meta name="description" content="企业上云首当其冲的就是要解决安全性的问题，是否满足企业对安全的诉求成了影响其是否上云的一个十分重要的因素之一。">
+<meta name="keywords" content="cloud,访问控制,DSL,云计算">
 <meta property="og:type" content="article">
 <meta property="og:title" content="访问控制：为你的云上业务再加一把锁">
 <meta property="og:url" content="http://michael-j.net/2017/06/01/访问控制：为你的云上业务再加一把锁/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="企业上云首当其冲的就是要解决安全性的问题，是否满足企业对安全的诉求成了影响其是否上云的一个十分重要的因素之一。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://michael-j.net/2017/06/01/访问控制：为你的云上业务再加一把锁/compile_error.png">
 <meta property="og:image" content="http://michael-j.net/2017/06/01/访问控制：为你的云上业务再加一把锁/auth_flow.png">
-<meta property="og:updated_time" content="2017-06-03T02:39:36.146Z">
+<meta property="og:updated_time" content="2017-06-03T02:39:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="访问控制：为你的云上业务再加一把锁">
 <meta name="twitter:description" content="企业上云首当其冲的就是要解决安全性的问题，是否满足企业对安全的诉求成了影响其是否上云的一个十分重要的因素之一。">
@@ -473,7 +475,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  1,467
+                  1,489
                 </span>
               
 
@@ -518,8 +520,8 @@
 </blockquote>
 <p>云环境下的访问控制使得这个问题变得复杂，我曾写过一篇<a href="http://michael-j.net/2017/03/07/%E5%AF%B9%E4%BA%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%80%9D%E8%80%83/">对云环境下访问控制系统的思考</a>来阐述这个问题。从2.14号上线访问控制以来，接入访问控制的业务越来越多，截止目前已有六大业务支持访问控制；同时，访问控制还对云服务提供了支持，用户可以授权给易盾和视频云来访问其在NOS（网易对象存储）的数据资源。现在，你可以自定义访问控制策略，通过一套特定DSL语法来定义权限。根据自己的实际使用场景和组织架构来定义对权限的需求，这具有十分重要的意义。</p>
 <p>举个例子，如果不允许某某子账号删除<code>avatar</code>桶中<code>file-1.png</code>的图片，而允许其对其他任何文件有所有的控制权限，那么可以定义如下的策略来达到这个目的。</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"version"</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">"statement"</span>: [</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"action"</span>: [</div><div class="line">                <span class="string">"comb:nos:DeleteObject"</span></div><div class="line">            ],</div><div class="line">            <span class="attr">"effect"</span>: <span class="string">"deny"</span>,</div><div class="line">            <span class="attr">"resource"</span>: [</div><div class="line">                <span class="string">"comb:nos:*:*:*:avatar/file-1.png"</span></div><div class="line">            ]</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">"action"</span>: [</div><div class="line">                <span class="string">"comb:nos:*"</span></div><div class="line">            ],</div><div class="line">            <span class="attr">"effect"</span>: <span class="string">"allow"</span>,</div><div class="line">            <span class="attr">"resource"</span>: [</div><div class="line">                <span class="string">"comb:nos:*:*:*:*"</span></div><div class="line">            ]</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>通过语言来定义权限，用户将获得十分灵活的权限控制，当然也包含了细粒度的权限控制。使用DSL来定义权限的做法很早之前就存在了，可以追溯到2001年的<a href="https://en.wikipedia.org/wiki/XACML" target="_blank" rel="external">XACML</a>时代。目前主流的云计算厂商也均采用这种方式来描述权限。我们采用了业界相同的命名方式来降低用户的理解成本。这里对策略语法做一个简单的介绍。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"statement"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"action"</span>: [</span><br><span class="line">                <span class="string">"comb:nos:DeleteObject"</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"effect"</span>: <span class="string">"deny"</span>,</span><br><span class="line">            <span class="attr">"resource"</span>: [</span><br><span class="line">                <span class="string">"comb:nos:*:*:*:avatar/file-1.png"</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"action"</span>: [</span><br><span class="line">                <span class="string">"comb:nos:*"</span></span><br><span class="line">            ],</span><br><span class="line">            <span class="attr">"effect"</span>: <span class="string">"allow"</span>,</span><br><span class="line">            <span class="attr">"resource"</span>: [</span><br><span class="line">                <span class="string">"comb:nos:*:*:*:*"</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过语言来定义权限，用户将获得十分灵活的权限控制，当然也包含了细粒度的权限控制。使用DSL来定义权限的做法很早之前就存在了，可以追溯到2001年的<a href="https://en.wikipedia.org/wiki/XACML" target="_blank" rel="noopener">XACML</a>时代。目前主流的云计算厂商也均采用这种方式来描述权限。我们采用了业界相同的命名方式来降低用户的理解成本。这里对策略语法做一个简单的介绍。</p>
 <p>策略语法就是有着一定约束关系的JSON格式数据，由<code>version</code>和<code>statement</code>两个部分组成。<code>version</code>目前只支持1，而<code>statement</code>则是描述策略的具体形式。<code>statement</code>由三个部分组成，<code>action</code>、<code>effect</code>和<code>resource</code>，这三个子句构成了访问控制最为核心的三个部分。</p>
 <ul>
 <li><code>effect</code>表示授权类型，只能是<code>allow</code>（允许）或者<code>deny</code>（拒绝）。</li>
@@ -532,10 +534,10 @@
 </ul>
 <p><code>statement</code>语句本身是一个Array，你可以在其中最多定义5条子句。这样就允许你将多条策略组合在一个策略里面，也可以根据需要将策略拆改，选择权在你手上。</p>
 <p>通过上面的策略语言，企业完全可以根据自身的实际需要来定义权限，具有非常大的灵活性和自由度。如果你以前使用过其他云的访问控制产品，那么上手会很快。如果是第一次接触此类产品，也不用担心，我们提供了一个强大了“编译器”来检查你的策略语法是否合法，并提供简单直观的错误展示来帮你迅速定位问题，如下图所示。</p>
-<img src="/2017/06/01/访问控制：为你的云上业务再加一把锁/compile_error.png" alt="错误提示" title="错误提示">
+<img src="/2017/06/01/访问控制：为你的云上业务再加一把锁/compile_error.png" title="错误提示">
 <p>另外，访问控制还提供了了<code>子账号</code>、<code>组</code>和<code>角色</code>来满足企业对访问主体描述性的需求，企业可以根据自身的组织架构和研发模式来组合使用这些身份。</p>
 <p>掌握了授权策略后，理解鉴权的执行流程也是很重要的。鉴权流程按照Deny优先原则执行，如果有显式的Deny，那么直接拒绝；如果有显式的allow，那么则允许，否则也拒绝。具体流程如下。</p>
-<img src="/2017/06/01/访问控制：为你的云上业务再加一把锁/auth_flow.png" alt="鉴权流程" title="鉴权流程">
+<img src="/2017/06/01/访问控制：为你的云上业务再加一把锁/auth_flow.png" title="鉴权流程">
 <p>在授权时请遵循最小权限原则，即根据用户的需要，将刚好能满足其需求的权限赋予给他，这样有助于规避一些越权执行的问题。除此之外，最佳实践还包含及时收回用户不再需要的权限，尽量通过组和角色来授权等等。详细的文档可以参考访问控制的官方文档。</p>
 <p>通过以上的介绍，不知道你是否对访问控制有一个大致的了解。如果还是有些云里雾里，那不如自己去动手定义一个属于自己的访问策略吧！</p>
 
@@ -836,7 +838,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

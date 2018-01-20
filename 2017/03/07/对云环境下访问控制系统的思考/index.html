@@ -116,13 +116,15 @@
 
 
 <meta name="description" content="最近我在做访问控制方面的工作，故此分享一下我对这个领域的一点思考。">
+<meta name="keywords" content="架构设计,cloud,访问控制,DSL,云计算">
 <meta property="og:type" content="article">
 <meta property="og:title" content="对云环境下访问控制系统的思考">
 <meta property="og:url" content="http://michael-j.net/2017/03/07/对云环境下访问控制系统的思考/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="最近我在做访问控制方面的工作，故此分享一下我对这个领域的一点思考。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://michael-j.net/2017/03/07/对云环境下访问控制系统的思考/XACML.png">
-<meta property="og:updated_time" content="2017-06-03T03:28:46.336Z">
+<meta property="og:updated_time" content="2017-06-03T03:28:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对云环境下访问控制系统的思考">
 <meta name="twitter:description" content="最近我在做访问控制方面的工作，故此分享一下我对这个领域的一点思考。">
@@ -472,7 +474,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  4,309
+                  4,316
                 </span>
               
 
@@ -512,7 +514,7 @@
       
         <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>现在，云计算市场已是一片红海，不论是国内还是国外的云计算市场竞争都相当激烈。主流的云计算厂商在争夺企业客户方面都不留余地，因为企业用户对云计算的发展有着极为重要的意义，尤其是大企业客户。可以毫不夸张的说，没有企业用户，云计算的发展绝不会发展的如此迅速。</p>
 <p>企业上云首当其冲的问题就是安全性，安全性已经成为企业上云最大的障碍。这里的安全性不光是基础设施的安全和稳定，比如虚拟机的高可用、RDS的高可靠等等，也包括应用层面的安全性，如WAF、证书服务、加密服务等等，还包括因为企业本身的IT架构/研发架构的复杂性带来的资源管控方面的安全性需求。毫不夸张地说，谁解决好了企业的安全性诉求，那么他就能在这片红海中立于不败之地。</p>
-<p>安全是一个很大的话题，我不敢妄谈。最近我在做访问控制方面的工作，故此分享一下我对这个领域的一点思考。访问控制是安全中一块，也是十分重要的一块。有些云计算提供商甚至都没有将其划归到安全的范围，可能是没有意识到访问控制的重要性。AWS中访问控制的产品是<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="external">IAM</a>，可以说是云计算厂商中做的最早也最为完善的一个。IAM在其的产品分类中有一个词我觉得形容该产品最为合适——“合规性“。其实访问控制就是满足企业用户对于合规性的需求，说白了就是规范企业用户对云计算资源的访问。</p>
+<p>安全是一个很大的话题，我不敢妄谈。最近我在做访问控制方面的工作，故此分享一下我对这个领域的一点思考。访问控制是安全中一块，也是十分重要的一块。有些云计算提供商甚至都没有将其划归到安全的范围，可能是没有意识到访问控制的重要性。AWS中访问控制的产品是<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="noopener">IAM</a>，可以说是云计算厂商中做的最早也最为完善的一个。IAM在其的产品分类中有一个词我觉得形容该产品最为合适——“合规性“。其实访问控制就是满足企业用户对于合规性的需求，说白了就是规范企业用户对云计算资源的访问。</p>
 <p>既然这是一篇关于访问控制的文章，那么我们先来看看关于访问控制的定义。</p>
 <p>维基百科关于<strong><em>访问控制</em></strong>的定义是：访问控制是指允许或者禁止某人使用某项资源的能力。这个定义中有几个关键点需要留意：</p>
 <ol>
@@ -569,14 +571,14 @@
 <h4 id="3-身份的多样性"><a href="#3-身份的多样性" class="headerlink" title="3.身份的多样性"></a>3.身份的多样性</h4><p>如果一个云计算厂商想吃下一个大客户，满足其业务架构只是其一，还有一个十分重要的条件就是满足其组织架构。大企业绝对有实力也有能力解决其本身的业务架构，其实上不上云更多地是战略性的考虑，他们更加看重云服务的稳定性、安全性和可维护性。同时，其本身的组织架构也十分复杂，要想让其没有阻力地上云，解决其员工的身份问题首当其冲。所以现在主流的云厂商都会提供多种身份的表示方式，例如：子账号、组和角色。</p>
 <h4 id="4-权限的描述方式"><a href="#4-权限的描述方式" class="headerlink" title="4.权限的描述方式"></a>4.权限的描述方式</h4><p>权限的描述方式也是十分重要的一个点，可以说这个点设计得好坏决定了你后期能否悠然地应对业务方的接入还是每天火急火燎地和各个业务方定协议定接口。我们知道所有需要访问控制的云产品必然有其支持的动作（Action），每个产品资源(Resource)的描述方式也各不相同，同时允许（Allow）还是禁止(Deny)针对某个资源的操作也是需要明确给出来的。这三个点构成了权限描述的三个要素。如果在前期的设计中没有充分思考这个问题，那么恭喜你，你很有可能给自己埋了一个深坑。你很有可能设计几张大表，来表示各个业务方支持的动作，资源以及用户和他们的关系。出现这样的设计是因为没有真正理解访问控制系统的业务领域。当你在设计这几张表的时候其实意味着访问控制系统在“理解”各个产品的功能，这对一个通用的访问控制系统是致命的。访问控制系统作为一个底层/共享的通用系统，对外输出地只能是能力，而不是去理解各个产品它们自己地业务领域。说到这里，我还是推荐所有的技术人员都有必要学习一下DDD的理论，就算不用自己写代码，系统性地学习其战略模式也会让你收益颇多。</p>
 <h4 id="5-动态的授权体系"><a href="#5-动态的授权体系" class="headerlink" title="5.动态的授权体系"></a>5.动态的授权体系</h4><p>这一点相比以上4点来说要简单，这是因为如果你的访问控制系统已经很好地解决上面的挑战，那么你也就自然而然得获得了动态的授权体系。之说以是动态的，是因为云环境下用户和权限的关系往往不是一成不变的。用户在某个时刻希望获得A授权，而在另外一个时刻又希望获得B授权，而且有时授权还带有时效性，当过了截至时间授权也就自动失效了。这种动态性的需求是真实存在的，但我认为满足这个需求依赖于针对前4点的设计，如果把前面的设计做好了，那么系统也就自然而然地满足了动态性的需求，这是一个水到渠成的过程。</p>
-<h2 id="业界是如何处理这个问题"><a href="#业界是如何处理这个问题" class="headerlink" title="业界是如何处理这个问题"></a>业界是如何处理这个问题</h2><p>说实话，当我去设计蜂巢的访问控制系统的时候并没有像现在考虑的这么全面。我意识到了一些问题的棘手性，也调研了现在业界做访问控制的方法，可以说做的最好的还是<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="external">IAM</a>。<br><a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="external">IAM</a>将用户身份划归为子用户、组和角色，基本上这三种身份标识可以满足身份多样性的要求了。我觉得<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="external">IAM</a>关于权限描述的方式令我耳目一新，它使用了领域专用（DSL）语言来描述权限，具体的形式如下：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"Version"</span>: <span class="string">"2012-10-17"</span>,</div><div class="line">  <span class="attr">"Statement"</span>: &#123;</div><div class="line">    <span class="attr">"Effect"</span>: <span class="string">"Allow"</span>,</div><div class="line">    <span class="attr">"Action"</span>: <span class="string">"s3:ListBucket"</span>,</div><div class="line">    <span class="attr">"Resource"</span>: <span class="string">"arn:aws:s3:::example_bucket"</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这是我第一次接触<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="external">DSL</a>的概念，当时对这种设计模式是完全懵逼的，也不太理解其设计思想。随着考虑的问题越来越多，我发现了<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="external">DSL</a>的强大之处。因为云环境下的访问控制系统最令人头疼的问题就是资源和权限的描述方式，这种极致的灵活性很难通过设计表格来获得。因为任何的以表为中心的设计方式都会映射到某个具体的领域模型上，又因为各个业务的权限控制各不相同，难道说我要根据各个业务来建立模型？前面也说过了，这是万万不可取的，这样设计只会让你深陷无尽的加班和调试之中。用<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="external">DSL</a>来将访问控制和具体的权限理解分隔开了是最为合适的方式。</p>
+<h2 id="业界是如何处理这个问题"><a href="#业界是如何处理这个问题" class="headerlink" title="业界是如何处理这个问题"></a>业界是如何处理这个问题</h2><p>说实话，当我去设计蜂巢的访问控制系统的时候并没有像现在考虑的这么全面。我意识到了一些问题的棘手性，也调研了现在业界做访问控制的方法，可以说做的最好的还是<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="noopener">IAM</a>。<br><a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="noopener">IAM</a>将用户身份划归为子用户、组和角色，基本上这三种身份标识可以满足身份多样性的要求了。我觉得<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="noopener">IAM</a>关于权限描述的方式令我耳目一新，它使用了领域专用（DSL）语言来描述权限，具体的形式如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"Version"</span>: <span class="string">"2012-10-17"</span>,</span><br><span class="line">  <span class="attr">"Statement"</span>: &#123;</span><br><span class="line">    <span class="attr">"Effect"</span>: <span class="string">"Allow"</span>,</span><br><span class="line">    <span class="attr">"Action"</span>: <span class="string">"s3:ListBucket"</span>,</span><br><span class="line">    <span class="attr">"Resource"</span>: <span class="string">"arn:aws:s3:::example_bucket"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是我第一次接触<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="noopener">DSL</a>的概念，当时对这种设计模式是完全懵逼的，也不太理解其设计思想。随着考虑的问题越来越多，我发现了<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="noopener">DSL</a>的强大之处。因为云环境下的访问控制系统最令人头疼的问题就是资源和权限的描述方式，这种极致的灵活性很难通过设计表格来获得。因为任何的以表为中心的设计方式都会映射到某个具体的领域模型上，又因为各个业务的权限控制各不相同，难道说我要根据各个业务来建立模型？前面也说过了，这是万万不可取的，这样设计只会让你深陷无尽的加班和调试之中。用<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="noopener">DSL</a>来将访问控制和具体的权限理解分隔开了是最为合适的方式。</p>
 <p>通过一套约定的DSL语法来描述权限，访问控制系统可以获得极大的灵活性，同时也不需要理解具体的权限。对权限的理解还是由各个业务方自己控制，这样系统就获得了最大程度的解耦。访问控制系统只用维护这套DSL语法就可以无限的扩展性，多么完美的方案啊！有时间我会专门写一篇关于DSL的文章来对其应用场景进行分析。</p>
-<p>实际上，用DSL语法来描述权限也不是<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="external">IAM</a>首创，早在2001年就出现了响应的规范——<a href="https://en.wikipedia.org/wiki/XACML" target="_blank" rel="external">XACML</a>（可扩展的访问控制高标识语言），该规范现在已经发展到3.0了。其大致的鉴权流程如下图所示，如果对其原理由兴趣的同学可以查看对应的资料。</p>
-<img src="/2017/03/07/对云环境下访问控制系统的思考/XACML.png" alt="This image shows the XACML architecture and a sample authorization flow." title="This image shows the XACML architecture and a sample authorization flow.">
-<p>以上就是我对云环境下访问控制系统的一点理解，如有不严谨的地方，还望指正。总而言之，云环境下的访问控制系统面临的挑战很多，充分理解访问控制的原理有助于理解代码背后的意义，让我们的系统设计不至于走偏。基于<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="external">DSL</a>的访问控制模型已经成为业界的主流，但各个云计算厂商自身的业务场景和面向目标人群又各有不通，如何制定适应自身环境的DSL成为了一个关键。后续有机会我会分享网易蜂巢在访问控制系统方面的实践。</p>
-<h4 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h4><p><a href="http://www.cec-ceda.org.cn/information/book/info_6.htm" target="_blank" rel="external">访问控制</a><br><a href="http://blog.csdn.net/bluishglc/article/details/6577778" target="_blank" rel="external">访问控制模型ACL和RBAC</a><br><a href="https://martinfowler.com/books/dsl.html" target="_blank" rel="external">DSL</a></p>
+<p>实际上，用DSL语法来描述权限也不是<a href="https://aws.amazon.com/cn/iam/" target="_blank" rel="noopener">IAM</a>首创，早在2001年就出现了响应的规范——<a href="https://en.wikipedia.org/wiki/XACML" target="_blank" rel="noopener">XACML</a>（可扩展的访问控制高标识语言），该规范现在已经发展到3.0了。其大致的鉴权流程如下图所示，如果对其原理由兴趣的同学可以查看对应的资料。</p>
+<img src="/2017/03/07/对云环境下访问控制系统的思考/XACML.png" title="This image shows the XACML architecture and a sample authorization flow.">
+<p>以上就是我对云环境下访问控制系统的一点理解，如有不严谨的地方，还望指正。总而言之，云环境下的访问控制系统面临的挑战很多，充分理解访问控制的原理有助于理解代码背后的意义，让我们的系统设计不至于走偏。基于<a href="https://en.wikipedia.org/wiki/Domain-specific_language" target="_blank" rel="noopener">DSL</a>的访问控制模型已经成为业界的主流，但各个云计算厂商自身的业务场景和面向目标人群又各有不通，如何制定适应自身环境的DSL成为了一个关键。后续有机会我会分享网易蜂巢在访问控制系统方面的实践。</p>
+<h4 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h4><p><a href="http://www.cec-ceda.org.cn/information/book/info_6.htm" target="_blank" rel="noopener">访问控制</a><br><a href="http://blog.csdn.net/bluishglc/article/details/6577778" target="_blank" rel="noopener">访问控制模型ACL和RBAC</a><br><a href="https://martinfowler.com/books/dsl.html" target="_blank" rel="noopener">DSL</a></p>
 
       
     </div>
@@ -902,7 +904,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
