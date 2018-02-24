@@ -97,7 +97,7 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="评论系统,架构," />
+  <meta name="keywords" content="架构,评论系统," />
 
 
 
@@ -116,7 +116,7 @@
 
 
 <meta name="description" content="本文主要分享了我在设计评论模块中的一些心得，希望对读者有些许帮助。">
-<meta name="keywords" content="评论系统,架构">
+<meta name="keywords" content="架构,评论系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="评论设计">
 <meta property="og:url" content="http://michael-j.net/2016/01/05/评论设计/index.html">
@@ -442,6 +442,17 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/01/05/评论设计/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2016/01/05/评论设计/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -783,9 +794,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/评论系统/" rel="tag"># 评论系统</a>
-          
             <a href="/tags/架构/" rel="tag"># 架构</a>
+          
+            <a href="/tags/评论系统/" rel="tag"># 评论系统</a>
           
         </div>
       
@@ -858,6 +869,13 @@
 
           
   <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     
   </div>
 
@@ -1163,6 +1181,26 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://michael-j.net/2016/01/05/评论设计/';
+          this.page.identifier = '2016/01/05/评论设计/';
+          this.page.title = '评论设计';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://michael-j.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -1181,10 +1219,6 @@
   
 
 
-
-
-
-  
 
 
 

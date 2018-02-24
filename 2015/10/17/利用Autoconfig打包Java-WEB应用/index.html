@@ -438,6 +438,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/10/17/利用Autoconfig打包Java-WEB应用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/10/17/利用Autoconfig打包Java-WEB应用/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -461,7 +472,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  1,246
+                  1,254
                 </span>
               
 
@@ -504,9 +515,8 @@
 <p>我们都知道每个软件项目或者公司都会维护几套隔离环境，例如以前在阿里就会有<code>日常测试</code>、<code>日常</code>、<code>预发</code>和<code>线上</code>几个环境，还有根据特殊需要配置的独立环境，如<code>性能环境</code>等等。 当然，对于小公司或者创业公司来说不需要准备这么多套环境，但至少是需要<code>测试</code>和<code>线上</code>两套环境的。多套环境的可以有效的隔离线上和线下，提高开发人员的工作效率，又不至于将不稳定的代码带到线上。其中最重要的一个环节就是打包，我主要介绍两种简单的打包方式。</p>
 <h2 id="利用Spring配置"><a href="#利用Spring配置" class="headerlink" title="利用Spring配置"></a>利用Spring配置</h2><p>现在Java WEB应用可以说90%都使用了Spring框架，而Spring框架早就帮我们考虑了这个问题。我一开始也是使用这个配置方式，在Spring配置文件中引入一下配置：</p>
 <blockquote>
-<context:property-placeholder location="file:${APP_HOME}/config.properties">
-
-</context:property-placeholder></blockquote>
+<p>&lt;context:property-placeholder location=”file:${APP_HOME}/config.properties”/&gt;</p>
+</blockquote>
 <p>Spring是支持classpath和file的，个人推荐使用<code>file</code>模式来查找外部配置文件，因为这样我们就不必将配置文件引入到工程目录中了，因为工程目录对所有的开发人员都可见，这样会降低配置文件的安全性。引入外部配置文件一个常见的做法就是使用环境变量，我们新建一个<code>APP_HOME</code>的环境变量来区分不同的环境。</p>
 <p>在使用配置文件的地方利用placeholder进行配置即可，例如以下方式：</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean <span class="built_in">id</span>=<span class="string">"dataSource"</span> <span class="built_in">class</span>=<span class="string">"org.apache.commons.dbcp2.BasicDataSource"</span>&gt;</span><br><span class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"driverClassName"</span> value=<span class="string">"$&#123;db.driverClass&#125;"</span>/&gt;</span><br><span class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"url"</span> value=<span class="string">"$&#123;db.url&#125;"</span>/&gt;</span><br><span class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"username"</span> value=<span class="string">"$&#123;db.username&#125;"</span>/&gt;</span><br><span class="line">        &lt;<span class="keyword">property</span> <span class="built_in">name</span>=<span class="string">"password"</span> value=<span class="string">"$&#123;db.password&#125;"</span>/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
@@ -684,6 +694,13 @@
 
           
   <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     
   </div>
 
@@ -989,6 +1006,26 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://michael-j.net/2015/10/17/利用Autoconfig打包Java-WEB应用/';
+          this.page.identifier = '2015/10/17/利用Autoconfig打包Java-WEB应用/';
+          this.page.title = '利用Autoconfig打包Java WEB应用';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://michael-j.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
 
 
 
@@ -1007,10 +1044,6 @@
   
 
 
-
-
-
-  
 
 
 
