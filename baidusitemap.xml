@@ -4,6 +4,27 @@
 
     
   <url>
+    <loc>http://michael-j.net/2018/04/23/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%85%A5%E9%97%A8/</loc>
+    <lastmod>2018-04-23T11:26:36.683Z</lastmod>
+    <data>
+        <display>
+        <title>架构设计入门</title>
+        <pubTime>2018-04-23T11:14:26.000Z</pubTime>
+        
+        <tag>架构</tag>
+         
+        <tag>系统架构</tag>
+         
+        <tag>代码架构</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://michael-j.net/2017/12/15/%E8%9C%82%E5%B7%A2%E8%AE%A1%E8%B4%B9%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%8D%87%E7%BA%A7%E4%B9%8B%E8%B7%AF/</loc>
     <lastmod>2018-01-20T13:52:03.376Z</lastmod>
     <data>
@@ -61,11 +82,11 @@
         <title>编程心智(一)——代码架构与系统架构</title>
         <pubTime>2017-09-24T12:00:27.000Z</pubTime>
         
-        <tag>编程心得</tag>
+        <tag>系统架构</tag>
          
         <tag>代码架构</tag>
          
-        <tag>系统架构</tag>
+        <tag>编程心得</tag>
          
          
            
@@ -207,11 +228,11 @@
         <title>Debug:Tomcat deploy twice</title>
         <pubTime>2015-10-30T02:46:31.000Z</pubTime>
         
-        <tag>debug</tag>
-         
         <tag>tomcat</tag>
          
         <tag>部署</tag>
+         
+        <tag>debug</tag>
          
          
            
@@ -411,11 +432,11 @@
         <title>对云环境下访问控制系统的思考</title>
         <pubTime>2017-03-07T12:16:56.000Z</pubTime>
         
-        <tag>架构设计</tag>
-         
         <tag>cloud</tag>
          
         <tag>访问控制</tag>
+         
+        <tag>架构设计</tag>
          
         <tag>DSL</tag>
          
