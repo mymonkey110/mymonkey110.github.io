@@ -3,6 +3,7 @@
 
 
     
+    
   <url>
     <loc>http://michael-j.net/2018/04/23/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%85%A5%E9%97%A8/</loc>
     <lastmod>2018-04-23T11:26:36.683Z</lastmod>
@@ -228,11 +229,11 @@
         <title>Debug:Tomcat deploy twice</title>
         <pubTime>2015-10-30T02:46:31.000Z</pubTime>
         
+        <tag>debug</tag>
+         
         <tag>tomcat</tag>
          
         <tag>部署</tag>
-         
-        <tag>debug</tag>
          
          
            
@@ -451,7 +452,6 @@
     </data>
     </url>
 
-    
     
     
   <url>
