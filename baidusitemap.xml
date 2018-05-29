@@ -3,6 +3,27 @@
 
 
     
+  <url>
+    <loc>http://michael-j.net/2018/05/29/%E6%BC%AB%E8%B0%88%E5%85%AC%E6%9C%89%E4%BA%91%E8%AE%A1%E8%B4%B9/</loc>
+    <lastmod>2018-05-29T08:28:09.437Z</lastmod>
+    <data>
+        <display>
+        <title>漫谈公有云计费</title>
+        <pubTime>2018-05-29T08:24:18.000Z</pubTime>
+        
+        <tag>cloud</tag>
+         
+        <tag>云计算</tag>
+         
+        <tag>计费</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://michael-j.net/2018/04/23/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%85%A5%E9%97%A8/</loc>
@@ -229,11 +250,11 @@
         <title>Debug:Tomcat deploy twice</title>
         <pubTime>2015-10-30T02:46:31.000Z</pubTime>
         
-        <tag>debug</tag>
-         
         <tag>tomcat</tag>
          
         <tag>部署</tag>
+         
+        <tag>debug</tag>
          
          
            
