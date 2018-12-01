@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>http://michael-j.net/2018/12/01/%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/</loc>
+    <lastmod>2018-12-01T13:15:43.522Z</lastmod>
+    <data>
+        <display>
+        <title>编程技巧分享</title>
+        <pubTime>2018-12-01T12:14:13.000Z</pubTime>
+        
+        <tag>编程技巧</tag>
+         
+         
+           
+             
+              <breadCrumb title="编程感悟" url="http://michael-j.net/categories/%E7%BC%96%E7%A8%8B%E6%84%9F%E6%82%9F/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://michael-j.net/2016/01/19/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/</loc>
     <lastmod>2018-07-06T10:56:55.638Z</lastmod>
     <data>
@@ -272,11 +292,11 @@
         <title>Debug:Tomcat deploy twice</title>
         <pubTime>2015-10-30T02:46:31.000Z</pubTime>
         
-        <tag>debug</tag>
-         
         <tag>tomcat</tag>
          
         <tag>部署</tag>
+         
+        <tag>debug</tag>
          
          
            
@@ -454,11 +474,11 @@
         <title>对云环境下访问控制系统的思考</title>
         <pubTime>2017-03-07T12:16:56.000Z</pubTime>
         
+        <tag>架构设计</tag>
+         
         <tag>cloud</tag>
          
         <tag>访问控制</tag>
-         
-        <tag>架构设计</tag>
          
         <tag>DSL</tag>
          
