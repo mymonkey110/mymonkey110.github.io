@@ -1,741 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-
-    
   <url>
+    <loc>http://michael-j.net/2019/04/16/CQRS%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2019-04-16</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2018/12/01/%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/</loc>
-    <lastmod>2018-12-01T13:15:43.522Z</lastmod>
-    <data>
-        <display>
-        <title>编程技巧分享</title>
-        <pubTime>2018-12-01T12:14:13.000Z</pubTime>
-        
-        <tag>编程技巧</tag>
-         
-         
-           
-             
-              <breadCrumb title="编程感悟" url="http://michael-j.net/categories/%E7%BC%96%E7%A8%8B%E6%84%9F%E6%82%9F/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2018-12-01</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/01/19/%E5%AE%9E%E7%8E%B0%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/</loc>
-    <lastmod>2018-07-06T10:56:55.638Z</lastmod>
-    <data>
-        <display>
-        <title>实现领域事件</title>
-        <pubTime>2016-01-19T08:53:05.000Z</pubTime>
-        
-        <tag>领域事件</tag>
-         
-        <tag>event</tag>
-         
-         
-           
-             
-              <breadCrumb title="DDD" url="http://michael-j.net/categories/DDD/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2018-07-06</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2018/05/29/%E6%BC%AB%E8%B0%88%E5%85%AC%E6%9C%89%E4%BA%91%E8%AE%A1%E8%B4%B9/</loc>
-    <lastmod>2018-05-29T08:28:09.437Z</lastmod>
-    <data>
-        <display>
-        <title>漫谈公有云计费</title>
-        <pubTime>2018-05-29T08:24:18.000Z</pubTime>
-        
-        <tag>cloud</tag>
-         
-        <tag>云计算</tag>
-         
-        <tag>计费</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-    
-  <url>
+    <lastmod>2018-05-29</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2018/04/23/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%85%A5%E9%97%A8/</loc>
-    <lastmod>2018-04-23T11:26:36.683Z</lastmod>
-    <data>
-        <display>
-        <title>架构设计入门</title>
-        <pubTime>2018-04-23T11:14:26.000Z</pubTime>
-        
-        <tag>架构</tag>
-         
-        <tag>系统架构</tag>
-         
-        <tag>代码架构</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2018-04-23</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/12/15/%E8%9C%82%E5%B7%A2%E8%AE%A1%E8%B4%B9%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%8D%87%E7%BA%A7%E4%B9%8B%E8%B7%AF/</loc>
-    <lastmod>2018-01-20T13:52:03.376Z</lastmod>
-    <data>
-        <display>
-        <title>蜂巢计费系统架构升级之路</title>
-        <pubTime>2017-12-15T06:26:26.000Z</pubTime>
-        
-        <tag>cloud</tag>
-         
-        <tag>云计算</tag>
-         
-        <tag>计费</tag>
-         
-        <tag>微服务</tag>
-         
-         
-           
-             
-              <breadCrumb title="云计算" url="http://michael-j.net/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2018-01-20</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/11/03/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA-%E4%BA%8C-%E2%80%94%E2%80%94%E4%BA%8C%E5%85%AB%E5%AE%9A%E5%BE%8B%E5%AF%B9%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E7%9A%84%E5%BD%B1%E5%93%8D/</loc>
-    <lastmod>2017-11-05T04:02:34.000Z</lastmod>
-    <data>
-        <display>
-        <title>编程心智(二)——二八定律对软件开发的影响</title>
-        <pubTime>2017-11-03T12:49:13.000Z</pubTime>
-        
-        <tag>编程心得</tag>
-         
-        <tag>二八定律</tag>
-         
-        <tag>软件开发</tag>
-         
-         
-           
-             
-              <breadCrumb title="编程心智" url="http://michael-j.net/categories/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-11-05</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/09/24/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA-%E4%B8%80-%E2%80%94%E2%80%94%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E4%B8%8E%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/</loc>
-    <lastmod>2017-09-25T08:06:12.000Z</lastmod>
-    <data>
-        <display>
-        <title>编程心智(一)——代码架构与系统架构</title>
-        <pubTime>2017-09-24T12:00:27.000Z</pubTime>
-        
-        <tag>系统架构</tag>
-         
-        <tag>代码架构</tag>
-         
-        <tag>编程心得</tag>
-         
-         
-           
-             
-              <breadCrumb title="编程心智" url="http://michael-j.net/categories/%E7%BC%96%E7%A8%8B%E5%BF%83%E6%99%BA/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-09-25</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/08/13/%E5%86%8D%E8%B0%88%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6/</loc>
-    <lastmod>2017-08-13T11:19:22.000Z</lastmod>
-    <data>
-        <display>
-        <title>再谈领域事件</title>
-        <pubTime>2017-08-13T11:11:14.000Z</pubTime>
-        
-        <tag>领域事件</tag>
-         
-        <tag>event</tag>
-         
-        <tag>dddd</tag>
-         
-         
-           
-             
-              <breadCrumb title="DDD" url="http://michael-j.net/categories/DDD/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-08-13</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/08/02/%E8%B7%A8Region%E5%AE%9E%E8%B7%B5%E5%88%9D%E6%8E%A2/</loc>
-    <lastmod>2017-08-02T11:39:22.000Z</lastmod>
-    <data>
-        <display>
-        <title>跨Region实践初探</title>
-        <pubTime>2017-08-02T11:27:13.000Z</pubTime>
-        
-        <tag>云计算</tag>
-         
-        <tag>架构</tag>
-         
-        <tag>高可用</tag>
-         
-        <tag>分布式</tag>
-         
-         
-           
-             
-              <breadCrumb title="架构设计" url="http://michael-j.net/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-08-02</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/06/21/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%9D%91%E7%88%B9%E7%9A%84Debug%E8%BF%87%E7%A8%8B/</loc>
-    <lastmod>2017-06-21T10:57:44.000Z</lastmod>
-    <data>
-        <display>
-        <title>记一次坑爹的Debug过程</title>
-        <pubTime>2017-06-21T10:46:22.000Z</pubTime>
-        
-        <tag>debug</tag>
-         
-        <tag>调试</tag>
-         
-        <tag>mysql</tag>
-         
-        <tag>工具</tag>
-         
-         
-           
-             
-              <breadCrumb title="debug" url="http://michael-j.net/categories/debug/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-21</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/06/03/%E6%9E%B6%E6%9E%84%E5%B8%88%E5%BA%94%E8%AF%A5%E6%98%AF%E4%B8%80%E7%A7%8D%E8%A7%92%E8%89%B2%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E4%B8%80%E4%B8%AA%E8%81%8C%E4%BD%8D/</loc>
-    <lastmod>2017-06-03T15:09:56.000Z</lastmod>
-    <data>
-        <display>
-        <title>架构师应该是一种角色，而不是一个职位</title>
-        <pubTime>2017-06-03T07:23:13.000Z</pubTime>
-        
-        <tag>架构设计</tag>
-         
-        <tag>软件开发理论</tag>
-         
-         
-           
-             
-              <breadCrumb title="翻译" url="http://michael-j.net/categories/%E7%BF%BB%E8%AF%91/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/09/20/%E8%AE%BAEnum%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7/</loc>
-    <lastmod>2017-06-03T03:50:52.000Z</lastmod>
-    <data>
-        <display>
-        <title>论Enum的重要性</title>
-        <pubTime>2016-09-20T14:18:11.000Z</pubTime>
-        
-        <tag>enum</tag>
-         
-        <tag>OO</tag>
-         
-        <tag>代码技巧</tag>
-         
-         
-           
-             
-              <breadCrumb title="Better code" url="http://michael-j.net/categories/Better-code/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2015/10/30/Tomcat%20deploy%20twice/</loc>
-    <lastmod>2017-06-03T03:43:58.000Z</lastmod>
-    <data>
-        <display>
-        <title>Debug:Tomcat deploy twice</title>
-        <pubTime>2015-10-30T02:46:31.000Z</pubTime>
-        
-        <tag>tomcat</tag>
-         
-        <tag>部署</tag>
-         
-        <tag>debug</tag>
-         
-         
-           
-             
-              <breadCrumb title="踩过的那些坑" url="http://michael-j.net/categories/%E8%B8%A9%E8%BF%87%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/09/18/DDD-%E5%A4%8D%E6%9D%82%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E4%B9%8B%E9%81%93/</loc>
-    <lastmod>2017-06-03T03:42:16.000Z</lastmod>
-    <data>
-        <display>
-        <title>DDD-复杂问题解决之道</title>
-        <pubTime>2016-09-18T14:09:45.000Z</pubTime>
-        
-        <tag>DDD</tag>
-         
-        <tag>感悟</tag>
-         
-         
-           
-             
-              <breadCrumb title="DDD" url="http://michael-j.net/categories/DDD/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/10/18/%E5%80%BC%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%A8%81%E5%8A%9B/</loc>
-    <lastmod>2017-06-03T03:41:58.000Z</lastmod>
-    <data>
-        <display>
-        <title>值对象的威力</title>
-        <pubTime>2016-10-18T15:27:45.000Z</pubTime>
-        
-        <tag>DDD</tag>
-         
-        <tag>Value Object</tag>
-         
-         
-           
-             
-              <breadCrumb title="DDD" url="http://michael-j.net/categories/DDD/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/01/05/%E8%AF%84%E8%AE%BA%E8%AE%BE%E8%AE%A1/</loc>
-    <lastmod>2017-06-03T03:41:46.000Z</lastmod>
-    <data>
-        <display>
-        <title>评论设计</title>
-        <pubTime>2016-01-05T09:52:07.000Z</pubTime>
-        
-        <tag>架构</tag>
-         
-        <tag>评论系统</tag>
-         
-         
-           
-             
-              <breadCrumb title="架构设计" url="http://michael-j.net/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2015/10/17/%E5%88%A9%E7%94%A8Autoconfig%E6%89%93%E5%8C%85Java-WEB%E5%BA%94%E7%94%A8/</loc>
-    <lastmod>2017-06-03T03:41:20.000Z</lastmod>
-    <data>
-        <display>
-        <title>利用Autoconfig打包Java WEB应用</title>
-        <pubTime>2015-10-17T06:39:08.000Z</pubTime>
-        
-        <tag>java</tag>
-         
-        <tag>package</tag>
-         
-        <tag>autoconfig</tag>
-         
-         
-           
-             
-              <breadCrumb title="部署" url="http://michael-j.net/categories/%E9%83%A8%E7%BD%B2/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/12/15/%E6%9E%B6%E6%9E%84%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E8%85%90%E5%8C%96/</loc>
-    <lastmod>2017-06-03T03:41:08.000Z</lastmod>
-    <data>
-        <display>
-        <title>架构为什么会腐化</title>
-        <pubTime>2016-12-14T16:33:22.000Z</pubTime>
-        
-        <tag>DDD</tag>
-         
-        <tag>架构设计</tag>
-         
-         
-           
-             
-              <breadCrumb title="架构设计" url="http://michael-j.net/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/04/12/%E9%98%B2%E8%8C%83xss%E7%9A%84%E6%AD%A3%E7%A1%AE%E5%A7%BF%E5%8A%BF/</loc>
-    <lastmod>2017-06-03T03:40:50.000Z</lastmod>
-    <data>
-        <display>
-        <title>防范xss的正确姿势</title>
-        <pubTime>2016-04-12T07:20:31.000Z</pubTime>
-        
-        <tag>security</tag>
-         
-         
-           
-             
-              <breadCrumb title="安全" url="http://michael-j.net/categories/%E5%AE%89%E5%85%A8/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/12/21/Spring-Boot%E5%8F%8D%E5%BA%8F%E5%88%97%E5%AF%B9%E8%B1%A1%E5%A4%B1%E8%B4%A5/</loc>
-    <lastmod>2017-06-03T03:40:38.000Z</lastmod>
-    <data>
-        <display>
-        <title>Spring Boot反序列对象失败</title>
-        <pubTime>2016-12-21T02:21:55.000Z</pubTime>
-        
-        <tag>debug</tag>
-         
-        <tag>springboot</tag>
-         
-        <tag>deserialized</tag>
-         
-        <tag>redis</tag>
-         
-         
-           
-             
-              <breadCrumb title="debug" url="http://michael-j.net/categories/debug/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/03/07/%E5%AF%B9%E4%BA%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%80%9D%E8%80%83/</loc>
-    <lastmod>2017-06-03T03:28:48.000Z</lastmod>
-    <data>
-        <display>
-        <title>对云环境下访问控制系统的思考</title>
-        <pubTime>2017-03-07T12:16:56.000Z</pubTime>
-        
-        <tag>架构设计</tag>
-         
-        <tag>cloud</tag>
-         
-        <tag>访问控制</tag>
-         
-        <tag>DSL</tag>
-         
-        <tag>云计算</tag>
-         
-         
-           
-             
-              <breadCrumb title="云计算" url="http://michael-j.net/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/06/01/%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%EF%BC%9A%E4%B8%BA%E4%BD%A0%E7%9A%84%E4%BA%91%E4%B8%8A%E4%B8%9A%E5%8A%A1%E5%86%8D%E5%8A%A0%E4%B8%80%E6%8A%8A%E9%94%81/</loc>
-    <lastmod>2017-06-03T02:39:38.000Z</lastmod>
-    <data>
-        <display>
-        <title>访问控制：为你的云上业务再加一把锁</title>
-        <pubTime>2017-06-01T10:56:02.000Z</pubTime>
-        
-        <tag>cloud</tag>
-         
-        <tag>访问控制</tag>
-         
-        <tag>DSL</tag>
-         
-        <tag>云计算</tag>
-         
-         
-           
-             
-              <breadCrumb title="云计算" url="http://michael-j.net/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-    
-  <url>
+    <lastmod>2017-06-03</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2017/05/21/%E8%AF%84%E8%AE%BA%E4%BB%8E%E5%A4%9A%E8%AF%B4%E8%BF%81%E7%A7%BB%E5%88%B0Disqus/</loc>
-    <lastmod>2017-05-21T14:36:08.000Z</lastmod>
-    <data>
-        <display>
-        <title>评论从多说迁移到Disqus</title>
-        <pubTime>2017-05-21T14:25:25.000Z</pubTime>
-        
-        <tag>blog</tag>
-         
-         
-           
-             
-              <breadCrumb title="生活" url="http://michael-j.net/categories/%E7%94%9F%E6%B4%BB/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2017-05-21</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2015/10/19/Debug-Tomcat-deploy-twice/</loc>
-    <lastmod>2016-08-20T10:45:30.000Z</lastmod>
-    <data>
-        <display>
-        <title>Btrace Sample Scripts</title>
-        <pubTime>2015-10-19T09:16:28.000Z</pubTime>
-        
-        <tag>btrace</tag>
-         
-         
-           
-             
-              <breadCrumb title="debug" url="http://michael-j.net/categories/debug/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-20</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/06/07/Java%E5%BC%82%E5%B8%B8%E7%9A%84%E9%80%89%E6%8B%A9/</loc>
-    <lastmod>2016-08-20T10:34:54.000Z</lastmod>
-    <data>
-        <display>
-        <title>Java异常的选择：Checked Exception还是Unchecked Exception ?</title>
-        <pubTime>2016-06-07T07:20:31.000Z</pubTime>
-        
-        <tag>Java</tag>
-         
-         
-           
-             
-              <breadCrumb title="Java" url="http://michael-j.net/categories/Java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-20</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/06/17/%E5%8D%9A%E5%AE%A2%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%96%B0/</loc>
-    <lastmod>2016-08-20T10:34:02.000Z</lastmod>
-    <data>
-        <display>
-        <title>博客域名更新：michael-j.net</title>
-        <pubTime>2016-06-17T07:20:31.000Z</pubTime>
-        
-        <tag>life</tag>
-         
-         
-           
-             
-              <breadCrumb title="生活" url="http://michael-j.net/categories/%E7%94%9F%E6%B4%BB/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-20</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/08/02/Zookeeper-distributed-process-coordination/</loc>
-    <lastmod>2016-08-15T15:39:50.000Z</lastmod>
-    <data>
-        <display>
-        <title>Zookeeper:distributed process coordination中文版</title>
-        <pubTime>2016-08-02T08:53:05.000Z</pubTime>
-        
-        <tag>zookeeper</tag>
-         
-         
-           
-             
-              <breadCrumb title="翻译" url="http://michael-j.net/categories/%E7%BF%BB%E8%AF%91/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-15</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/06/23/%E8%AE%A9%E7%99%BE%E5%BA%A6%E7%B4%A2%E5%BC%95%E4%BD%A0%E7%9A%84github%E7%9A%84%E5%8D%9A%E5%AE%A2/</loc>
-    <lastmod>2016-08-14T12:53:20.000Z</lastmod>
-    <data>
-        <display>
-        <title>让百度索引你的github的博客</title>
-        <pubTime>2016-06-23T08:53:05.000Z</pubTime>
-        
-        <tag>life blog</tag>
-         
-         
-           
-             
-              <breadCrumb title="生活" url="http://michael-j.net/categories/%E7%94%9F%E6%B4%BB/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-14</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2014/12/23/%E5%88%A9%E7%94%A8Tair%E5%AE%9E%E7%8E%B0%E5%85%A8%E5%B1%80%E5%B9%B6%E5%8F%91%E9%94%81/</loc>
-    <lastmod>2016-08-14T12:52:10.000Z</lastmod>
-    <data>
-        <display>
-        <title>利用Tair实现分布式并发锁</title>
-        <pubTime>2014-12-23T00:00:00.000Z</pubTime>
-        
-        <tag>distributed lock</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-14</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2011/10/03/C#%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%88%9D%E6%AD%A5%E4%B9%8BTCP/</loc>
-    <lastmod>2016-08-14T12:52:02.000Z</lastmod>
-    <data>
-        <display>
-        <title>C#网络编程初步之TCP</title>
-        <pubTime>2011-10-03T02:22:40.000Z</pubTime>
-        
-        <tag>C# tcp udp network</tag>
-         
-         
-           
-             
-              <breadCrumb title="C#" url="http://michael-j.net/categories/C/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-14</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2015/05/30/Java%E4%B9%9F%E8%83%BD%E7%8E%A9%E8%BD%ACWebSocket/</loc>
-    <lastmod>2016-08-14T12:52:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>Java也能玩转WebSocket</title>
-        <pubTime>2015-05-30T00:00:00.000Z</pubTime>
-        
-        <tag>websocket</tag>
-         
-         
-           
-             
-              <breadCrumb title="Java" url="http://michael-j.net/categories/Java/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-14</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2011/09/03/%E8%B6%85%E5%B0%8F%E5%9E%8B%E5%B1%80%E5%9F%9F%E7%BD%91%E7%BB%84%E5%BB%BA%E7%9A%84%E6%96%B9%E6%A1%88/</loc>
-    <lastmod>2016-08-12T02:52:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>超小型局域网组建的方案</title>
-        <pubTime>2011-09-03T15:20:25.000Z</pubTime>
-        
-        <tag>network engineering</tag>
-         
-         
-           
-             
-              <breadCrumb title="网络" url="http://michael-j.net/categories/%E7%BD%91%E7%BB%9C/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
+    <lastmod>2016-08-12</lastmod>
+  </url>  <url>
     <loc>http://michael-j.net/2016/03/18/Mac%E4%B8%8B%E6%8B%B3%E7%9A%8797%E9%BB%91%E5%B1%8F%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</loc>
-    <lastmod>2016-08-12T02:51:32.000Z</lastmod>
-    <data>
-        <display>
-        <title>Mac下拳皇97黑屏问题的解决方法</title>
-        <pubTime>2016-03-17T16:00:00.000Z</pubTime>
-        
-        <tag>life</tag>
-         
-         
-           
-             
-              <breadCrumb title="生活" url="http://michael-j.net/categories/%E7%94%9F%E6%B4%BB/"/>
-          
-        </display>
-    </data>
-    </url>
-
+    <lastmod>2016-08-12</lastmod>
+  </url>
 </urlset>

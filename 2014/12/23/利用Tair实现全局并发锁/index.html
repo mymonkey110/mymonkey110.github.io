@@ -103,7 +103,7 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="Michael-J" type="application/atom+xml" />
+  <link rel="alternate" href="/rss2.xml" title="Michael-J" type="application/atom+xml" />
 
 
 
@@ -500,7 +500,7 @@
 <p>由于在分布式环境中，要实现全局的并发锁，那么我们必须借助第三方的服务来进行协调。数据库和缓存经常会成为我们的优先选择。出于性能的考虑，一般选用缓存来实现全局并发锁，其中的关键也就是借助Tair的<a href="http://baike.corp.taobao.com/index.php/Faq#.E4.BB.80.E4.B9.88.E6.98.AFversion.EF.BC.9F" target="_blank" rel="noopener">Version</a>控制，相比已经有很多人已经在这样做了。Tair提供了以下API：</p>
 <p><code>ResultCode put(int namespace, Object key, Serializable value, int version, int expireTime)</code></p>
 <p>利用该API实现并发控制轻而易举,伪代码如下：</p>
-<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">//加锁</span></span><br><span class="line">	<span class="keyword">public</span> <span class="built_in">boolean</span> lock(<span class="keyword">String</span> <span class="built_in">key</span>, <span class="built_in">int</span> timeOut) &#123;</span><br><span class="line">         ResultCode rc = tairManager.put(NAMESPACE, <span class="built_in">key</span>, DEFAULT_VALUE, INIT_VERSION, timeOut);</span><br><span class="line">         <span class="keyword">return</span> rc!=<span class="keyword">null</span>&amp;&amp;ResultCode.SUCCESS.equals(rc)?<span class="keyword">true</span>:<span class="keyword">false</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     </span><br><span class="line">     <span class="comment">//解锁</span></span><br><span class="line">     <span class="keyword">public</span> <span class="built_in">boolean</span> unlock(<span class="keyword">String</span> <span class="built_in">key</span>) &#123;</span><br><span class="line">         ResultCode rc = tairManager.invalid(NAMESPACE, <span class="built_in">key</span>);</span><br><span class="line"><span class="keyword">return</span> rc!=<span class="keyword">null</span>&amp;&amp;ResultCode.SUCCESS.equals(rc)?<span class="keyword">true</span>:<span class="keyword">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">    //加锁</span><br><span class="line">	public boolean lock(String key, int timeOut) &#123;</span><br><span class="line">         ResultCode rc = tairManager.put(NAMESPACE, key, DEFAULT_VALUE, INIT_VERSION, timeOut);</span><br><span class="line">         return rc!=null&amp;&amp;ResultCode.SUCCESS.equals(rc)?true:false;</span><br><span class="line">     &#125;</span><br><span class="line">     </span><br><span class="line">     //解锁</span><br><span class="line">     public boolean unlock(String key) &#123;</span><br><span class="line">         ResultCode rc = tairManager.invalid(NAMESPACE, key);</span><br><span class="line">return rc!=null&amp;&amp;ResultCode.SUCCESS.equals(rc)?true:false;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>  这主要是利用了Tair的VERSION特性。如果KEY不存在的话，传入一个固定的初始化VERSION，Tair会在保存这个缓存的同时设置这个缓存的VERSION为你传入的<em>VERSION+1</em>；然而KEY如果已经存在，Tair会校验你传入的VERSION是否等于现在这个缓存的VERSION，如果相等则允许修改，否则将失败。  其过程如下图所示：</p>
@@ -510,17 +510,17 @@
 <li><p>利用Tair实现全局TOP-N并发锁</p>
 <p>全局TOP-N并发锁是我自己想出来的一个名字，有点不明觉厉吧。实际业务中我们可能会遇到这样一种情况，在短时间内会有大量的并发来获取某种资源，但是我们这个资源又有数量限制。例如，抢火车票，在某一时刻将1000张火车票发出去，假如有大量的用户在同一时间来抢这些火车票就会形成并发，同时我们又有着很高的性能要求。以抢火车票为例，下面是我的思考过程。</p>
 <p>因为我需要控制并发，要告诉第1001个用户你没有抢到，那么我肯定需要一个计数器来保存火车票发售的实时情况，那么很容易就写出了以下伪代码：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="builtin-name">get</span>(ticker_counter)&lt;1000)) &#123;</span><br><span class="line">    bool <span class="attribute">lockFlag</span>=lock(key,60);</span><br><span class="line">	<span class="keyword">if</span>(lockFlag) &#123;</span><br><span class="line">		int <span class="attribute">counter</span>=get(ticker_counter);</span><br><span class="line">		<span class="keyword">if</span>(++counter&lt;1000) &#123;</span><br><span class="line">			<span class="builtin-name">set</span>(<span class="attribute">ticker_counter</span>=counter)</span><br><span class="line">		&#125;</span><br><span class="line">		unlock(key);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if(get(ticker_counter)&lt;1000)) &#123;</span><br><span class="line">    bool lockFlag=lock(key,60);</span><br><span class="line">	if(lockFlag) &#123;</span><br><span class="line">		int counter=get(ticker_counter);</span><br><span class="line">		if(++counter&lt;1000) &#123;</span><br><span class="line">			set(ticker_counter=counter)</span><br><span class="line">		&#125;</span><br><span class="line">		unlock(key);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>  首先获取当前计数器的值，如果&gt;=1000则直接失败返回,表示已经被抢完了，但是如果&lt;1000，表示还没被抢完，则尝试去获取全局锁，如果获取成功则增加计数器的值，注意此时是需要再获取一次计数器的。但是这样会有一个明显的问题，就是当A获取了锁，正在执行增加计数器操作时，B也去尝试获取锁，此时必然是失败的。但是我现在就应该告诉他你已经失败了吗，你没有机会获得这张火车票了吗？显然不是。因为我们允许获取的资源是一个范围，那么当没有明确地表示现在资源已经超出这个返回了或者没有资源了，那么现在所有尝试得到资源的线程或者用户都是有机会的。此时，书中的一个概念浮现出来——信号量。这种业务场景正好是信号量技术能够解决的。但是在分布式环境下如何解决这个问题呢。</p>
 <p>  我想到了Linux环境下编程时的很多技术。其中就有一个很这个业务场景非常相似的API，就是POSIX系列里面的<code>pthread_cond_wait()</code>和<code>pthread_cond_signal()</code>。前者会一直阻塞直到等待的资源变为可用，而后者会唤醒一个正在等待某个资源的线程。如果有有这两个语义的API存在的话就会变得非常简单，伪代码将变为：</p>
-  <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="builtin-name">get</span>(ticker_counter)&lt;1000)) &#123;</span><br><span class="line">	    pthread_cond_wait();</span><br><span class="line">		int <span class="attribute">counter</span>=get(ticker_counter);</span><br><span class="line">		<span class="keyword">if</span>(++counter&lt;1000) &#123;</span><br><span class="line">			<span class="builtin-name">set</span>(<span class="attribute">ticker_counter</span>=counter)</span><br><span class="line">		&#125;</span><br><span class="line">		pthread_cond_signal();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if(get(ticker_counter)&lt;1000)) &#123;</span><br><span class="line">	    pthread_cond_wait();</span><br><span class="line">		int counter=get(ticker_counter);</span><br><span class="line">		if(++counter&lt;1000) &#123;</span><br><span class="line">			set(ticker_counter=counter)</span><br><span class="line">		&#125;</span><br><span class="line">		pthread_cond_signal();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 <p>  只可惜在分布式环境下没有这两个语义的API操作存在，那么久不得不转化思维。之所以我需要这两个语义的API存在是因为我希望在A线程完成工作以后，将这个状态/消息通知到其他在等待的线程，并且这些线程是分布式的。其实这里是可以使用到消息模型的。notify会选择集群中的一台服务器投递消息，这就可以作为唤醒操作。所有的worker一开始都去监听notify的消息，直到其中一个worker收到，然后去checkAndInc(counter)，最后再发出一个消息，如此循环就能达到目的。最后只需要增加一个Trigger,在最开始执行的时候直接去执行，而不用等待notify消息，就能完成完整的流程。但是，如此简单地一个功能，真的要实现的这么复杂吗？当然不行，什么时候都要坚持KISS原则。</p>
 <p>  其实，我最终的目的很简单，就是增加一个计数器的值，然后达到某一上线时希望能够得到一个错误返回。因为在做以前一个项目时使用到了Tair中计数器的功能，带着侥幸的心理重新去找Tair的API，居然发现了这个重要API:</p>
 <pre><code>`Result&lt;Integer&gt; incr(int namespace, Serializable key, int value, int defaultValue, int expireTime, int lowBound, int upperBound)`
 </code></pre><p>  当我看到这个API的时候感悟良多，在此还是要感谢一下设计这个API的作者，因为这个API的设计就是为这种业务场景而生的。这个<code>incr()</code>操作可以指定一个范围段，如果value值不在这个范围段中就会报错。有个这个API那么伪代码就简化成以下：</p>
-  <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">result</span> = tairManager.incr(NAMESPACE, key, <span class="number">1</span>, <span class="number">0</span>, <span class="number">60</span>, <span class="number">0</span>, <span class="number">1000</span>);</span><br><span class="line"><span class="built_in">    return</span> ResultCode.SUCCESS.<span class="keyword">equals</span>(<span class="literal">result</span>.getRc())? <span class="literal">true</span> : <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">result = tairManager.incr(NAMESPACE, key, 1, 0, 60, 0, 1000);</span><br><span class="line">    return ResultCode.SUCCESS.equals(result.getRc())? true : false</span><br></pre></td></tr></table></figure>
 <p>   这个多么的简洁和优雅,而且又有着很高的性能。如果有着类似的业务场景，推荐大家不妨试一下这个API。</p>
 <ul>
 <li><p>一点思考</p>
@@ -710,7 +710,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -732,7 +732,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -742,7 +742,7 @@
 
         
           <div class="feed-link motion-element">
-            <a href="/atom.xml" rel="alternate">
+            <a href="/rss2.xml" rel="alternate">
               <i class="fa fa-rss"></i>
               RSS
             </a>
@@ -819,7 +819,7 @@
         <div class="copyright" >
   
   &copy;  2014 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
