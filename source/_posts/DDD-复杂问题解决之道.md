@@ -7,7 +7,7 @@ category: DDD
 description: 本文分享了我对于DDD的观点和对程序员成长的认识。 
 ---
 
-上个星期在团队内部进行了关于DDD的分享，分享链接：<http://slides.com/fengchen/ddd-tackling-complex-problem#/>。
+上个星期在团队内部进行了关于DDD的分享，分享链接：<http://slides.com/michael-j/ddd-tackling-complex-problem#/>。
 
 分享的过程中发现还是有很多小伙伴对DDD不太了解，或者一知半解。DDD其实不是一个新的技术，实际上距离Eric Evans出版《Domain Driven Design》已经12年了。与其说DDD是一门编程技术，我更愿意将它称之为软件开发方法。我发现国内的技术分享两级分化比较严重，要么太过高大上——关于架构、新技术之类，要么太底层——关于数据库优化、底层性能优化之类，但很少有人来讲中间的那一层——软件编程方法。
 
