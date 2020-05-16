@@ -1,0 +1,1432 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="dOa1DsNrFPTHLB7PCkDCzVn_7nnJXGgiPV8l8ZSRvD4" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="DDD,持久化," />
+
+
+
+
+
+  <link rel="alternate" href="/rss2.xml" title="Michael-J" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.4" />
+
+
+
+
+
+
+<meta name="description" content="DDD实质上还是关于代码架构的一种方法论，那么如何做好持久化是一个至关重要的问题，本篇我将分享一下自己在实践过程中的一些思考与技巧。">
+<meta name="keywords" content="DDD,持久化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="持久化——DDD务实篇（一）">
+<meta property="og:url" content="http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/index.html">
+<meta property="og:site_name" content="Michael-J">
+<meta property="og:description" content="DDD实质上还是关于代码架构的一种方法论，那么如何做好持久化是一个至关重要的问题，本篇我将分享一下自己在实践过程中的一些思考与技巧。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/DDD-Module.png">
+<meta property="og:updated_time" content="2020-05-16T13:32:16.649Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="持久化——DDD务实篇（一）">
+<meta name="twitter:description" content="DDD实质上还是关于代码架构的一种方法论，那么如何做好持久化是一个至关重要的问题，本篇我将分享一下自己在实践过程中的一些思考与技巧。">
+<meta name="twitter:image" content="http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/DDD-Module.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/"/>
+
+
+
+
+
+  <title>持久化——DDD务实篇（一） | Michael-J</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-64773431-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?157f1b4ead183afaf48d4513691034f4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Michael-J</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">一个修行路上的码农</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Michael Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Michael-J">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">持久化——DDD务实篇（一）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-15T10:47:42+08:00">
+                2020-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DDD/" itemprop="url" rel="index">
+                    <span itemprop="name">DDD</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/15/持久化——DDD务实篇（一）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/05/15/持久化——DDD务实篇（一）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  3,566
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+              <div class="post-description">
+                  DDD实质上还是关于代码架构的一种方法论，那么如何做好持久化是一个至关重要的问题，本篇我将分享一下自己在实践过程中的一些思考与技巧。
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>持久化就是Java对象存储到数据库以及从数据库中构建出Java对象的技术。DDD中的持久化无非是对实体、值对象和聚合的持久化，这与传统的针对POJO的持久化还是存在一些差异的。我将从模块依赖、ORM框架和具体对象的持久化来说明DDD中持久化的技术与思考。</p>
+<h2 id="模块依赖"><a href="#模块依赖" class="headerlink" title="模块依赖"></a>模块依赖</h2><p>DDD的模块划分一般如下：</p>
+<img src="/2020/05/15/持久化——DDD务实篇（一）/DDD-Module.png" title="DDD-Module">
+<p>其中领域层(Domain)是依赖基础设施层（Infrastructure）的。我个人认为实际上这个关系应该反过来，让基础设施层依赖领域层，而领域层不依赖任何其他的Module。</p>
+<p>这样做的好处在于：</p>
+<ol>
+<li>领域层更加纯粹。采用DDD项目的核心就在于领域层，这也是整个项目最有价值的地方。领域层的建设应该尽量排除基础设施的干扰，专注于业务逻辑的实现。</li>
+<li>让领域层具有可移植性。虽然更换基础设施的概率不大，但还是需要考虑这样的问题。随着项目的不断发展，传统的RDBMS很可能适应不了持久化方面的要求，私有化部署可能要求依赖的开源软件固定在几个少数的数据库中，公司技术层面战略变化导致底层迁移等等这些可能的因素要求我们具有一定的前瞻性。</li>
+</ol>
+<p>既然决定让Domain不依赖Infrastructure，那么Reposistory应该放到哪里？</p>
+<p>我推荐的做法是将接口放到Domain中，而Reposistory的实现放到Infrastructure里面。直接将Reposistory的Interface和业务模型放到同一个package下面就可以了，让业务模型和负责业务模型的存储接口放到一个目录下。但这里感觉有点“坏味道”的产生，好像存储层的内容“侵入”到了领域层。我举得这是可以接受的，因为在领域层的模型是以业务维度划分的，实体与存储库是可以共存。反而，如果让领域层依赖基础设施，那么这种侵入性将更加难以控制，很容易造成深度耦合。</p>
+<h2 id="持久化的时机"><a href="#持久化的时机" class="headerlink" title="持久化的时机"></a>持久化的时机</h2><p>领域层的实体和聚合说白了就是业务属性和业务行为的集合，业务属性对应表中的字段，而行为则反映了模型本身的能力。业务逻辑的实现从内存层面去看就是通过一系列计算来改变属性的值，但这个改变后的实体对象对应着本机内存的一个普通Java对象。那么在哪里对这个Java对象进行持久化呢？</p>
+<p>大部分情况下，一般在Application层调用Reposistory进行持久化。大部分项目主要是针对实体的CRUD操作，实体的行为基本局限在实体本身，通过调用一个或者少数几个实体方法就可得到满足要求的实体对象。这种情况下，在Application进行持久化是比较简单容易的。</p>
+<p>Application的Service进行持久化的一般步骤如下：</p>
+<ol>
+<li>检索出对应的实体</li>
+<li>调用对应的实体方法</li>
+<li>最后调用实体对应的Reposistory进行持久化</li>
+</ol>
+<p>一个典型的Service方法如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeRoleRemark</span><span class="params">(<span class="keyword">long</span> primaryAccountId, String roleName, Stringremark)</span> <span class="keyword">throws</span> RoleNotFoundException </span>&#123;</span><br><span class="line">    Optional&lt;Role&gt; result = getUserRoleByName(primaryAccountId, roleName);</span><br><span class="line">    Role role = result.orElseThrow(RoleNotFoundException::<span class="keyword">new</span>);</span><br><span class="line">    role.changeRemark(remark);</span><br><span class="line">    roleRepository.update(role);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们要修改<code>Role</code>（Role对应一个实体）的备注，上面是一个典型的Service实现。再调用完Role的changeRemark方法后，直接调用<code>roleRepository</code>的update方法将更新后的Role持久化到数据库中。</p>
+<p>关系表的持久化也是一样的处理方式，如下所示。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteUserRole</span><span class="params">(<span class="keyword">long</span> primaryAccountId, String roleName)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> RoleNotFoundException </span>&#123;</span><br><span class="line">    Optional&lt;Role&gt; result = getUserRoleByName(primaryAccountId, roleName);</span><br><span class="line">    Role role = result.orElseThrow(RoleNotFoundException::<span class="keyword">new</span>);</span><br><span class="line">    RoleRelationParam roleRelationParam = <span class="keyword">new</span> RoleRelationParam();</span><br><span class="line">    roleRelationParam.setPrimaryAccountId(primaryAccountId);</span><br><span class="line">    roleRelationParam.setRoleId(role.getId());</span><br><span class="line">    roleRelationRepository.revokeRolePolicy(roleRelationParam);</span><br><span class="line">    roleRepository.delete(primaryAccountId, roleName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上诉的持久化方式可以满足大部分项目的需求，但是总有特殊情况。我在一些项目中发现，针对具有长流程的实体行为，持久化行为下沉到实体方法里面会更为合适。</p>
+<p>举个例子，云服务中的IaaS和iPaaS服务的管控端一般都有着很多长流程的业务逻辑，如”创建一个云主机“，”对一个云主机实例升配“，”创建一个高可用版的RDS实例“等等。这些长流程的业务逻辑一般有一个个原子的步骤操作构造，如”共享镜像给租户”、”指定物理机创建VM”、”挂在硬盘”、”启动指定脚本”等等。做的比较好的管控端会将这些原子步骤抽离出来，形成预编码的Step；同时长流程过程做成一个抽象后的实体Process。一个Process由多个Step组成，Process控制着Step的运行过程。</p>
+<p>这个例子中，Process具有一个Start或者Execute的行为方法，代表整个流程的启动和执行。在执行过程中，Process需要保存每个Step的执行上下文，为了执行过程异常中断后可继续整个执行流程。那么一个合理的持久化方式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    StepRepository stepRepository = BeanUtil.getBean(StepRepository.class);</span><br><span class="line">    <span class="keyword">for</span>(Step step: steps) &#123;</span><br><span class="line">        step.execute();</span><br><span class="line">        stepRepository.save(step);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，我们也可以将Step的保存和Step的execut放到一起，这样Process就不需要关心如何对Step进行持久化了。</p>
+<p>之所以长流程的持久化方式不同于短流程，其根本原因在于我们关心长流程运行过程中产生的中间变量。这些中间变量如果也是实体，那么我们就必须对齐进行持久化。对中间变量持久化已经成为了业务逻辑的一部分，所以我们需要将其放到领域层的模型中进行。</p>
+<h2 id="ORM框架"><a href="#ORM框架" class="headerlink" title="ORM框架"></a>ORM框架</h2><p>如果可以，请在使用DDD的项目中使用更加自动化ORM框架，如Hibernate；MyBatis这种半自动化SQL映射工具对DDD项目来说不太友好。</p>
+<p>由于我自己对Hibernate不熟悉，不适合做两者的对比。使用DDD架构模式的项目其核心在于领域模型的建模与演化，实质上是一种以Java对象为核心的开发方式。而三段式的开发方式中，持久化层是以表为核心的，Java对象（一般是POJO）只是表的容器而已。因为核心的关注点不同，导致在框架的设计理念是不一样的。Mybatis对DDD的领域模型侵入性比较强，而Hibernate对DDD中的实体和值对象都有着很好的支持。个人认为一款好的ORM框架是能最大程度地贴合你的领域模型，能灵活的支持模型对象的存取和模型间关系的映射。</p>
+<p>目前我还无法细致的描绘ORM对DDD的影响，后期有机会在对其进行更加细致的分析。</p>
+<h2 id="实体持久化"><a href="#实体持久化" class="headerlink" title="实体持久化"></a>实体持久化</h2><p>实体的持久化注意以下几点：</p>
+<h3 id="善用Constructor"><a href="#善用Constructor" class="headerlink" title="善用Constructor"></a>善用Constructor</h3><p>Construct在POJO中基本未被使用，而在DDD中它十分重要。因为我们的开发思维已经从面向表编程转变为面向对象编程，那么对象的每一个属性、构造器和方法我们都应该反复的思考与推敲。</p>
+<p>Constructor代表了一个对象的开始，它是如何被构造出来的。在实体中，Constructor应该接受这个实体构造必不可少的参数，当然可以提供多个Constructor来接受更加丰富的参数。下面是一个<code>UserGroup</code>的实体对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 子账号用户组</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Created by Michael Jiang on 16-12-5.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserGroup</span> <span class="keyword">extends</span> <span class="title">Entity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">3431132267526140851L</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_GROUP_NUMBER = <span class="number">50</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Min</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> primaryAccountId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Pattern</span>(regexp = <span class="string">"^[a-z]([a-z0-9-]&#123;0,62&#125;[a-z0-9]$|[a-z0-9]?)"</span>, message = <span class="string">"组名称只能是英文字母，数字和中划线"</span>)</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Size</span>(max = <span class="number">255</span>)</span><br><span class="line">    <span class="keyword">private</span> String remark;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Size</span>(max = <span class="number">50</span>)</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; subAccountList;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserGroup</span><span class="params">(Long primaryAccountId, String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(primaryAccountId, name, <span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserGroup</span><span class="params">(Long primaryAccountId, String name, String remark)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.primaryAccountId = primaryAccountId;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.remark = remark;</span><br><span class="line">        <span class="keyword">this</span>.subAccountList = Lists.newArrayList();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getPrimaryAccountId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> primaryAccountId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getRemark</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> remark;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeName</span><span class="params">(String newGroupName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = newGroupName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeRemark</span><span class="params">(String newRemark)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.remark = newRemark;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addSubAccount</span><span class="params">(String subAccount)</span> <span class="keyword">throws</span> MaxGroupMemberException, AlreadyJoinGroupException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (subAccountList.size() &lt; MAX_GROUP_NUMBER) &#123;</span><br><span class="line">            <span class="keyword">if</span> (subAccountList.contains(subAccount)) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> AlreadyJoinGroupException();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">this</span>.subAccountList.add(subAccount);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MaxGroupMemberException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">removeSubAccount</span><span class="params">(String subAccount)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.subAccountList.remove(subAccount);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">getSubAccountList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> subAccountList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setSubAccountList</span><span class="params">(List&lt;String&gt; subAccountList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.subAccountList = subAccountList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Set&lt;String&gt; <span class="title">validate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Entity.validate(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"UserGroup&#123;"</span> + <span class="string">"primaryAccountId='"</span> + primaryAccountId + <span class="string">'\''</span> + <span class="string">", name='"</span> + name + <span class="string">'\''</span> + <span class="string">", remark='"</span></span><br><span class="line">                + remark + <span class="string">'\''</span> + <span class="string">", subAccountList="</span> + subAccountList + <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>UserGroup提供了两个Constructor。由于一个UserGroup必须属于一个主账号，同时必须有一个组名称，那么我们一般需要提供这样一个Constructor。</p>
+<blockquote>
+<p>public UserGroup(Long primaryAccountId, String name)</p>
+</blockquote>
+<p>对应的MyBatis ResultMap如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"groupResult"</span> <span class="attr">type</span>=<span class="string">"userGroup"</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">constructor</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">arg</span> <span class="attr">column</span>=<span class="string">"primary_account_id"</span> <span class="attr">javaType</span>=<span class="string">"long"</span>/&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">arg</span> <span class="attr">column</span>=<span class="string">"name"</span> <span class="attr">javaType</span>=<span class="string">"String"</span>/&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">arg</span> <span class="attr">column</span>=<span class="string">"remark"</span> <span class="attr">javaType</span>=<span class="string">"String"</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">constructor</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">property</span>=<span class="string">"id"</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"gmt_create"</span> <span class="attr">property</span>=<span class="string">"gmtCreate"</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"gmt_modify"</span> <span class="attr">property</span>=<span class="string">"gmtModify"</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"is_deleted"</span> <span class="attr">property</span>=<span class="string">"isDeleted"</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"subAccountList"</span> <span class="attr">javaType</span>=<span class="string">"list"</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">ofType</span>=<span class="string">"String"</span></span></span><br><span class="line"><span class="tag">                   <span class="attr">select</span>=<span class="string">"selectSubAccountUser"</span> <span class="attr">fetchType</span>=<span class="string">"eager"</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">"sub_account_user"</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="戒掉Setter"><a href="#戒掉Setter" class="headerlink" title="戒掉Setter"></a>戒掉Setter</h3><p>DDD推荐使用更有表现力的方法名称，例如上面<code>UserGroup</code>的<code>changeName</code>，而不是<code>setName</code>。这两者的语义与使用心智是不一样的。<code>changeName</code>表示我已经有一个<code>name</code>，而现在要接受一个新的<code>name</code>，而<code>setName</code>是看不出来任何的业务语义的。</p>
+<p>不用<code>setter</code>带来的一个问题就是Mybatis无法正确的识别对应的反射方法，如果使用属性注入，那么Mybatis要求一定要存在对应的<code>setter</code>。</p>
+<p>解决办法有两个：</p>
+<ol>
+<li>如果这个属性是构造时可以附带的，那么就通过Mybatis的<code>constrcutor</code>进行注入，而不是<code>property</code>。</li>
+<li>如果这个属性不合适放到<code>Constructor</code>中，那么增加一个<code>protect</code>级别的<code>setter</code>方法。这样一来就会有两个注入点了，这也是Mybatis不适合DDD的原因之一。</li>
+</ol>
+<h3 id="处理关联关系"><a href="#处理关联关系" class="headerlink" title="处理关联关系"></a>处理关联关系</h3><p>聚合里面一般多个其他实体或者值对象，这种关联关系时如何建立起来的呢？</p>
+<p>如<code>UserGroup</code>中的<code>subAccountList</code>属性，这个代表了用户组中的子账号集合。通过<code>addSubAccount</code>和<code>removeSubAccount</code>来增加和删除组中的子账号。通过<code>setSubAccountList</code>来完成MyBatis注入子账号的集合，对应<code>ResultMap</code>中的<code>collection</code>元素。下面会在<a href="#值对象持久化">值对象持久化</a>中讲到如何利用值对象来保存关联关系。</p>
+<h2 id="值对象持久化"><a href="#值对象持久化" class="headerlink" title="值对象持久化"></a>值对象持久化</h2><p>值对象的持久化一般分为两种场景：</p>
+<h3 id="描述客观事物"><a href="#描述客观事物" class="headerlink" title="描述客观事物"></a>描述客观事物</h3><p>大部分值对象是用来描述一种客观存在的事物，如Email、Phone、Url等等。这些对象的持久化需要使用专门的<code>TypeHandler</code>。如处理EMail可使用如下的<code>EmailAddressTypeHandler</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * EMailAddress值对象 Type Handler</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Created by Michael Jiang on 16-12-6.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@MappedTypes</span>(EMailAddress.class)</span><br><span class="line"><span class="meta">@MappedJdbcTypes</span>(JdbcType.VARCHAR)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EMailAddressTypeHandler</span> <span class="keyword">extends</span> <span class="title">BaseTypeHandler</span>&lt;<span class="title">EMailAddress</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNonNullParameter</span><span class="params">(PreparedStatement preparedStatement, <span class="keyword">int</span> i, EMailAddress eMailAddress,</span></span></span><br><span class="line"><span class="function"><span class="params">            JdbcType jdbcType)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        preparedStatement.setString(i, eMailAddress.email());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> EMailAddress <span class="title">getNullableResult</span><span class="params">(ResultSet resultSet, String s)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> EMailAddress(resultSet.getString(s));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> EMailAddress <span class="title">getNullableResult</span><span class="params">(ResultSet resultSet, <span class="keyword">int</span> i)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> EMailAddress(resultSet.getString(i));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> EMailAddress <span class="title">getNullableResult</span><span class="params">(CallableStatement callableStatement, <span class="keyword">int</span> i)</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> EMailAddress(callableStatement.getString(i));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种场景下值对象是在实体或者聚合内部的，没有专属的数据表，只需要使用对应的TypeHandler完成值对象的存取就可以了。</p>
+<h3 id="描述关联关系"><a href="#描述关联关系" class="headerlink" title="描述关联关系"></a>描述关联关系</h3><p>我们经常会遇到关联关系表，这种表对应着一种N:N的实体关系。我们可以利用值对象的特性来表示这种关联关系，因为关联关系一旦建立就不可改变直到你销毁它。</p>
+<p>这种情况下值对象本身就对应了一张关系表，无法通过TypeHandler来完成持久化。我们需要使用<code>IdentifiedValueObject</code>这个带ID的值对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 带id的值对象 Created by jiangwenkang on 16-11-7.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">IdentifiedValueObject</span>&lt;<span class="title">V</span> <span class="keyword">extends</span> <span class="title">IdentifiedValueObject</span>&gt; <span class="keyword">implements</span> <span class="title">ValueObject</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">7815856088988915247L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> Long id;</span><br><span class="line">    <span class="keyword">protected</span> Date gmtCreate;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Long <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Date <span class="title">getGmtCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> gmtCreate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setGmtCreate</span><span class="params">(Date gmtCreate)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.gmtCreate = gmtCreate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"IdentifiedValueObject&#123;"</span> + <span class="string">"id="</span> + id + <span class="string">", gmtCreate="</span> + gmtCreate + <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后具体的关系值对象继承这个<code>IdentifiedValueObject</code>即可。之所以会存在这个<code>IdentifiedValueObject</code>是因为我们关系表中还会存在<code>主键ID</code>,<code>创建时间</code>之类的通用字段，我们把这些字段封装在这个带ID值的基类中，这样我们具体的值对象就不需要冗余这些字段了。</p>
+<p>综上所述，DDD中的持久化要考虑的东西更多一些。从模块的依赖关系、持久化的时机、ORM的选型都需要仔细考量。大部分情况下我们都是对实体和聚合进行持久化，需要利用好Constructor、尽量避免使用Setter、利用Collection来加载聚合关联的实体对象。一般情况下值对象是跟着实体一起进行持久化的，某些情况下需要专门对值对象进行持久化，那么我们可以构造一个带ID的值对象基类来屏蔽技术层面的细节，从而保持具体值对象的纯粹性。</p>
+<hr>
+<p>趁着最近换工作之际，可以静下心来写点DDD的东西了。最近微服务和中台概念的流行，似乎又让国内的开发者重拾DDD的开发理念，这让我感到有些兴奋。后续我将更多分享关于DDD落地方面的问题。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/wechat_pay.png" alt="Michael Jiang WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/alipay.png" alt="Michael Jiang Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      Michael Jiang
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/" title="持久化——DDD务实篇（一）">http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDD/" rel="tag"># DDD</a>
+          
+            <a href="/tags/持久化/" rel="tag"># 持久化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/24/网易PaaS-On-K8S实践/" rel="next" title="网易PaaS On K8S实践">
+                <i class="fa fa-chevron-left"></i> 网易PaaS On K8S实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/avatar.jpg"
+               alt="Michael Jiang" />
+          <p class="site-author-name" itemprop="name">Michael Jiang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/rss2.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/mymonkey110" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/mjxyz" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              朋友
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fegirl.com/" title="fegirl" target="_blank">fegirl</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://work-jlsun.github.io/" title="tom哥" target="_blank">tom哥</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://itech.red/" title="鑫爷" target="_blank">鑫爷</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#模块依赖"><span class="nav-number">1.</span> <span class="nav-text">模块依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持久化的时机"><span class="nav-number">2.</span> <span class="nav-text">持久化的时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ORM框架"><span class="nav-number">3.</span> <span class="nav-text">ORM框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实体持久化"><span class="nav-number">4.</span> <span class="nav-text">实体持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#善用Constructor"><span class="nav-number">4.1.</span> <span class="nav-text">善用Constructor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#戒掉Setter"><span class="nav-number">4.2.</span> <span class="nav-text">戒掉Setter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理关联关系"><span class="nav-number">4.3.</span> <span class="nav-text">处理关联关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#值对象持久化"><span class="nav-number">5.</span> <span class="nav-text">值对象持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#描述客观事物"><span class="nav-number">5.1.</span> <span class="nav-text">描述客观事物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#描述关联关系"><span class="nav-number">5.2.</span> <span class="nav-text">描述关联关系</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2014 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Michael Jiang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://michael-j.net/2020/05/15/持久化——DDD务实篇（一）/';
+          this.page.identifier = '2020/05/15/持久化——DDD务实篇（一）/';
+          this.page.title = '持久化——DDD务实篇（一）';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://michael-j.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

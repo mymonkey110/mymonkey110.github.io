@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -130,7 +130,7 @@
 <meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/greys.png">
 <meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/jstat.png">
 <meta property="og:image" content="http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/啊.png">
-<meta property="og:updated_time" content="2019-07-19T03:35:26.621Z">
+<meta property="og:updated_time" content="2019-07-19T03:35:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次坑爹的Debug过程">
 <meta name="twitter:description" content="昨天QA跟我反馈说系统有几个接口反应很慢，起初我不以为意，因为这几个接口就是简单的写入和删除，最多就是再更新一下缓存，能有多慢。我让QA看看是不是网络抖动，延迟的问题，再看看我们的access_log里面响应时间是多少。QA说网络比较稳定，access_log里面显示要好几秒，这就让我有些诧异了。其中有一个删除用户XXX数据的接口响应特别慢，我们在测试环境去复现的时候果然复现了这个问题。当前端直接">
@@ -142,7 +142,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Mist',
+    scheme: 'Pisces',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
@@ -446,6 +446,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/21/记一次坑爹的Debug过程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/21/记一次坑爹的Debug过程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -681,7 +692,12 @@
           
   <div class="comments" id="comments">
     
-      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mzc1MS8yMDI5MA"></div>
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     
   </div>
 
@@ -720,7 +736,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -742,7 +758,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -848,7 +864,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
+    NexT.Pisces
   </a>
 </div>
 
@@ -948,6 +964,13 @@
   
   
 
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
@@ -963,6 +986,26 @@
 
   
 
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://michael-j.net/2017/06/21/记一次坑爹的Debug过程/';
+          this.page.identifier = '2017/06/21/记一次坑爹的Debug过程/';
+          this.page.title = '记一次坑爹的Debug过程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://michael-j.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
 
   
 
@@ -984,21 +1027,6 @@
   
 
 
-
-
-
-  
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
-  
 
 
 

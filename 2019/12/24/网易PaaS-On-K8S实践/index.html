@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -126,7 +126,7 @@
 <meta property="og:image" content="http://michael-j.net/2019/12/24/网易PaaS-On-K8S实践/operator-principle.png">
 <meta property="og:image" content="http://michael-j.net/2019/12/24/网易PaaS-On-K8S实践/pod-schedule-deadlock.jpg">
 <meta property="og:image" content="http://michael-j.net/2019/12/24/网易PaaS-On-K8S实践/operator-shop.png">
-<meta property="og:updated_time" content="2019-12-24T09:48:35.362Z">
+<meta property="og:updated_time" content="2019-12-24T09:48:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网易PaaS On K8S实践">
 <meta name="twitter:description" content="背景随着Kubernetes日趋成熟与稳定，网易云将其列为最重要的基础设施，成为云计算的底座。在此背景之下，PaaS团队的目标自然也将适配K8S列为了其首要支持目标。但是在实际落地过程中，我们遇到了很多问题，本文将分享一下网易在PaaS服务在迁移上K8S过程中的问题和我们的应对之道。 调研众所周知，Kubernetes处理无状态应用最为合适，Pod的短生命周期特性和无数据本地存储都是为无状态应用而">
@@ -138,7 +138,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Mist',
+    scheme: 'Pisces',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
@@ -442,6 +442,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/12/24/网易PaaS-On-K8S实践/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/12/24/网易PaaS-On-K8S实践/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -663,6 +674,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2020/05/15/持久化——DDD务实篇（一）/" rel="prev" title="持久化——DDD务实篇（一）">
+                持久化——DDD务实篇（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -710,7 +725,12 @@
           
   <div class="comments" id="comments">
     
-      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mzc1MS8yMDI5MA"></div>
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     
   </div>
 
@@ -758,7 +778,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -780,7 +800,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -902,7 +922,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
+    NexT.Pisces
   </a>
 </div>
 
@@ -1002,6 +1022,13 @@
   
   
 
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
@@ -1017,6 +1044,26 @@
 
   
 
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://michael-j.net/2019/12/24/网易PaaS-On-K8S实践/';
+          this.page.identifier = '2019/12/24/网易PaaS-On-K8S实践/';
+          this.page.title = '网易PaaS On K8S实践';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://michael-j.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
 
   
 
@@ -1038,21 +1085,6 @@
   
 
 
-
-
-
-  
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
-  
 
 
 

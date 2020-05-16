@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -129,7 +129,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Mist',
+    scheme: 'Pisces',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
@@ -370,6 +370,234 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://michael-j.net/2015/10/19/Debug-Tomcat-deploy-twice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Michael Jiang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Michael-J">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2015/10/19/Debug-Tomcat-deploy-twice/" itemprop="url">Btrace Sample Scripts</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-19T17:16:28+08:00">
+                2015-10-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/debug/" itemprop="url" rel="index">
+                    <span itemprop="name">debug</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/10/19/Debug-Tomcat-deploy-twice/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/10/19/Debug-Tomcat-deploy-twice/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  620
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://kenai.com/projects/btrace/pages/Home" target="_blank" rel="noopener">Btrace</a> is very powerful tool for online debugging, here is the sample scripts in tar btrace.</p>
+<p>The scripts are very useful, so I decide to upload them. Here is the scripts below:</p>
+<ul>
+<li>AWTEventTracer.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AWTEventTracer.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AWTEventTracer.java</a></li>
+<li>AllCalls1.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls1.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls1.java</a></li>
+<li>AllCalls1Sampled.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls1Sampled.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls1Sampled.java</a></li>
+<li>AllCalls2.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls2.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls2.java</a></li>
+<li>AllCalls2Sampled.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls2Sampled.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls2Sampled.java</a></li>
+<li>AllCalls3.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls3.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls3.java</a></li>
+<li>AllCalls3Sampled.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls3Sampled.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllCalls3Sampled.java</a></li>
+<li>AllLines.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllLines.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllLines.java</a></li>
+<li>AllMethods.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllMethods.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllMethods.java</a></li>
+<li>AllMethodsSampled.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllMethodsSampled.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllMethodsSampled.java</a></li>
+<li>AllSync.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllSync.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-AllSync.java</a></li>
+<li>ArgArray.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-ArgArray.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-ArgArray.java</a></li>
+<li>Classload.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Classload.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Classload.java</a></li>
+<li>CommandArg.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-CommandArg.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-CommandArg.java</a></li>
+<li>DTraceInline.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-DTraceInline.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-DTraceInline.java</a></li>
+<li>DTraceRefDemo.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-DTraceRefDemo.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-DTraceRefDemo.java</a></li>
+<li>Deadlock.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Deadlock.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Deadlock.java</a></li>
+<li>FileTracker.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-FileTracker.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-FileTracker.java</a></li>
+<li>FinalizeTracker.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-FinalizeTracker.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-FinalizeTracker.java</a></li>
+<li>HistoOnEvent.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-HistoOnEvent.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-HistoOnEvent.java</a></li>
+<li>Histogram.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Histogram.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Histogram.java</a></li>
+<li>HistogramBean.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-HistogramBean.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-HistogramBean.java</a></li>
+<li>JInfo.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-JInfo.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-JInfo.java</a></li>
+<li>JMap.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-JMap.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-JMap.java</a></li>
+<li>JStack.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-JStack.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-JStack.java</a></li>
+<li>JdbcQueries.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-JdbcQueries.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-JdbcQueries.java</a></li>
+<li>LogTracer.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-LogTracer.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-LogTracer.java</a></li>
+<li>MemAlerter.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-MemAlerter.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-MemAlerter.java</a></li>
+<li>Memory.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Memory.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Memory.java</a></li>
+<li>MultiClass.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-MultiClass.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-MultiClass.java</a></li>
+<li>NewArray.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-NewArray.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-NewArray.java</a></li>
+<li>NewComponent.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-NewComponent.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-NewComponent.java</a></li>
+<li>OnThrow.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-OnThrow.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-OnThrow.java</a></li>
+<li>ProbeExit.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-ProbeExit.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-ProbeExit.java</a></li>
+<li>Profiling.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Profiling.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Profiling.java</a></li>
+<li>Sizeof.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Sizeof.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Sizeof.java</a></li>
+<li>SocketTracker.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-SocketTracker.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-SocketTracker.java</a></li>
+<li>SocketTracker1.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-SocketTracker1.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-SocketTracker1.java</a></li>
+<li>SubtypeTracer.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-SubtypeTracer.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-SubtypeTracer.java</a></li>
+<li>SysProp.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-SysProp.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-SysProp.java</a></li>
+<li>Test.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Test.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Test.java</a></li>
+<li>ThreadBean.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadBean.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadBean.java</a></li>
+<li>ThreadCounter.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadCounter.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadCounter.java</a></li>
+<li>ThreadCounterBean.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadCounterBean.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadCounterBean.java</a></li>
+<li>ThreadStart.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadStart.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-ThreadStart.java</a></li>
+<li>Timers.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-Timers.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-Timers.java</a></li>
+<li>URLTracker.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-URLTracker.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-URLTracker.java</a></li>
+<li>WebServiceTracker.java : <a href="http://7xnmye.com1.z0.glb.clouddn.com/btrace-WebServiceTracker.java" target="_blank" rel="noopener">http://7xnmye.com1.z0.glb.clouddn.com/btrace-WebServiceTracker.java</a></li>
+</ul>
+<p>You can access them with curl or wget, wish you happy debugging!</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://michael-j.net/2015/10/17/利用Autoconfig打包Java-WEB应用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -436,6 +664,17 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/10/17/利用Autoconfig打包Java-WEB应用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/10/17/利用Autoconfig打包Java-WEB应用/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -606,6 +845,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/05/30/Java也能玩转WebSocket/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2015/05/30/Java也能玩转WebSocket/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -752,6 +1002,17 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/12/23/利用Tair实现全局并发锁/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2014/12/23/利用Tair实现全局并发锁/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -921,6 +1182,17 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2011/10/03/C#网络编程初步之TCP/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2011/10/03/C#网络编程初步之TCP/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -1193,6 +1465,17 @@ namespace Demo_Client
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2011/09/03/超小型局域网组建的方案/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2011/09/03/超小型局域网组建的方案/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -1338,7 +1621,7 @@ namespace Demo_Client
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1360,7 +1643,7 @@ namespace Demo_Client
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1466,7 +1749,7 @@ namespace Demo_Client
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
+    NexT.Pisces
   </a>
 </div>
 
@@ -1566,6 +1849,13 @@ namespace Demo_Client
   
   
 
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
   
     <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
@@ -1581,6 +1871,14 @@ namespace Demo_Client
 
   
 
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
 
   
 
@@ -1602,10 +1900,6 @@ namespace Demo_Client
   
 
 
-
-
-
-  
 
 
 

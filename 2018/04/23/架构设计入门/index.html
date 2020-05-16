@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -97,7 +97,7 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="架构,系统架构,代码架构," />
+  <meta name="keywords" content="代码架构,系统架构,架构," />
 
 
 
@@ -116,14 +116,14 @@
 
 
 <meta name="description" content="最近在团队内部分享了一些关于架构设计方面的基础知识，特此分享一下。">
-<meta name="keywords" content="架构,系统架构,代码架构">
+<meta name="keywords" content="代码架构,系统架构,架构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="架构设计入门">
 <meta property="og:url" content="http://michael-j.net/2018/04/23/架构设计入门/index.html">
 <meta property="og:site_name" content="Michael-J">
 <meta property="og:description" content="最近在团队内部分享了一些关于架构设计方面的基础知识，特此分享一下。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-19T03:35:26.604Z">
+<meta property="og:updated_time" content="2019-07-19T03:35:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="架构设计入门">
 <meta name="twitter:description" content="最近在团队内部分享了一些关于架构设计方面的基础知识，特此分享一下。">
@@ -134,7 +134,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Mist',
+    scheme: 'Pisces',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
@@ -416,6 +416,17 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/04/23/架构设计入门/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/04/23/架构设计入门/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -541,11 +552,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/架构/" rel="tag"># 架构</a>
+            <a href="/tags/代码架构/" rel="tag"># 代码架构</a>
           
             <a href="/tags/系统架构/" rel="tag"># 系统架构</a>
           
-            <a href="/tags/代码架构/" rel="tag"># 代码架构</a>
+            <a href="/tags/架构/" rel="tag"># 架构</a>
           
         </div>
       
@@ -619,7 +630,12 @@
           
   <div class="comments" id="comments">
     
-      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mzc1MS8yMDI5MA"></div>
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
     
   </div>
 
@@ -658,7 +674,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -680,7 +696,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -786,7 +802,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
+    NexT.Pisces
   </a>
 </div>
 
@@ -886,6 +902,13 @@
   
   
 
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
@@ -901,6 +924,26 @@
 
   
 
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://michael-j.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://michael-j.net/2018/04/23/架构设计入门/';
+          this.page.identifier = '2018/04/23/架构设计入门/';
+          this.page.title = '架构设计入门';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://michael-j.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
 
   
 
@@ -922,21 +965,6 @@
   
 
 
-
-
-
-  
-    <script type="text/javascript">
-      (function(d, s) {
-        var j, e = d.getElementsByTagName(s)[0];
-        if (typeof LivereTower === 'function') { return; }
-        j = d.createElement(s);
-        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-        j.async = true;
-        e.parentNode.insertBefore(j, e);
-      })(document, 'script');
-    </script>
-  
 
 
 
