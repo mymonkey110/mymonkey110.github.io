@@ -195,9 +195,9 @@
         <category>云计算</category>
       </categories>
       <tags>
+        <tag>架构设计</tag>
         <tag>cloud</tag>
         <tag>访问控制</tag>
-        <tag>架构设计</tag>
         <tag>DSL</tag>
         <tag>云计算</tag>
       </tags>
@@ -268,7 +268,7 @@
   <entry>
     <title><![CDATA[Zookeeper:distributed process coordination中文版]]></title>
     <url>%2F2016%2F08%2F02%2FZookeeper-distributed-process-coordination%2F</url>
-    <content type="text"><![CDATA[最近使用zookeeper比较多，但是国内关于zookeeper方面的数据太少。能介绍其使用同时也讲解原理的书太少了。Zookeeper:distributed process coordination是一本关于zookeeper不可多得的好书。读完以后我对zookeeper有能一个非常直观的了解。 现在分布式应用开发越来越常见，基本上大部分的分布式应用都需要与其它应用进行协同。Zookeeper非常擅长于处理分布式协同。所以我决定利用工作之余的时间翻译这本书籍，完全出于个人兴趣。 GitBook阅读地址 GitHub阅读地址 由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献： 参与讨论：邮件列表：&#x7a;&#x6b;&#x5f;&#116;&#114;&#x61;&#x6e;&#x73;&#x6c;&#x61;&#116;&#111;&#x72;&#x40;&#103;&#114;&#x6f;&#117;&#x70;&#x73;&#46;&#x31;&#54;&#x33;&#x2e;&#99;&#x6f;&#x6d;，申请加入地址：http://163.fm/UJNWGHS 部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。 在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。 1234$ git clone git@github.com:user/zookeeper-book.git$ cd zookeeper-book$ git config user.name &quot;yourname&quot;$ git config user.email &quot;your email&quot; 修改代码后提交，并推送到自己的仓库。 123$ #do some change on the content$ git commit -am &quot;Fix issue #1: change helo to hello&quot;$ git push 在 GitHub 网站上提交 pull request。定期使用项目仓库内容更新自己仓库内容。 12345$ git remote add upstream https://github.com/mymonkey110/zookeeper-book.git$ git fetch upstream$ git checkout master$ git rebase upstream/master$ git push -f origin master PS: 2016/8/15 Update: 很遗憾，因为授权的问题，不得不停止翻译的工作。本书已经有中文版的译本了，我后来才得知，所以我也不会取得中文版的翻译授权了。因为本人第一次翻译，事先没有搞清这些事情，才导致了现在的情况。不得不说，十分遗憾，感谢关注本书翻译的伙伴。我相信已有的中文译本应该还不错，如果需要的伙伴可以去购买。So, that’s it, it’s over, thanks for your attention.]]></content>
+    <content type="text"><![CDATA[最近使用zookeeper比较多，但是国内关于zookeeper方面的数据太少。能介绍其使用同时也讲解原理的书太少了。Zookeeper:distributed process coordination是一本关于zookeeper不可多得的好书。读完以后我对zookeeper有能一个非常直观的了解。 现在分布式应用开发越来越常见，基本上大部分的分布式应用都需要与其它应用进行协同。Zookeeper非常擅长于处理分布式协同。所以我决定利用工作之余的时间翻译这本书籍，完全出于个人兴趣。 GitBook阅读地址 GitHub阅读地址 由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献： 参与讨论：邮件列表：&#122;&#x6b;&#95;&#116;&#x72;&#x61;&#110;&#115;&#x6c;&#x61;&#x74;&#x6f;&#x72;&#64;&#x67;&#x72;&#x6f;&#117;&#x70;&#x73;&#46;&#x31;&#x36;&#51;&#x2e;&#x63;&#111;&#109;，申请加入地址：http://163.fm/UJNWGHS 部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。 在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。 1234$ git clone git@github.com:user/zookeeper-book.git$ cd zookeeper-book$ git config user.name &quot;yourname&quot;$ git config user.email &quot;your email&quot; 修改代码后提交，并推送到自己的仓库。 123$ #do some change on the content$ git commit -am &quot;Fix issue #1: change helo to hello&quot;$ git push 在 GitHub 网站上提交 pull request。定期使用项目仓库内容更新自己仓库内容。 12345$ git remote add upstream https://github.com/mymonkey110/zookeeper-book.git$ git fetch upstream$ git checkout master$ git rebase upstream/master$ git push -f origin master PS: 2016/8/15 Update: 很遗憾，因为授权的问题，不得不停止翻译的工作。本书已经有中文版的译本了，我后来才得知，所以我也不会取得中文版的翻译授权了。因为本人第一次翻译，事先没有搞清这些事情，才导致了现在的情况。不得不说，十分遗憾，感谢关注本书翻译的伙伴。我相信已有的中文译本应该还不错，如果需要的伙伴可以去购买。So, that’s it, it’s over, thanks for your attention.]]></content>
       <categories>
         <category>翻译</category>
       </categories>
@@ -351,8 +351,8 @@
         <category>架构设计</category>
       </categories>
       <tags>
-        <tag>架构</tag>
         <tag>评论系统</tag>
+        <tag>架构</tag>
       </tags>
   </entry>
   <entry>
