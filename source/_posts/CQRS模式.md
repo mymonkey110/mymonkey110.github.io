@@ -6,6 +6,7 @@ tags:
  - DDD
  - CQRS
 category: 翻译
+description: 通过使用不同的接口来分离读写操作，这种模式能最大化性能、可扩展性和安全性；能通过更高的灵活性来支持系统的演进；同时能在领域层面防止因更新命令引起的合并冲突。
 ---
 
 > 原文链接：https://docs.microsoft.com/en-us/previous-versions/msp-n-p/dn568103(v%3dpandp.10)
