@@ -681,79 +681,14 @@
 
       
         
-          
-            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>随着Kubernetes日趋成熟与稳定，网易云将其列为最重要的基础设施，成为云计算的底座。在此背景之下，PaaS团队的目标自然也将适配K8S列为了其首要支持目标。但是在实际落地过程中，我们遇到了很多问题，本文将分享一下网易在PaaS服务在迁移上K8S过程中的问题和我们的应对之道。</p>
-<h2 id="调研"><a href="#调研" class="headerlink" title="调研"></a>调研</h2><p>众所周知，Kubernetes处理无状态应用最为合适，Pod的短生命周期特性和无数据本地存储都是为无状态应用而生的，但是有状态应用是否也适合上K8S呢？最开始我们对此是持怀疑态度的，直到发现<a href="https://coreos.com/operators/" target="_blank" rel="noopener">Operator</a>的存在。Operator是由coreos公司提出的一个概念，定位为一种打包、部署和管理Kubernetes应用的一种方法。关于Operator诞生的历史，可以参见这篇博文：<a href="https://mp.weixin.qq.com/s?__biz=MzU3ODE2MTk2Mg==&amp;mid=2247484589&amp;idx=1&amp;sn=101680db0f3ca6ca3b4e760da98bf85e" target="_blank" rel="noopener">OpenShift全力拥抱Operator：Kubernetes运维自动化背后的战争</a></p>
-<p>Operator的工作原理并不复杂，如下图所示：</p>
-<img src="/2019/12/24/网易PaaS-On-K8S实践/operator-principle.png" title="原理">
-<p>Operator通过Watch ApiServer来捕获CR的请求，然后创建对应的资源来“组装”成我们需要的集群。CR所属的子资源的状态也通过ApiServer反馈给Operator，Operator来做相应的协调处理，整个过程清晰明了。</p>
-<p>原理不复杂，关键在于Operator的开发模式与我们以前做PaaS管控的逻辑出入是很大的，主要表现在以下两个方面：</p>
-<ol>
-<li>基于声明式的开发模式，而不是命令式。</li>
-<li>假定资源的状态变化是高频的，而不是低频的。</li>
-</ol>
-<p>对我们冲击最大的就是声明式的开发方式，它强调一开始就把最终的结果描述清楚，不管过程；而我们已经的开发模式基本上都是命令式的，由用户通过一些列的Restful“命令”来组装成他需要的集群。</p>
-<p>声明式的优势:</p>
-<ul>
-<li>强调结果，而不是过程</li>
-<li>对使用者友好</li>
-<li>简化开发工作</li>
-</ul>
-<p>缺点也很明显：</p>
-<ul>
-<li>性能。针对某些大规模的场景，声明式可能没有命令式处理高效。</li>
-</ul>
-<p>但是对于PaaS服务的管控端而言，性能不是主要指标，稳定性和可维护性更加重要。所以声明式的开发方式应该是对PaaS的管控端开发更加友好。</p>
-<p>另外，还一个显著的区别在于，相比于传统的VM架构，Kubernetes集群上的资源似乎更加“不稳定”。我们分析发现，这种不稳定性来源于多个方面：</p>
-<ul>
-<li>混部。一个Kubernet集群可以承载的负载类型非常多，业务容器、PaaS容器和大数据相关的容器都可以跑在一个K8S集群中。虽然可以通过给Node打标签，配合一些调度策略将不通的业务隔离开，但出于提高利用率的考虑，又不会隔离的非常严格。这样就可能造成资源的抢占，从而带来风险。</li>
-<li>Docker较弱的隔离性。Docker是共性操作系统内容，基于Namespace的隔离还不够完善，可能带来潜在风险。</li>
-<li>复杂的Controller关系。Kubernetes的一大优势在于其高度的自治性，这种自治性通过各自各样的Controller来完成，同时Controller之间又存在着隐含的层级关系。</li>
-</ul>
-<p>这种“不稳定”因素的存在迫使我们在设计之初就要考虑服务的自愈能力。实际上，K8S已经提供了非常强大的自愈能力，我们更多要考虑的是让PaaS如何利用这些能力。</p>
-<p>在调研过程中，我们发现其实现在已经有非常多的PaaS服务迁移上了Kubernetes，<a href="https://github.com/operator-framework/awesome-operators" target="_blank" rel="noopener">awesome-operators</a>上有众多开源的Operator项目，有官方的也有第三方开源的。这进一步坚定了我们选择Operator的决心。</p>
-<h2 id="标准化"><a href="#标准化" class="headerlink" title="标准化"></a>标准化</h2><p>在云1.0和2.0的研发过程中我们发现了一个很大的问题，在于各个PaaS服务的管控端都是每个PaaS团队各自开发，基本上没有代码复用。有一两个团队出于自己代码维护性地角度方便，开发了一些SDK包来封装与IaaS之间的交互，但这些SDK包并没有经过良好的设计和抽象，导致其很难在其他PaaS之间共享。这样带来的一个直接问题就是研发效率低下。一个PaaS服务从立项、开发、测试和上线大概需要2~3个月的时间，这还不包括对接各种横向服务，如计费、SAM、资源池等。另外一个问题在于，管控端质量取决于PaaS人员的水平，一些共性的问题反复发生，没有集中性的技术手段来规避这些问题。</p>
-<p>为了避免重蹈覆辙，在PaaS on K8S立项之初我们就强调通过标准化规范来约束PaaS Operator，通过“中台”小组来解决PaaS共性的问题。（这里的中台应该叫PaaS公共服务更为合适）</p>
-<p>我们在充分调研的情况下，结合Redis和Kafka迁移上K8S的实际项目经验，制定了一套标准化的规范。该规范包含以下几个方面：</p>
-<ul>
-<li>文档规范：必须包含需求文档、概要设计和详细设计，尤其是需求文档，一定是要从业务方的痛点出发，说明该项目的价值和意义。</li>
-<li>设计规范：包括设计原则，<a href="http://dockone.io/article/9088" target="_blank" rel="noopener">最佳实践</a>和CRD的详细设计要求。</li>
-<li>开发规范：使用Go为开发语言，OperatorSDK为开发框架，Api设计遵循<a href="https://kubernetes.io/zh/docs/concepts/overview/kubernetes-api/" target="_blank" rel="noopener">社区规范</a>。</li>
-<li>高可用要求：必须容忍单节点异常，多机房部署要容忍单机房异常。</li>
-<li>部署规范：所有的Operator都需要发布到轻舟应用商店；镜像制作要使用统一维护的基础镜像，禁止使用<code>latest</code>标签；统一使用脚本管理系统来分发宿主机上的管理脚本等。</li>
-<li>运维规范：定义Operator和人工运维的边界；日常巡检的内容；应急预案的要求。</li>
-<li>测试规范：由QA团队制定，包含单元测试、e2e测试、功能场景测试、数据面稳定性测试、管控面和数据面异常测试、性能测试等。</li>
-<li>监控报警：基础的监控指标、数据面的采集指标和采集方式、管控面的采集指标和采集方式、报警的规范和原则。</li>
-</ul>
-<p>目前标准化的内容已经涵盖非功能性80%的内容，功能性大概40%左右，可以说做到了PaaS研发过程的基本覆盖了。有些内容很难通过标准化的规范来约束，我们通过白皮书的形式来进行说明，进一步覆盖实际开发过程中的可能遇到的问题。</p>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>PaaS迁移上K8S的过程中遇到了很多问题，我们发现原生的K8S的能力还不能满足我们的需求。为此，我们和K8S团队合作，将我们的需求统一化，由K8S团队来实现这些扩展能力。</p>
-<h3 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h3><p>PaaS服务的调度与无状态应用还是存在很大的差别，主要在于PaaS对高可用的要求更高。比如，我们希望Redis Cluster不超过1/3的Pod分布到同一个Node上，不超过1/2的Pod分布到同一个机房里面等等。我们将这种扩展调度的需求放置到一个<code>configmap</code>里面，由K8S来实现统一的扩展调度器。</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">config-map-name</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">cluster-namespace</span> <span class="comment">#实例集群所在的ns</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line"><span class="attr">  cluster-size:</span> <span class="number">100</span>  <span class="string">//集群大小</span></span><br><span class="line"><span class="attr">  max-pod-on-node:</span> <span class="number">33</span> <span class="string">//单节点最多能调度的Pod（包含）</span></span><br><span class="line"><span class="attr">  max-pod-in-zone:</span> <span class="number">50</span> <span class="string">//Zone内最多调度Pod（包含）</span></span><br><span class="line"><span class="attr">  available-zones:</span> <span class="string">cn-east-1a,cn-east-1b,cn-east-1c</span> <span class="string">//必须调度的可用区</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>max-pod-on-node</code>就可以限制整个集群在单个Node上调度Pod的数量</li>
-<li><code>max-pod-in-zone</code>可限制单个机房内调度<code>Pod</code>的数量</li>
-<li><code>available-zone</code>用来实现AZ的<code>MUST IN</code>语言，从而满足多机房特性</li>
-</ul>
-<p><code>MUST IN</code>语义的实现其实比较困难，这与K8S的调度机制有关。K8S是基于Pod进行调度，通过预选和优选来过滤出符合条件的Node。然而，PaaS服务很多时候需要有“全局视野”，局部调度最优但不代表全局调度就是最优的。</p>
-<p>我们Redis Cluster采用了多个StatefulSet来管理分片，每个StatefulSet的0号Pod为主分片，1号Pod为复制分片，要求多机房的情况下主分片和复制分片不能在同一个机房。如果由K8S随机调度，那么有可能就会发生死锁问题，可调度的Node越少发生死锁的概率就会越高。下图详细说明发生这一问题的过程，已经目前我们的解决方法。</p>
-<img src="/2019/12/24/网易PaaS-On-K8S实践/pod-schedule-deadlock.jpg" title="死锁问题">
-<p>但是这种解决方式存在局限性和特殊性，并不能应用于所有的情况。问题的核心还是在于PaaS调度需要有“全局视野”，我们需要提前规划好Pod的分布情况，但是现有K8S的调度机制限制了这方面的能力，除非我们自定义PaaS的“专属调度器”。</p>
-<h3 id="本地盘"><a href="#本地盘" class="headerlink" title="本地盘"></a>本地盘</h3><p>很多PaaS服务都有存储的需求，这也有状态服务的一大特点。云原生架构推荐我们存储架构分离，但是这需要强大的网络支持，所以本地盘还是相对现实靠谱的方案。K8S原生对本地盘的支持不太好，主要在于Local PV需要手工管理和维护，为止K8S团队帮助我们开发了基于LVM的本地盘管理插件。</p>
-<p>管理员只需要按如下方式来申明可用的盘和机器信息即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: node.netease.com/v1</span><br><span class="line">kind: LocalStorage</span><br><span class="line">metadata:</span><br><span class="line">  name: ls</span><br><span class="line">spec:</span><br><span class="line">  disks:</span><br><span class="line">  - /dev/sde</span><br><span class="line">  node: 172.24.5.4</span><br><span class="line">  storageClass: localstorage-class</span><br><span class="line">  vg: k8svg</span><br><span class="line">status:</span><br><span class="line">  allocatable: 676475Mi</span><br><span class="line">  capacity: 762491Mi</span><br><span class="line">  phase: Active</span><br></pre></td></tr></table></figure>
-<p>通过自定义storageclass的方式给我们提供了相当高的灵活的和扩展性，可以满足共享盘和独立盘的功能，只需要建立不同storageclass即可。</p>
-<h3 id="IP保持"><a href="#IP保持" class="headerlink" title="IP保持"></a>IP保持</h3><p>IP保持K8S团队开发的扩展能力，它是在Pod重建以后还能保持以前分配的IP，从使用方式上表现得更像VM一样。实际上这种使用方式是违反K8S的设计理念的，但是出于调试、运维、查看日志等需求，业务方希望能保持POD的IP。我们使用这一功能是因为我们遇到以下的场景。</p>
-<blockquote>
-<p>Redis集群中某个Pod挂掉以后，原先分配给该Pod的IP可能被其他集群复用，造成元信息混乱，客户端有可能连接到一个另外一个集群的Pod，造成访问异常。</p>
-</blockquote>
-<p>这是一个合理的场景，如果PaaS的节点之间或者Client与服务节点之间缺少认证机制，仅靠IP地址来建立信任关系，确实会存在上诉的场景。但IP被错误的Pod复用的概率取决于可分配IP池的大小，如果IP池足够大，出现这种概率的情况还是极低的。</p>
-<p>目前我们还没有找到一种相对简单的方式来规避该问题，但我们还是不推荐使用该功能。</p>
-<h2 id="产品化"><a href="#产品化" class="headerlink" title="产品化"></a>产品化</h2><p>PaaS开发的Operator都将集成到<a href="https://www.163yun.com/product/qz-ncs?entry=dh01040102" target="_blank" rel="noopener">轻舟平台</a>的应用商店。标准化规范要求Operator统一使用OperatorSDK进行开发，它自动化生成CSV文件，而轻舟应用商店通过Operator Lifecyc Manager来统一管理和运维Operator，两者可以无缝对接，部署难度大大降低。</p>
-<p>同时前端界面是一套，无须为PaaS服务做定制化开发，前端研发效率大大提高，使用方式也更加统一。业务方使用也是非常友好的。业务只需要在应用市场订阅所需要的Operator即可使用到PaaS服务。当然，在产品化集成方面，Operator离一个完整的产品还存在差距，但为了尽量剥离这些商业化逻辑，让PaaS Operator更加纯粹，我们正在开发Operator Assistor这样的统一适配组件，来满足权限、配额、计量计费的产品逻辑。</p>
-<img src="/2019/12/24/网易PaaS-On-K8S实践/operator-shop.png" title="Operator应用商店">
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从今年8月开始做Operator，到年底已经上线了3个Operator（Redis Cluster、Kafka、Zookeeper），我们的研发速度大大提高。从大家的反馈来看也十分积极。经统计，编写Operator所需要的代码比起1.0和2.0的管控代码大概减少了80%以上，可用性提高的同时，运维成本还降低了很多。由于今年还未大规模部署，预计明年基于Operator托管的PaaS服务将遍地开花，我们人均的运维规模将大幅提升。</p>
-
-          
+          随着Kubernetes日趋成熟与稳定，网易云将其列为最重要的基础设施，成为云计算的底座。在此背景之下，PaaS团队的目标自然也将适配K8S列为了其首要支持目标。但是在实际落地过程中，我们遇到了很多问题，本文将分享一下网易在PaaS服务在迁移上K8S过程中的问题和我们的应对之道。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/12/24/网易PaaS-On-K8S实践/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -926,61 +861,14 @@
 
       
         
-          
-            <blockquote>
-<p>原文链接：<a href="https://docs.microsoft.com/en-us/previous-versions/msp-n-p/dn568103(v%3dpandp.10)" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/previous-versions/msp-n-p/dn568103(v%3dpandp.10)</a></p>
-</blockquote>
-<p>通过使用不同的接口来分离读写操作，这种模式能最大化性能、可扩展性和安全性；能通过更高的灵活性来支持系统的演进；同时能在领域层面防止因更新命令引起的合并冲突。</p>
-<h2 id="背景与问题"><a href="#背景与问题" class="headerlink" title="背景与问题"></a>背景与问题</h2><p>在传统的数据管理系统中，命令（更新数据）与查询（请求数据）是在相同的一组实体集在单个数据仓库下执行的。这些实体可能是传统关系型数据库（比如：SQLServer）中一张或者多张表的多行数据的一个子集。</p>
-<p>典型的，在这些系统中，所有的创建、读取、更新和删除（CRUD)操作在同一个实体上执行。比如，一个“客户”的DTO对象通过数据访问层（DAL)从数据仓库中检索出来并展示到界面上。用户更新了DTO对象中的几个熟悉，然后DTO对象通过DAL层被存回了数据仓库中。像图一所示，同一个DTO对象既被用于了读操作又被用于了写操作。</p>
-<p><img src="https://i0.wp.com/docs.microsoft.com/en-us/previous-versions/msp-n-p/images/dn568103.da4ddd8b45993eb958a15b067e22ecfd%28en-us%2cpandp.10%29.png?w=863&amp;ssl=1" alt="图一 传统的CRUD架构"><br>传统的CRUD模式在针对数据的业务逻辑十分有限的情况下能比较好的工作。一些开发工具提供的脚手架机制能迅速的创建数据层的访问代码，然后能按需调整。</p>
-<p>然后，传统的CRUD方法有几个弊端：</p>
-<ul>
-<li>这通常说明对数据的读和写操作存在不匹配，比如附加的列或者属性必须正确的更新即使它们不是操作的必须部分。</li>
-<li>在一个协作的领域模型（例如多个Actor并行操作相同的数据集）中，当记录被锁定在数据仓库中，或者因为并发更新引起的更新冲突，此时会存在数据争取的风险。随着系统的复杂度和吞吐量增加，这些风险也逐渐加大。另外，因为数据存储和数据访问层的负载较重，加之检索必要信息的复杂性查询，传统方法同样对性能有着负作用。</li>
-<li>因为一个实体同时暴露了读写操作，有可能一不小心在一个错误的上下文中暴露了数据，从而使得管理数据的安全性和权限更加繁琐。</li>
-</ul>
-<h2 id="解决之道"><a href="#解决之道" class="headerlink" title="解决之道"></a>解决之道</h2><p>命令与查询责任分离是一种通过接口来区分开读数据（查询）与更新数据（命令）的模式。这表明用于查询的数据模型与用于更新的数据模型是不一样的。如图二所示，这些模型可以是独立的，虽然这不是必须的。</p>
-<p><img src="https://docs.microsoft.com/en-us/previous-versions/msp-n-p/images/dn568103.152121e2dbe656d3fa1902158422c025%28en-us%2cpandp.10%29.png" alt="图二 一个基础的CQRS架构"></p>
-<p>与基于CRUD系统中固有的单一数据模型相比，基于CQRS系统中分离的查询与更新数据模型能极大的简化设计与实现。然后，一个缺点是，不能像CRUD，CQRS代码不能通过脚手架的工具自动生成。</p>
-<p>读数据的模型和写数据的模型可以访问相同的物理存储，可能通过使用SQL试图或者动态生成映射。然后，通常的做法是将数据分离到不同的物理存储，这样能最大化性能，可扩展性和安全性，如图三所示。</p>
-<p><img src="https://docs.microsoft.com/en-us/previous-versions/msp-n-p/images/dn568103.3769b26881da48bc03c082c1965d0832%28en-us%2cpandp.10%29.png" alt="图三 一个使用不同的读存储和写存储的CQRS架构"></p>
-<p>读存储可以是写存储的一个只读副本，也可以有完成不同的数据结构。使用多个只读副本可以提高查询性能和应用的UI响应性，尤其是在分布式的场景中，应用系统的实例可以与只读副本距离很近。某些数据库系统中，例如SQLServer，提供额外的副本故障转移功能来提高可用性。</p>
-<p>分离读存储与写存储允许对方能独立的扩展来应对负载。例如，读存储一般都比写存储遇到的复杂要高得多。</p>
-<p>当读模型包含非结构化的数据时，在读取应用系统中每个视图的数据或者从系统中进行查询时，性能将最大化。</p>
-<h2 id="问题与考虑"><a href="#问题与考虑" class="headerlink" title="问题与考虑"></a>问题与考虑</h2><p>当实现这个模式时应当考虑一下几点：</p>
-<ul>
-<li>将数据存储根据读写操作划分为独立的读存储和写存储，这能提高系统的性能和安全性，但在弹性和最终一致性方面，它增加了相当大的复杂度。读存储必须更新以反映写存储的变化，同时，很难检查用户何时基于一个老旧的读数据发出请求，这意味着操作不可能完成。</li>
-<li>考虑将CQRS应用到你系统中最有价值部分，同时从经验中学习。</li>
-<li>采用最终一致性的一个典型做法是使用事件溯源（EventSouring）与CQRS相结合，这样读模型就是一些列追加的命令执行的事件流。这些事件用于更新充当读模型的物理视图。</li>
-</ul>
-<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><p>该模式适用于以下场景：</p>
-<ul>
-<li>协同的领域中针对同样的数据有多个操作并发执行。CQRS模型能在领域这个层次上提供最小化冲突的保证（任何出现的冲突都可以通过命令的方式来合并），即使是在更新同种类型的数据。</li>
-<li>当时候基于任务视图的用户界面时（用户操作被引导为一些列复杂的步骤），同时你有一个复杂的领域模型，而且团队成员已经对DDD技术比较熟悉了。写模型拥有完整的完整的命令处理堆栈，包含业务逻辑、输入校验、业务校验，以确保写模型中每个聚合的所有内容是一致的。读模型没有验证逻辑或者验证堆栈，只需要视图模型需要的DTO对象。读模型与写模型是保持最终一致的。</li>
-<li>在那些需要根据数据写入性能来微调数据读取性能的场景中，尤其是读写比非常高，需要水平扩容的时候。比如，在很多系统中，数据读取操作要比写入操作大几个数量级。为了适应该场景，考虑将读模型进行扩展，但是写模型只需要一个或者少数几个实例就可以了。少量的写模型能最小化冲突发生的概率。</li>
-<li>一个团队可以专注于复杂的领域模型，而该模型是写模型的一部分；而另外一个相对缺乏经验的团队可以专注于读模型和用户界面。</li>
-<li>系统期望能随着时间演进，同时能维持多个版本，或者业务逻辑会时常变化。</li>
-<li>与其他系统进行集成，尤其是结合EventSouring，一个子系统临时的失败不应影响其他系统的可用性。</li>
-</ul>
-<h2 id="该模式不适用于以下场景："><a href="#该模式不适用于以下场景：" class="headerlink" title="该模式不适用于以下场景："></a>该模式不适用于以下场景：</h2><ul>
-<li>领域模型或者业务逻辑很简单。</li>
-<li>一个简单的CRUD风格的用户界面，以及其相关的数据访问操作就已足够。</li>
-<li>实现跨越了整个系统。整个数据管理场景中特定组件使用CQRS可能很有用，但是需要考虑的是它经常会带来不必要的复杂性。</li>
-</ul>
-<h2 id="EventSouring与CQRS"><a href="#EventSouring与CQRS" class="headerlink" title="EventSouring与CQRS"></a>EventSouring与CQRS</h2><p>CQRS经常与EventSouring相结合。基于CQRS的系统使用独立的读写模型，它们是为其相关的任务量身定制的，而且经常会分不到不同的物理存储上。当使用EventSouring时，存储的事件就是写模型，并且这是信息的权威来源。基于CQRS的读模型提供了数据的物化视图，典型的是作为高度非规范化的视图。这些视图是为用户界面和应用展示需要高度定制化的，这样能最大化展示和查询性能。</p>
-<p>相比于使用某个时刻点的实际数据而言，使用事件流作为写存储，能避免在单一聚合上的更新冲突以及最大化性能和扩展性。事件可用于异步生成物化视图，而这些视图是由读存储填充形成的。</p>
-<p>因为事件存储是信息的权威来源，所以当系统演进的过程中或者读模型必须改变的时候，是有可能删除物化视图并重放过去的所有事件来重建一个当前状态的新描述。物化视图实际上是数据的一个持久化只读缓存。</p>
-<p>当结合CQRS和EventSouring时，需要考虑以下问题：</p>
-<ul>
-<li>与任何读写存储分离的系统一样，基于该模式的系统也是最终一致的。生产事件和保存由这些事件发起的操作结果之间会存在一些延迟。</li>
-<li>该模式引入了额外的复杂性，因为必须写代码来初始化、处理事件，并组装或者更新因为查询或者读模型所需要的合适的视图和对象。当与EventSouring相结合的时候，CQRS内在的复杂性使得一个成功的实现更加困难。这需要重新学习模型概念，以及一个不同的系统设计方法。然后，EventSouring使得建模更加简单，也更加容易重建视图或者创建一个新试图，因为数据变化的本质得以保留。</li>
-<li>通过重放和处理特定实体或者实体集合的事件来生成用于读模型或者数据映射的物化视图可能需要充足的处理时间和资源消耗，尤其当需要对长时间段内值做求和或者分析操作时，因为可能需要检查每个所相关联的事件。这可以通过在预定的时间间隔内打数据快照来部分解决，例如记录下某些操作发生的总次数，或者实体的当前状态。</li>
-</ul>
-<hr>
-<h2 id="个人观点"><a href="#个人观点" class="headerlink" title="个人观点"></a>个人观点</h2><p>CQRS是一种相当常见并且适用性相当广泛的架构模式，我曾经在多个真实的系统中见到该模式发挥巨大作用。该模式的核心观点在于将用于读和写的领域模型进行分割，根据实际的业务场景进行独立的开发和优化，这样带来的好处就是极高的扩展性和灵活性。我们再也不用纠结因为因为领域模型是一个而小心翼翼地处理并发、安全、性能等问题。但是任何架构都有两面性，就像文中所说的一样，该模式会引入额外的复杂性，如果你的业务场景比较简单，建议还是不要轻易尝试。至于EventSouring，个人持有保留意见，因为只保留事件记录的做法过于极端，即使通过快照优化，还是有点过于激进。我相信EventSouring会在少数几个关注于历史数据的业务场景中得到应用，例如审计、金融等，但这种业务相对比较特殊，适用性有限。</p>
-
-          
+          通过使用不同的接口来分离读写操作，这种模式能最大化性能、可扩展性和安全性；能通过更高的灵活性来支持系统的演进；同时能在领域层面防止因更新命令引起的合并冲突。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/16/CQRS模式/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
