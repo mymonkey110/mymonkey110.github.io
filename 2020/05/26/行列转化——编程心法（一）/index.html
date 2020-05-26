@@ -97,7 +97,7 @@
 <link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="编程心得,二八定律,软件开发," />
+  <meta name="keywords" content="编程技巧,代码技巧," />
 
 
 
@@ -115,22 +115,18 @@
 
 
 
-<meta name="description" content="相信很多人都听说过二八定律，这是一个适用性非常广泛的定律。我发现二八定律同样适用于软件开发，并对其产生了十分深远的影响。这次我想聊聊二八定律是如何影响我们日常的开发工作的，希望通过这个话题来改变一下大家习以为常的开发思维。">
-<meta name="keywords" content="编程心得,二八定律,软件开发">
+<meta name="description" content="行列转化是我用的最多的编程技巧之一，不论是对领域建模还是表结构设计都大有裨益。">
+<meta name="keywords" content="编程技巧,代码技巧">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编程心智(二)——二八定律对软件开发的影响">
-<meta property="og:url" content="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/index.html">
+<meta property="og:title" content="行列转化——编程心法（一）">
+<meta property="og:url" content="http://michael-j.net/2020/05/26/行列转化——编程心法（一）/index.html">
 <meta property="og:site_name" content="Michael-J">
-<meta property="og:description" content="相信很多人都听说过二八定律，这是一个适用性非常广泛的定律。我发现二八定律同样适用于软件开发，并对其产生了十分深远的影响。这次我想聊聊二八定律是如何影响我们日常的开发工作的，希望通过这个话题来改变一下大家习以为常的开发思维。">
+<meta property="og:description" content="行列转化是我用的最多的编程技巧之一，不论是对领域建模还是表结构设计都大有裨益。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/effort-feature.png">
-<meta property="og:image" content="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/effort-performance.png">
-<meta property="og:image" content="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/people-progress.png">
-<meta property="og:updated_time" content="2019-07-19T03:35:26.000Z">
+<meta property="og:updated_time" content="2020-05-26T08:11:19.081Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="编程心智(二)——二八定律对软件开发的影响">
-<meta name="twitter:description" content="相信很多人都听说过二八定律，这是一个适用性非常广泛的定律。我发现二八定律同样适用于软件开发，并对其产生了十分深远的影响。这次我想聊聊二八定律是如何影响我们日常的开发工作的，希望通过这个话题来改变一下大家习以为常的开发思维。">
-<meta name="twitter:image" content="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/effort-feature.png">
+<meta name="twitter:title" content="行列转化——编程心法（一）">
+<meta name="twitter:description" content="行列转化是我用的最多的编程技巧之一，不论是对领域建模还是表结构设计都大有裨益。">
 
 
 
@@ -158,13 +154,13 @@
 
 
 
-  <link rel="canonical" href="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/"/>
+  <link rel="canonical" href="http://michael-j.net/2020/05/26/行列转化——编程心法（一）/"/>
 
 
 
 
 
-  <title>编程心智(二)——二八定律对软件开发的影响 | Michael-J</title>
+  <title>行列转化——编程心法（一） | Michael-J</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -377,7 +373,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/">
+    <link itemprop="mainEntityOfPage" href="http://michael-j.net/2020/05/26/行列转化——编程心法（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Michael Jiang">
@@ -394,7 +390,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">编程心智(二)——二八定律对软件开发的影响</h2>
+          <h2 class="post-title" itemprop="name headline">行列转化——编程心法（一）</h2>
         
 
         <div class="post-meta">
@@ -406,8 +402,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-03T20:49:13+08:00">
-                2017-11-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-26T14:47:16+08:00">
+                2020-05-26
               </time>
             
 
@@ -429,8 +425,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/编程心智/" itemprop="url" rel="index">
-                    <span itemprop="name">编程心智</span>
+                  <a href="/categories/编程心法/" itemprop="url" rel="index">
+                    <span itemprop="name">编程心法</span>
                   </a>
                 </span>
 
@@ -447,9 +443,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/11/03/编程心智-二-——二八定律对软件开发的影响/#comments" itemprop="discussionUrl">
+                <a href="/2020/05/26/行列转化——编程心法（一）/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/11/03/编程心智-二-——二八定律对软件开发的影响/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2020/05/26/行列转化——编程心法（一）/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -476,7 +472,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  1,385
+                  1,261
                 </span>
               
 
@@ -499,6 +495,10 @@
           
 
           
+              <div class="post-description">
+                  行列转化是我用的最多的编程技巧之一，不论是对领域建模还是表结构设计都大有裨益。
+              </div>
+          
 
         </div>
       </header>
@@ -510,27 +510,58 @@
       
 
       
-        <p>相信很多人都听说过二八定律，这是一个适用性非常广泛的定律。我发现二八定律同样适用于软件开发，并对其产生了十分深远的影响。这次我想聊聊二八定律是如何影响我们日常的开发工作的，希望通过这个话题来改变一下大家习以为常的开发思维。</p>
-<a id="more"></a>
-<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>二八定律是19世纪末20世纪初意大利经济学家巴莱多发现的。他认为：</p>
-<blockquote>
-<p>在任何一组东西中，最重要的只占其中一小部分，约20%，其余80%尽管是多数，却是次要的，因此又称二八定律。</p>
-</blockquote>
-<p>二八定律有相当广泛的普适性，不论是在生活中，还是在工作上，只要你细心观察，都会发现其身影。</p>
-<h2 id="功能需求对软件开发的影响"><a href="#功能需求对软件开发的影响" class="headerlink" title="功能需求对软件开发的影响"></a>功能需求对软件开发的影响</h2><p>不知道大家有没有发现这样一个事实，随着我们系统要处理的业务功能越来越多，我们添加一个新功能的代价也越来越大。很有意思，我发现业务功能与添加一个新功能要做出的努力呈现出类似于下图所示的关系。</p>
-<img src="/2017/11/03/编程心智-二-——二八定律对软件开发的影响/effort-feature.png" title="effort-feature">
-<p>起初，为了使得一个新系统能运行，我们不得不处理一些非业务性的工作，比如搭建框架、技术选型、架构设计、部署结构设计、资源申请等等。而一旦这些基础性的工作完成，那我们就可以快速的完成业务需求。大概花费我们20%的精力就可以满足80%的业务功能，这些业务功能也是系统的主要功能。但是再往后新增功能，所要做出的努力就会成指数增长。这张图与<a href="https://www.amazon.cn/%E4%BC%81%E4%B8%9A%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F-%E7%A6%8F%E5%8B%92/dp/B003LBSRDM/ref=sr_1_1?qid=1509850680" target="_blank" rel="noopener">P o EAA</a>中的领域逻辑复杂度与工作量之间的关系类似。当然，这个曲线并不是绝对的，影响这条曲线的关键在于系统的代码架构，好的代码架构能让你在处理复杂的业务需求时更加从容。（题外话，我认为一个优秀的程序员应该具备处理复杂需求的能力。）</p>
-<p>既然我们发现了这个规律，是否能指导我们的日常开发工作呢？答案是肯定的。因为80%的功能基本已经满足了大部分人的需求，而为了满足少数人的需求而增加80%的努力是不值得。当然，公司完全有理由要求你这么做，与此同时你也可以把这个利害关系介绍给他们听。</p>
-<p>甚至在细分到x轴和y轴，我们可以继续运用二八定律来分解。80%的业务功能其实大概只有20%是核心功能，其余的只是为了优化体验或者简化流程为存在的；而对于20%的努力而言，其中80%的工作主要集中在满足核心的业务需求而存在的，我们应该也必须投入这么多精力来设计并开发这些功能，因为它们是整个系统的核心。</p>
-<h2 id="性能优化对软件开发的影响"><a href="#性能优化对软件开发的影响" class="headerlink" title="性能优化对软件开发的影响"></a>性能优化对软件开发的影响</h2><p>程序员总是对性能优化这个话题充满激情，好像这成了唯一彰显其技术能力的手段。确实，要把应用系统的性能优化到极致，确实要付出大量的努力。但实际上性能优化所付出的努力与取得的效果也符合二八定律。其工作量与索取的效果类似于下图所示。</p>
-<img src="/2017/11/03/编程心智-二-——二八定律对软件开发的影响/effort-performance.png" title="effort-performance">
-<p>不消多说，凡是做个性能优化的同学应该都会有这样的感触：只用加个索引或者加上缓存就可以使得系统的性能大幅度提供。使用常规的优化手段（大概耗费20%的精力）就可以取得显著的效果（提升80%的性能）。但是要取得另外20%的性能提升要付出努力将大大增加。掌握这个规律相信大家应该知道如何“使力”了。</p>
-<h2 id="项目人数对开发效率的影响"><a href="#项目人数对开发效率的影响" class="headerlink" title="项目人数对开发效率的影响"></a>项目人数对开发效率的影响</h2><p>还一个比较显著的符合二八定律的场景就是在项目管理上。</p>
-<img src="/2017/11/03/编程心智-二-——二八定律对软件开发的影响/people-progress.png" title="people-progress">
-<p>同时参与一个项目的人并非越多越好，实际上影响应项目进度只取决于少数人（20%），后面增加更多的人其实收效甚微。我个人也是倾向于不要在一个项目上投入过多的人力，要精不要多。现在微服务这么流行，我觉得也有类似地影响。它在架构层面把一个大系统拆分成一个一个小服务，让每个服务有少数几个人负责，这样整体的开发效率会更高。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>类似上面的例子还有很多，比如迭代周期对软件质量的影响、服务数量对整体可用性的影响等等，只要你细心观察就会发现二八定律在我们的日常开发工作中无处不在。更为重要的是，我们不仅要发现其存在，更要在那20%的重点上下功夫，避免在80%的事情上瞎费劲。</p>
-<p>（文中配图是我用Windows的画图程序生成的，不好看望大家见谅。）</p>
-<h4 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h4><p><a href="https://baike.baidu.com/item/%E4%BA%8C%E5%85%AB%E5%AE%9A%E5%BE%8B/747076?fr=aladdin" target="_blank" rel="noopener">二八定律</a><br><a href="https://www.amazon.cn/%E4%BC%81%E4%B8%9A%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F-%E7%A6%8F%E5%8B%92/dp/B003LBSRDM/ref=sr_1_1?qid=1509850680" target="_blank" rel="noopener">企业架构模式</a></p>
+        <p>难度等级：地阶中级</p>
+<p>行列转化是我用的最多的编程技巧之一，不论是对领域建模还是表结构设计都大有裨益。适用于实体向聚合的转化阶段。我将通过一系列用户故事来描述其作用。</p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>小明是某NB公司的后端开发工程师，最近NB公司发展十分迅猛，日活大涨，高层决定搞活动拉新。最后落地下来就决定以抽奖发红包的形式来搞。</p>
+<h3 id="Story-1"><a href="#Story-1" class="headerlink" title="Story-1"></a>Story-1</h3><p>PD：抽奖咋们也没搞过，只要满足XXPay实名认证就可以抽奖吧。</p>
+<p>小明：这简单，给我一天。</p>
+<p>于是乎就诞生了如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lottery</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result <span class="title">execute</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//检查XXXPay实名认证</span></span><br><span class="line">        <span class="keyword">if</span>(!checkIsXXXPayCertifact(uid))</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//执行真正抽奖逻辑</span></span><br><span class="line">        <span class="keyword">return</span> doLottery();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>小明直接把XXXPay验证逻辑写道了抽奖流程中，作为前置流程。</p>
+<h3 id="Story-2"><a href="#Story-2" class="headerlink" title="Story-2"></a>Story-2</h3><p>PD：上次活动效果很好，拉新的目的达到了。我们要给高消费能力的人群再发红包，就再上次规则上加上积分大于1000的限制吧。</p>
+<p>小明：好吧，你说什么就是什么咯。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lottery</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result <span class="title">execute</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//检查XXXPay实名认证 &amp;&amp; 积分大于1000</span></span><br><span class="line">        <span class="keyword">if</span>(!checkIsXXXPayCertifact(uid) &amp;&amp; !checkPointAbove1000(uid))</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//执行真正抽奖逻辑</span></span><br><span class="line">        <span class="keyword">return</span> doLottery();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Story-3"><a href="#Story-3" class="headerlink" title="Story-3"></a>Story-3</h3><p>PD：不好，上次活动引来了大批羊毛党，下次活动要接一下风控系统。</p>
+<p>小明：WTF，搞个活动真麻烦。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lottery</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result <span class="title">execute</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//检查XXXPay实名认证</span></span><br><span class="line">        <span class="keyword">if</span>(!checkIsXXXPayCertifact(uid)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 积分大于1000</span></span><br><span class="line">        <span class="keyword">if</span>(!checkPointAbove1000(uid))</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 风控系统校验通过</span></span><br><span class="line">        <span class="keyword">if</span>(!isPassRiskSystem(uid))</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//执行真正抽奖逻辑</span></span><br><span class="line">        <span class="keyword">return</span> doLottery();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Story-4"><a href="#Story-4" class="headerlink" title="Story-4"></a>Story-4</h3><p>PD: 老板们决定把抽奖做成常态工具，需要经常搞，你看看怎么弄。前置条件就那三个，但不一定都有。</p>
+<p>小明：我就知道没啥好事。</p>
+<p>小明认值考虑了下，这三个都是验证条件，返回结果只有true/false，我可以抽象一下提取成一个前置条件（Rule），得到如下代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rule</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    Rule(String name) &#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">check</span><span class="params">(<span class="keyword">long</span> uid)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">XXXPayRule</span> <span class="keyword">extends</span> <span class="title">Rule</span> </span>&#123;</span><br><span class="line">    XXXPay() &#123;</span><br><span class="line">        <span class="keyword">super</span>(<span class="string">"XXXPayRule"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">check</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> checkIsXXXPayCertifact(uid);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PointRule</span> <span class="keyword">extends</span> <span class="title">Rule</span> </span>&#123;</span><br><span class="line">    <span class="comment">//省略</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RiskRule</span> <span class="keyword">extends</span> <span class="title">Rule</span> </span>&#123;</span><br><span class="line">    <span class="comment">//省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Lottery实体加了3个属性，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lottery</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Rule rule1;</span><br><span class="line">    <span class="keyword">private</span> Rule rule2;</span><br><span class="line">    <span class="keyword">private</span> Rule rule3;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result <span class="title">execute</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(rule1!=<span class="keyword">null</span>!rule1.check(uid)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(rule2!=<span class="keyword">null</span>!rule2.check(uid)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(rule3!=<span class="keyword">null</span>!rule3.check(uid)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Result.fail();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//执行真正抽奖逻辑</span></span><br><span class="line">        <span class="keyword">return</span> doLottery();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>表结构也修改为:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>rule_1</th>
+<th>rule_2</th>
+<th>rule_3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>XXX拉新活动</td>
+<td>XXXPayRule</td>
+<td>RiskRule</td>
+<td>NULL</td>
+</tr>
+</tbody>
+</table>
+<p>经过这么一修改，小明十分满意，内心OS：还有谁！现在抽奖可自由配置规则，根据需要加载，比以前灵活度高了很多。</p>
+<p>几个月内PD再没找过小明，小明也过了几天舒服日子。</p>
+<h3 id="Story-5"><a href="#Story-5" class="headerlink" title="Story-5"></a>Story-5</h3><p>PD：现在发展太快了，很多子产品都用我们的抽奖工具，他们的验证规则太多了。什么注册满7天，只能中一次，XXX等等。<br>小明：这…让我想想。</p>
+<p>看到这么多人用小明的抽奖系统，他内心很开心，但是这么多规则不知道如何承接。</p>
+<p>这个时候其实就要用到 <strong><em>行列转换</em></strong> 这个技巧了。小明已经有意识的将规则抽象成了一个独立的类<code>Rule</code>，但是却没有建立专门的表。对于不确定数量的规则，可以在<code>Lottery</code>中加入规则的聚合<code>List&lt;Rule&gt; rules</code>来表示独立的规则，而每个<code>Rule</code>对于规则表中的一行记录。这样就把<code>Lottery</code>表中的列<code>rule_123</code>转化为了<code>rule</code>表中的一行记录。</p>
+<p>受到启发后，小明最终做出了如下修改：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lottery</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Rule&gt; rules;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result <span class="title">execute</span><span class="params">(<span class="keyword">long</span> uid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(Rule rule:rules) &#123;</span><br><span class="line">            <span class="keyword">if</span>(!rule.check(uid)) &#123;</span><br><span class="line">                <span class="keyword">return</span> Result.fail();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//执行真正抽奖逻辑</span></span><br><span class="line">        <span class="keyword">return</span> doLottery();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来，<code>Lottery</code>的代码也清爽了许多，最后一丝坏味道也去除了。</p>
+<hr>
+<p>回过头来看行列转化，本质上是实体(Lottery)演变成了一个聚合(Lottery)。总结一下该技巧的使用条件：</p>
+<h3 id="列转行"><a href="#列转行" class="headerlink" title="列转行"></a>列转行</h3><h4 id="适用时机：实体演变成聚合"><a href="#适用时机：实体演变成聚合" class="headerlink" title="适用时机：实体演变成聚合"></a>适用时机：实体演变成聚合</h4><h4 id="关键点：抽象聚合子类，建立独立表存储。"><a href="#关键点：抽象聚合子类，建立独立表存储。" class="headerlink" title="关键点：抽象聚合子类，建立独立表存储。"></a>关键点：抽象聚合子类，建立独立表存储。</h4><h3 id="行转列"><a href="#行转列" class="headerlink" title="行转列"></a>行转列</h3><h4 id="适用时机：聚合蜕变成实体"><a href="#适用时机：聚合蜕变成实体" class="headerlink" title="适用时机：聚合蜕变成实体"></a>适用时机：聚合蜕变成实体</h4><h4 id="关键点：与上述过程相反"><a href="#关键点：与上述过程相反" class="headerlink" title="关键点：与上述过程相反"></a>关键点：与上述过程相反</h4><p>就我个人的开发经验来看，大部分情况下都是<code>列转行</code>，这样代表你的业务在进一步发展，很少遇到<code>行转列</code>。<code>行列转化</code>这其中有个阈值，个人觉得一般超过3个比较合适。</p>
 
       
     </div>
@@ -580,7 +611,7 @@
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/" title="编程心智(二)——二八定律对软件开发的影响">http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/</a>
+      <a href="http://michael-j.net/2020/05/26/行列转化——编程心法（一）/" title="行列转化——编程心法（一）">http://michael-j.net/2020/05/26/行列转化——编程心法（一）/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -596,11 +627,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/编程心得/" rel="tag"># 编程心得</a>
+            <a href="/tags/编程技巧/" rel="tag"># 编程技巧</a>
           
-            <a href="/tags/二八定律/" rel="tag"># 二八定律</a>
-          
-            <a href="/tags/软件开发/" rel="tag"># 软件开发</a>
+            <a href="/tags/代码技巧/" rel="tag"># 代码技巧</a>
           
         </div>
       
@@ -613,8 +642,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/24/编程心智-一-——代码架构与系统架构/" rel="next" title="编程心智(一)——代码架构与系统架构">
-                <i class="fa fa-chevron-left"></i> 编程心智(一)——代码架构与系统架构
+              <a href="/2020/05/17/湘湖露营/" rel="next" title="湘湖露营">
+                <i class="fa fa-chevron-left"></i> 湘湖露营
               </a>
             
           </div>
@@ -622,10 +651,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/15/蜂巢计费系统架构升级之路/" rel="prev" title="蜂巢计费系统架构升级之路">
-                蜂巢计费系统架构升级之路 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -833,7 +858,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能需求对软件开发的影响"><span class="nav-number">2.</span> <span class="nav-text">功能需求对软件开发的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能优化对软件开发的影响"><span class="nav-number">3.</span> <span class="nav-text">性能优化对软件开发的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目人数对开发效率的影响"><span class="nav-number">4.</span> <span class="nav-text">项目人数对开发效率的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料："><span class="nav-number">5.0.1.</span> <span class="nav-text">参考资料：</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Story-1"><span class="nav-number">2.</span> <span class="nav-text">Story-1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Story-2"><span class="nav-number">3.</span> <span class="nav-text">Story-2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Story-3"><span class="nav-number">4.</span> <span class="nav-text">Story-3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Story-4"><span class="nav-number">5.</span> <span class="nav-text">Story-4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Story-5"><span class="nav-number">6.</span> <span class="nav-text">Story-5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列转行"><span class="nav-number">7.</span> <span class="nav-text">列转行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用时机：实体演变成聚合"><span class="nav-number">7.1.</span> <span class="nav-text">适用时机：实体演变成聚合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关键点：抽象聚合子类，建立独立表存储。"><span class="nav-number">7.2.</span> <span class="nav-text">关键点：抽象聚合子类，建立独立表存储。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#行转列"><span class="nav-number">8.</span> <span class="nav-text">行转列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#适用时机：聚合蜕变成实体"><span class="nav-number">8.1.</span> <span class="nav-text">适用时机：聚合蜕变成实体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关键点：与上述过程相反"><span class="nav-number">8.2.</span> <span class="nav-text">关键点：与上述过程相反</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -1003,9 +1028,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://michael-j.net/2017/11/03/编程心智-二-——二八定律对软件开发的影响/';
-          this.page.identifier = '2017/11/03/编程心智-二-——二八定律对软件开发的影响/';
-          this.page.title = '编程心智(二)——二八定律对软件开发的影响';
+          this.page.url = 'http://michael-j.net/2020/05/26/行列转化——编程心法（一）/';
+          this.page.identifier = '2020/05/26/行列转化——编程心法（一）/';
+          this.page.title = '行列转化——编程心法（一）';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://michael-j.disqus.com/embed.js';
