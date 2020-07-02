@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[扩展字段——编程心法（二）]]></title>
+    <url>%2F2020%2F07%2F02%2F%E6%89%A9%E5%B1%95%E5%AD%97%E6%AE%B5%E2%80%94%E2%80%94%E7%BC%96%E7%A8%8B%E5%BF%83%E6%B3%95%EF%BC%88%E4%BA%8C%EF%BC%89%2F</url>
+    <content type="text"><![CDATA[难度等级：玄阶中级 适用场景扩展字段一般出现在实体的建模过程中，多用于对一个“不稳定”实体的建模。”不稳定”表示对这个实体的认知目前还不清楚，并不确定该属性是不是属于实体。 举几个例子： 在行列转化——编程心法（一）的Story-4中，小明设计了rule_1 rule_2 rule_3三个字段，这三个字段都属于扩展字段。这个阶段小明不确定Rule是否真的属于Lottery，但又不想过度设计，此时采用扩展字段的方式既能解决问题，改动内容有比较少。 在公有云的订单系统中，经常会出现下单时选择”到期自动续费/删除“的选项，但不是所有的产品都有类似的选项。当时，我们在订单系统中设计一个ExtraParams来存放这些附加参数。对于”到期自动续费/删除“这个需求，当时我们很难判别它是订单的必须属性还是演进过程中的一个临时需求，此时采用扩展字段的方式是合适。 关键点 扩展字段一定不是实体的必要属性。实体的必要属性在建模时就应该能清晰地辨识出来，而扩展字段对构成一个基本实体并不会产生较大的影响。随着实体的演化，扩展字段时有可能转化为实体的必要属性的。 不要滥用扩展字段。如果你能尽早的确定扩展字段的意义，那么就应该使用更有意义的描述词汇，而不是Extra Params之类的通用词汇。更加具象的词汇能更加清晰地反映你对模型的认识。 最佳实践 尽量不要使用扩展字段。正如前面所说，使用扩展字段正是源于我们对实体模型认识还不清晰，如果你准确的知道该字段的意义，那么就不应该使用扩展字段。 扩展字段不要太多。个人建议不要超过3个，如果超过这个值，可以参考行列转化——编程心法（一）的技巧将模型进一步拆分。 扩展字段的内容尽量简单。不要再扩展字段里面承载太多的内容，如前面所说的”到期自动续费/删除“、一个规则的参数等。如果在扩展字段里面承载过多的内容，往往意味着这里的模型设计存在某些问题，我们需要重新思考字段内容与实体间的关系。 变体扩展字段时常会和类型字段一同出现，如行列转换的Story-5中，规则(Rule)已经转化为了一条条具体的行。但是规则所需要的参数往往是动态的，例如我们需要对XXXPay的信誉值在(a,b)的用户做活动，而积分值要大于1000。那么规则表的设计如下： id type param_1 param_2 1 XXXPayRule a b 2 PointRule 1000 - param_1和param_2就属于扩展字段，他们针对不同的type有则完全不同的意义。 总结扩展字段在我们还对实体的某些属性还不清楚时是有帮助的。但从实体的整个演化周期来看，扩展字段是一种临时的过度手段，它会增加我们地技术债务。]]></content>
+      <categories>
+        <category>编程心法</category>
+      </categories>
+      <tags>
+        <tag>编程技巧</tag>
+        <tag>代码技巧</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[行列转化——编程心法（一）]]></title>
     <url>%2F2020%2F05%2F26%2F%E8%A1%8C%E5%88%97%E8%BD%AC%E5%8C%96%E2%80%94%E2%80%94%E7%BC%96%E7%A8%8B%E5%BF%83%E6%B3%95%EF%BC%88%E4%B8%80%EF%BC%89%2F</url>
     <content type="text"><![CDATA[难度等级：地阶中级 行列转化是我用的最多的编程技巧之一，不论是对领域建模还是表结构设计都大有裨益。适用于实体向聚合的转化阶段。我将通过一系列用户故事来描述其作用。 背景小明是某NB公司的后端开发工程师，最近NB公司发展十分迅猛，日活大涨，高层决定搞活动拉新。最后落地下来就决定以抽奖发红包的形式来搞。 Story-1PD：抽奖咋们也没搞过，只要满足XXPay实名认证就可以抽奖吧。 小明：这简单，给我一天。 于是乎就诞生了如下代码： 1234567891011class Lottery &#123; public Result execute(long uid) &#123; //检查XXXPay实名认证 if(!checkIsXXXPayCertifact(uid)) return Result.fail(); &#125; //执行真正抽奖逻辑 return doLottery(); &#125;&#125; 小明直接把XXXPay验证逻辑写道了抽奖流程中，作为前置流程。 Story-2PD：上次活动效果很好，拉新的目的达到了。我们要给高消费能力的人群再发红包，就再上次规则上加上积分大于1000的限制吧。 小明：好吧，你说什么就是什么咯。 1234567891011class Lottery &#123; public Result execute(long uid) &#123; //检查XXXPay实名认证 &amp;&amp; 积分大于1000 if(!checkIsXXXPayCertifact(uid) || !checkPointAbove1000(uid)) return Result.fail(); &#125; //执行真正抽奖逻辑 return doLottery(); &#125;&#125; Story-3PD：不好，上次活动引来了大批羊毛党，下次活动要接一下风控系统。 小明：WTF，搞个活动真麻烦。 12345678910111213141516171819class Lottery &#123; public Result execute(long uid) &#123; //检查XXXPay实名认证 if(!checkIsXXXPayCertifact(uid)) &#123; return Result.fail(); &#125; // 积分大于1000 if(!checkPointAbove1000(uid)) return Result.fail(); &#125; // 风控系统校验通过 if(!isPassRiskSystem(uid)) return Result.fail(); &#125; //执行真正抽奖逻辑 return doLottery(); &#125;&#125; Story-4PD: 老板们决定把抽奖做成常态工具，需要经常搞，你看看怎么弄。前置条件就那三个，但不一定都有。 小明：我就知道没啥好事。 小明认值考虑了下，这三个都是验证条件，返回结果只有true/false，我可以抽象一下提取成一个前置条件（Rule），得到如下代码。 12345678910111213141516171819202122232425262728class Rule &#123; private String name; Rule(String name) &#123; this.name = name; &#125; abstract public boolean check(long uid);&#125;class XXXPayRule extends Rule &#123; XXXPay() &#123; super("XXXPayRule"); &#125; @Override public boolean check(long uid) &#123; return checkIsXXXPayCertifact(uid); &#125;&#125;class PointRule extends Rule &#123; //省略&#125;class RiskRule extends Rule &#123; //省略&#125; Lottery实体加了3个属性， 12345678910111213141516171819class Lottery &#123; private Rule rule1; private Rule rule2; private Rule rule3; public Result execute(long uid) &#123; if(rule1!=null!rule1.check(uid)) &#123; return Result.fail(); &#125; if(rule2!=null!rule2.check(uid)) &#123; return Result.fail(); &#125; if(rule3!=null!rule3.check(uid)) &#123; return Result.fail(); &#125; //执行真正抽奖逻辑 return doLottery(); &#125;&#125; 表结构也修改为: id name rule_1 rule_2 rule_3 1 XXX拉新活动 XXXPayRule RiskRule NULL 经过这么一修改，小明十分满意，内心OS：还有谁！现在抽奖可自由配置规则，根据需要加载，比以前灵活度高了很多。 几个月内PD再没找过小明，小明也过了几天舒服日子。 Story-5PD：现在发展太快了，很多子产品都用我们的抽奖工具，他们的验证规则太多了。什么注册满7天，只能中一次，XXX等等。小明：这…让我想想。 看到这么多人用小明的抽奖系统，他内心很开心，但是这么多规则不知道如何承接。 这个时候其实就要用到 行列转换 这个技巧了。小明已经有意识的将规则抽象成了一个独立的类Rule，但是却没有建立专门的表。对于不确定数量的规则，可以在Lottery中加入规则的聚合List&lt;Rule&gt; rules来表示独立的规则，而每个Rule对于规则表中的一行记录。这样就把Lottery表中的列rule_123转化为了rule表中的一行记录。 受到启发后，小明最终做出了如下修改： 12345678910111213class Lottery &#123; private List&lt;Rule&gt; rules; public Result execute(long uid) &#123; for(Rule rule:rules) &#123; if(!rule.check(uid)) &#123; return Result.fail(); &#125; &#125; //执行真正抽奖逻辑 return doLottery(); &#125;&#125; 这样一来，Lottery的代码也清爽了许多，最后一丝坏味道也去除了。 回过头来看行列转化，本质上是实体(Lottery)演变成了一个聚合(Lottery)。总结一下该技巧的使用条件： 列转行适用时机：实体演变成聚合关键点：抽象聚合子类，建立独立表存储。行转列适用时机：聚合蜕变成实体关键点：与上述过程相反就我个人的开发经验来看，大部分情况下都是列转行，这样代表你的业务在进一步发展，很少遇到行转列。行列转化这其中有个阈值，个人觉得一般超过3个比较合适。]]></content>
@@ -87,9 +99,9 @@
     <url>%2F2018%2F04%2F23%2F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E5%85%A5%E9%97%A8%2F</url>
     <content type="text"><![CDATA[最近在团队内部分享了一些关于架构设计方面的基础知识，特此分享一下。 分享链接：https://pan.baidu.com/s/1GXkudSSD-az03wRf6IXj2g]]></content>
       <tags>
-        <tag>架构</tag>
-        <tag>系统架构</tag>
         <tag>代码架构</tag>
+        <tag>系统架构</tag>
+        <tag>架构</tag>
       </tags>
   </entry>
   <entry>
@@ -127,9 +139,9 @@
         <category>编程心智</category>
       </categories>
       <tags>
-        <tag>系统架构</tag>
-        <tag>代码架构</tag>
         <tag>编程心得</tag>
+        <tag>代码架构</tag>
+        <tag>系统架构</tag>
       </tags>
   </entry>
   <entry>
@@ -290,7 +302,7 @@
   <entry>
     <title><![CDATA[Zookeeper:distributed process coordination中文版]]></title>
     <url>%2F2016%2F08%2F02%2FZookeeper-distributed-process-coordination%2F</url>
-    <content type="text"><![CDATA[最近使用zookeeper比较多，但是国内关于zookeeper方面的数据太少。能介绍其使用同时也讲解原理的书太少了。Zookeeper:distributed process coordination是一本关于zookeeper不可多得的好书。读完以后我对zookeeper有能一个非常直观的了解。 现在分布式应用开发越来越常见，基本上大部分的分布式应用都需要与其它应用进行协同。Zookeeper非常擅长于处理分布式协同。所以我决定利用工作之余的时间翻译这本书籍，完全出于个人兴趣。 GitBook阅读地址 GitHub阅读地址 由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献： 参与讨论：邮件列表：&#x7a;&#x6b;&#x5f;&#x74;&#x72;&#x61;&#x6e;&#115;&#x6c;&#x61;&#116;&#x6f;&#x72;&#x40;&#x67;&#x72;&#x6f;&#117;&#x70;&#115;&#46;&#x31;&#x36;&#x33;&#x2e;&#99;&#111;&#109;，申请加入地址：http://163.fm/UJNWGHS 部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。 在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。 1234$ git clone git@github.com:user/zookeeper-book.git$ cd zookeeper-book$ git config user.name &quot;yourname&quot;$ git config user.email &quot;your email&quot; 修改代码后提交，并推送到自己的仓库。 123$ #do some change on the content$ git commit -am &quot;Fix issue #1: change helo to hello&quot;$ git push 在 GitHub 网站上提交 pull request。定期使用项目仓库内容更新自己仓库内容。 12345$ git remote add upstream https://github.com/mymonkey110/zookeeper-book.git$ git fetch upstream$ git checkout master$ git rebase upstream/master$ git push -f origin master PS: 2016/8/15 Update: 很遗憾，因为授权的问题，不得不停止翻译的工作。本书已经有中文版的译本了，我后来才得知，所以我也不会取得中文版的翻译授权了。因为本人第一次翻译，事先没有搞清这些事情，才导致了现在的情况。不得不说，十分遗憾，感谢关注本书翻译的伙伴。我相信已有的中文译本应该还不错，如果需要的伙伴可以去购买。So, that’s it, it’s over, thanks for your attention.]]></content>
+    <content type="text"><![CDATA[最近使用zookeeper比较多，但是国内关于zookeeper方面的数据太少。能介绍其使用同时也讲解原理的书太少了。Zookeeper:distributed process coordination是一本关于zookeeper不可多得的好书。读完以后我对zookeeper有能一个非常直观的了解。 现在分布式应用开发越来越常见，基本上大部分的分布式应用都需要与其它应用进行协同。Zookeeper非常擅长于处理分布式协同。所以我决定利用工作之余的时间翻译这本书籍，完全出于个人兴趣。 GitBook阅读地址 GitHub阅读地址 由于本人第一次翻译技术书籍，肯定会有很多翻译不当的地方，欢迎大家能及时指正。如果有对本书翻译有兴趣的小伙伴，可以通过以下方式参与贡献： 参与讨论：邮件列表：&#122;&#107;&#95;&#116;&#114;&#97;&#110;&#115;&#108;&#97;&#116;&#x6f;&#x72;&#64;&#x67;&#x72;&#111;&#x75;&#x70;&#x73;&#x2e;&#x31;&#54;&#x33;&#46;&#x63;&#x6f;&#x6d;，申请加入地址：http://163.fm/UJNWGHS 部分贡献：通过issue进行讨论，如果通过，我会进行修改。这种方式我无法统计贡献者的名字，建议使用下面的方式参与翻译。 在 GitHub 上 fork 到自己的仓库，如 user/zookeeper-book，然后 clone 到本地，并设置用户信息。 1234$ git clone git@github.com:user/zookeeper-book.git$ cd zookeeper-book$ git config user.name &quot;yourname&quot;$ git config user.email &quot;your email&quot; 修改代码后提交，并推送到自己的仓库。 123$ #do some change on the content$ git commit -am &quot;Fix issue #1: change helo to hello&quot;$ git push 在 GitHub 网站上提交 pull request。定期使用项目仓库内容更新自己仓库内容。 12345$ git remote add upstream https://github.com/mymonkey110/zookeeper-book.git$ git fetch upstream$ git checkout master$ git rebase upstream/master$ git push -f origin master PS: 2016/8/15 Update: 很遗憾，因为授权的问题，不得不停止翻译的工作。本书已经有中文版的译本了，我后来才得知，所以我也不会取得中文版的翻译授权了。因为本人第一次翻译，事先没有搞清这些事情，才导致了现在的情况。不得不说，十分遗憾，感谢关注本书翻译的伙伴。我相信已有的中文译本应该还不错，如果需要的伙伴可以去购买。So, that’s it, it’s over, thanks for your attention.]]></content>
       <categories>
         <category>翻译</category>
       </categories>
