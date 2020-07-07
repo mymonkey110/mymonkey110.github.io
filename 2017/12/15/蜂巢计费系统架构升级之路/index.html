@@ -131,7 +131,7 @@
 <meta property="og:image" content="http://michael-j.net/2017/12/15/蜂巢计费系统架构升级之路/region-new-arch.png">
 <meta property="og:image" content="http://michael-j.net/2017/12/15/蜂巢计费系统架构升级之路/apollo.png">
 <meta property="og:image" content="http://michael-j.net/2017/12/15/蜂巢计费系统架构升级之路/elastic-job.png">
-<meta property="og:updated_time" content="2019-07-19T03:35:26.000Z">
+<meta property="og:updated_time" content="2020-07-07T12:16:02.147Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="蜂巢计费系统架构升级之路">
 <meta name="twitter:description" content="项目背景蜂巢计费系统为网易云基础服务（网易蜂巢）提供整体的计费服务，业务范围涵盖完整的产品售卖流程，包含定价、订单、支付、计费、结算、优惠、账单等主体功能，支持十几种不同产品的售卖，产品形态上贯穿了IaaS、PaaS和SaaS类别。同时，计费方式还提供了了按量、包年包月、资源包等多种方式。该项目的业务范围之广，玩法种类之多，数据要求之严注定了它将成为一个烫手的山芋，而且还是一个吃力不讨好的工作。">
@@ -526,7 +526,7 @@
 <p>为了最小化风险，订单拆分我们分了两步进行：一，模块独立；二：系统独立。</p>
 <h3 id="模块独立"><a href="#模块独立" class="headerlink" title="模块独立"></a>模块独立</h3><p>模块独立是将订单的代码首先在工程内部独立出来，我们采用独立Module的形式，将订单独立成了一个Order的模块。它拥有完全独立的服务层、业务层以及持久化层。其他模块可以依赖Order，而Order不能依赖除公共模块外的其他业务模块。整体的模块划分如下图所示。模块的拆分过程中我们也发现了原先很多不合理的地方，例如：其他服务直接操作订单的持久化层(DAO)、模块直接依赖关系混乱、Service所在的Pacakge不合理、存在大量无用的代码和逻辑、随意的命名等。我们边拆分边重构，虽然进度比预期要缓慢一些，但整体上在向着合理的方向进行。</p>
 <img src="/2017/12/15/蜂巢计费系统架构升级之路/module-indepent.png" title="模块拆分">
-<p>模块独立的过程中我们遇到了业务层级关系的问题。由于订单模块不再依赖于其他业务模块，而又有一些业务逻辑是由订单触发的，需要在计费模块完成，我们又不能直接调用计费模块的Service。针对这个问题，我们采用了<code>领域事件</code>的方式来解耦，简单来说就是订单通过发布事件的方式来与其他模块进行通信，当时实现的代码其实也相当简单，可以参考:<a href="https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a。" target="_blank" rel="noopener">https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a。</a></p>
+<p>模块独立的过程中我们遇到了业务层级关系的问题。由于订单模块不再依赖于其他业务模块，而又有一些业务逻辑是由订单触发的，需要在计费模块完成，我们又不能直接调用计费模块的Service。针对这个问题，我们采用了<code>领域事件</code>的方式来解耦，简单来说就是订单通过发布事件的方式来与其他模块进行通信，当时实现的代码其实也相当简单，可以参考: <a href="https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a" target="_blank" rel="noopener">https://gist.github.com/mymonkey110/aba58de452928bec2243848bb2c9b84a</a></p>
 <p>我们并没有独立拆分web层，因为系统还没有独立，web层作为统一的打包入口也承载着订单的流量。而且，Controller层的逻辑相对比较简单，完全可以在系统独立时再做。通过大家的努力，8月底订单已独立模块的方式上线了，一切正常。</p>
 <h3 id="系统独立"><a href="#系统独立" class="headerlink" title="系统独立"></a>系统独立</h3><p>模块拆分完成后，仅接着就是系统独立，此时我们需要将订单系统独立部署。这里一个关键的问题是，独立部署意味着单独提供服务，而依赖订单系统的业务方非常之多，包含前端、主站、大部分的PaaS业务和计费，都有需要直接依赖订单接口的地方，冒然独立风险很大。针对这个问题，我们采用使用haproxy七层转发代理来将流量分发到不同的vip来解决。虽然，在上线过程中遇到了一些坎坷，但最终还是成功了。现在看来这个选择是非常对的，因为这样可以在业务方无感知的情况下平滑升级。但长远来看，最终我们还是以独立的vip对外保留服务。</p>
 <img src="/2017/12/15/蜂巢计费系统架构升级之路/deploy-indepent.png" title="独立部署">
